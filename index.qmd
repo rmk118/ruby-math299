@@ -4,7 +4,6 @@ about:
   template: trestles
   image: https://www.fisheries.noaa.gov/s3//styles/original/s3/2021-05/640x427-Crab-Jonah-R-NB-W.jpg?itok=OIpVOe7Z 
   image-width: 10cm
-  image-shape: round
   links:
     - href: https://github.com/rmk118
       text: GitHub
