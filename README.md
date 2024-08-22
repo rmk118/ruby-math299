@@ -1,6 +1,7 @@
 # MATH 299: Directed Study – Environmental Data Analysis 
 
 Ruby Krasnow 
+Clark University, Fall 2024
 
 Supervised by: Michael Satz 
 
