@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Math 299"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: ./HW/hw_01_intro_to_markdown.qmd
+        text: HW1
+
+format:
+  html:
+    theme: minty
+    css: styles.css
+    toc: true
+    link-external-newwindow: true
+    link-external-icon: false
+
+
+

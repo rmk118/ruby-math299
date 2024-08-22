@@ -1,0 +1,91 @@
+---
+title: "HW1"
+author: "Ruby Krasnow"
+date: "2024-08-22"
+link-external-newwindow: true 
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| echo: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+```
+
+# 1) Who am I & what do I study?
+
+I am an aspiring marine ecologist with a strong interest in sustainable fisheries and aquaculture. I am especially passionate about using mathematical and statistical models to understand aquatic ecosystems, support sustainable fisheries management, and advance the kelp and shellfish aquaculture industries. I am currently a senior at Clark University, where I am majoring in Biology with a minor in Mathematics. After graduating with my B.A. in December 2024, I will start my PhD in Marine Biology at the University of Maine. I am one of the team captains for the [Clark cross-country team](https://clarkathletics.com/sports/womens-cross-country) and am excited to continue my athletic as well as academic career by competing on the UMaine track and cross-country teams as a graduate student.
+
+A major focus of my research is enhancing the accuracy of kelp (Saccharina latissima) growth models by incorporating factors such as blade erosion, biofouling, genetic variation, and phenotypic plasticity. Additionally, I am collaborating with the NOAA Northeast Fisheries Science Center to model spatial variation in crustacean size-at-maturity, supporting the sustainable management of the emerging Jonah crab fishery in New England.
+
+To learn more about me, you can visit my personal website: <https://rmk118.github.io/>
+
+### Keywords
+
+-   quantitative marine ecology
+-   fisheries & aquaculture
+    -   kelp aquaculture
+    -   modeling crustacean size-at-maturity
+    -   population dynamics & stock assessment
+-   synthesis research/meta-analyses
+-   open & reproducible data science
+
+# 2) What do I want from this course?
+
+1.  Develop a more solid theoretical understanding of the concepts underlying the modeling techniques I frequently use in my research
+2.  Learn new techniques for model selection and inference (e.g., practice cross-validation)
+3.  Become more familiar with distributions/models that can address common issues in ecological analyses, such as zero-inflated and hurdle models
+
+# 3) Plot air quality data
+
+```{r}
+#| label: setup-data
+#| echo: false
+
+air <- airquality %>% 
+  clean_names() %>% 
+  select(wind, temp)
+```
+
+```{r}
+#| label: fig-windtemp
+#| fig-cap: "Avg. wind speed (mph) and max. daily temperature (°F) at LaGuardia Airport, NY, from May-Sept. 1973"
+#| fig-width: 5
+#| fig-height: 4
+#| fig-align: "center"
+
+ggplot(air)+
+  geom_point(aes(x=wind, y=temp))+
+  theme_light()+ #define custom theme for ggplots
+  theme(
+    axis.title.y = element_text(margin = margin(t = 0, r = 10, b = 0, l = 0)),
+    axis.title.x = element_text(margin = margin(t = 10, r = 0, b = 0, l = 0)),
+    text=element_text(size=13))+labs(x="Wind speed (mph)", y="Temperature (°F)")+
+  xlim(0,NA)
+```
+
+# 4) Say it with an equation
+
+$$ Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon $$ {#eq-linmod}
+$$ \varepsilon \sim N(0, \sigma^2)$$
+
+In @eq-linmod, the two different predictor variables are represented by $X_1$ and $X_2$.

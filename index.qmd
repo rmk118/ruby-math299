@@ -1,0 +1,17 @@
+---
+about:
+  id: header
+  template: trestles
+  image: https://www.fisheries.noaa.gov/s3//styles/original/s3/2021-05/640x427-Crab-Jonah-R-NB-W.jpg?itok=OIpVOe7Z 
+  image-width: 10cm
+  image-shape: round
+  links:
+    - href: https://github.com/rmk118
+      text: GitHub
+      icon: github
+---
+
+## Welcome!
+
+My name is Ruby Krasnow *(she/her)* and I am an aspiring quantitative marine ecologist interested in using modeling and data science to support sustainable fisheries management and marine aquaculture.
+
