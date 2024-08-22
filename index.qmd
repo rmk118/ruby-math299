@@ -2,15 +2,16 @@
 about:
   id: header
   template: trestles
-  image: https://www.fisheries.noaa.gov/s3//styles/original/s3/2021-05/640x427-Crab-Jonah-R-NB-W.jpg?itok=OIpVOe7Z 
+  image: https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gamma_distribution_pdf.svg/650px-Gamma_distribution_pdf.svg.png
   image-width: 10cm
   links:
-    - href: https://github.com/rmk118
+    - href: https://github.com/rmk118/ruby-math299
       text: GitHub
       icon: github
 ---
 
-## Welcome!
+## MATH 299: Directed Study – Environmental Data Analysis
 
-My name is Ruby Krasnow *(she/her)* and I am an aspiring quantitative marine ecologist interested in using modeling and data science to support sustainable fisheries management and marine aquaculture.
+**Ruby Krasnow**
 
+This website will house my assignments as I work through the course material for [QERM 514: Analysis of Ecological and Environmental Data](https://qerm514.github.io/website/index.html), one of the core requirements for graduate students in the Quantitative Ecology & Resource Management (QERM) program at the University of Washington. The QERM 514 course materials developed and made publicly available online by Dr. Mark Scheuerell will serve as a foundation for a directed study I will complete during my final semester at Clark, supervised by [Michael Satz](https://www.clarku.edu/faculty/profiles/michael-satz/) (Clark University, Department of Mathematics).

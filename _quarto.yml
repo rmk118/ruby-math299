@@ -4,13 +4,19 @@ project:
 
 website:
   title: "Math 299"
+  back-to-top-navigation: true
   navbar:
+    right:
+      - icon: github
+        href: https://github.com/rmk118/ruby-math299
     left:
       - href: index.qmd
         text: Home
-      - href: ./HW/hw_01_intro_to_markdown.qmd
-        text: HW1
-
+      - text: HW
+        menu: 
+        - text: HW1
+          href: ./HW/hw_01_intro_to_markdown.qmd
+    
 format:
   html:
     theme: flatly
