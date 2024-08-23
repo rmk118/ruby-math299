@@ -16,13 +16,22 @@ website:
         menu: 
         - text: HW1
           href: ./HW/hw_01_intro_to_markdown.qmd
+        - text: HW2
+          href: ./HW/hw_02_fitting_lm.qmd
+      - text: Labs
+        menu: 
+          - text: Lab 1
+            href: ./labs/lab1.qmd
     
 format:
   html:
     theme: flatly
-    toc: true
     link-external-newwindow: true
     link-external-icon: false
+    toc: true
+    toc-depth: 3
+    df-print: kable
+    code-overflow: wrap
 
 
 

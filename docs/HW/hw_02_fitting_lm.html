@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Ruby Krasnow">
 
-<title>Math 299</title>
+<title>Math 299 - HW2: Linear Models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,21 +24,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -69,7 +71,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Math 299</span>
     </a>
   </div>
@@ -80,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -89,11 +91,11 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hw">    
         <li>
-    <a class="dropdown-item" href="./HW/hw_01_intro_to_markdown.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_01_intro_to_markdown.html" rel="" target="">
  <span class="dropdown-text">HW1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_02_fitting_lm.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_02_fitting_lm.html" rel="" target="">
  <span class="dropdown-text">HW2</span></a>
   </li>  
     </ul>
@@ -119,35 +121,69 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
+   
   <ul>
-  <li><a href="#math-299-directed-study-environmental-data-analysis" id="toc-math-299-directed-study-environmental-data-analysis" class="nav-link active" data-scroll-target="#math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</a></li>
+  <li><a href="#to-be-completed" id="toc-to-be-completed" class="nav-link active" data-scroll-target="#to-be-completed">To be completed</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gamma_distribution_pdf.svg/650px-Gamma_distribution_pdf.svg.png" class="about-image
-  rounded " style="width: 10cm;">
-    <div class="about-links">
-  <a href="https://github.com/rmk118/ruby-math299" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<section id="math-299-directed-study-environmental-data-analysis" class="level2">
-<h2 data-anchor-id="math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</h2>
-<p><strong>Ruby Krasnow</strong></p>
-<p>This website will house my assignments as I work through the course material for <a href="https://qerm514.github.io/website/index.html">QERM 514: Analysis of Ecological and Environmental Data</a>, one of the core requirements for graduate students in the Quantitative Ecology &amp; Resource Management (QERM) program at the University of Washington. The QERM 514 course materials developed and made publicly available online by Dr.&nbsp;Mark Scheuerell will serve as a foundation for a directed study I will complete during my final semester at Clark, supervised by <a href="https://www.clarku.edu/faculty/profiles/michael-satz/">Michael Satz</a> (Clark University, Department of Mathematics).</p>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">HW2: Linear Models</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ruby Krasnow </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><a href="https://qerm514.github.io/website/homework/week_02/hw_02_fitting_lm.pdf"><em>Link to original assignment PDF</em></a></p>
+<section id="to-be-completed" class="level1">
+<h1>To be completed</h1>
+<!-- ```{r setup, include=FALSE} -->
+<!-- knitr::opts_chunk$set(echo = TRUE) -->
+<!-- ``` -->
+<!-- # Background -->
+<!-- The goal of this assignment is to familiarize yourself with fitting linear models in **R**. We will be working some data from nearby Lake Washington that is part of a long-term monitoring program begun in the 1960s by the late, and rather famous, [Dr. W.T. Edmondson](http://www.nasonline.org/publications/biographical-memoirs/memoir-pdfs/edmondson-wt.pdf) and since continued by [Dr. Daniel Schindler](https://fish.uw.edu/faculty/daniel-schindler/). The accompanying data file `L_Washington_plankton.csv` contains information on the following four variables: -->
+<!-- * `Daphnia`: index of the density of the cladoceran *Daphnia* (unitless) -->
+<!-- * `Greens`: index of the density of green algae (unitless) -->
+<!-- * `Cyclops`: index of the density of the copepod *Cyclops* (unitless) -->
+<!-- * `Temp`: water temperature (C) -->
+<!-- *Daphnia* are an effective grazer on phytoplankton and green algae make up a large proportion of their diet. *Cyclops* are an inferior grazer compared to *Daphnia*, but a competitor nonetheless. *Daphnia* growth rates are also affected by water temperature. -->
+<!-- As you work through the following problems, make sure to explain your thought process and show your code, so Mark can give you partial credit, if necessary. -->
+<!-- # Question 1 -->
+<!-- a) Write out the equation for a linear regression model that expresses *Daphnia* abundance as a function of its preferred prey, green algae, and describe the terms in your model. -->
+<!-- b) Produce a scatterplot that shows the relationship between `Daphnia` and `Greens`. Make sure to label your plot accordingly and give it an informative caption. Describe the relationship between `Daphnia` and `Greens`. Does a linear model seem reasonable here? -->
+<!-- c) Produce the step-by-step **R** code required to fit your model **via linear algebra** to generate estimates the model parameters and the data. Be sure to show the construction of the design matrix $(\mathbf{X})$, the calculation of the parameter estimates $(\hat{\beta_i})$, the calculation of the hat matrix $(\mathbf{H})$, and the calculation of the model predictions $(\hat{y_i})$. -->
+<!-- d) Calculate and report your estimate of the residual variance $(\sigma^2)$. -->
+<!-- e) Give a prediction of what you might expect the specific abundance of *Daphnia* to be on the next sampling occasion if the abundance of green algae is 1.5 units. Also provide an estimate of the interval around your estimate that conveys 95% confidence in your prediction. Again, do so via direct calculations rather than relying on **R**'s built-in functions. -->
+<!-- # Question 2 -->
+<!-- a) Expand upon your model from Question 1 to include the additional effects of *Cyclops* and water temperature on *Daphnia*. Write out your equation and describe the terms in the model. -->
+
+<!-- b) Using **R**'s built-in functions, fit the model from (a) and show the resulting table of results. For each of the $p$-values shown in the table, describe the null hypothesis being tested. -->
+<!-- c) Test the hypothesis that $\beta_{Greens} = \beta_{Cyclops} = \beta_{Temp} = 0$. What is the $F$-statistic, the associated $df$, and the $p$-value? What can you conclude from this test? -->
+<!-- d) It has come to your attention that someone has done lab experiments suggesting the effect of temperature on *Daphnia* abundance is 0.4 per degree Celsius after controlling for the effects of prey (green algae) and competitors (*Cyclops*). Create a null hypothesis test to evaluate the evidence for this finding from the data collected in the field. Specify $H_0$ and report the results of your test. What do you conclude? -->
 
 
 </section>
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main></div>
-</div>
- <!-- /main -->
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -168,6 +204,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

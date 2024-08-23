@@ -1,0 +1,398 @@
+---
+title: "Lecture & Lab 1: Fitting Linear Models"
+author: "Ruby Krasnow"
+date: "2024-08-22"
+link-external-newwindow: true 
+editor_options: 
+  chunk_output_type: console
+number-sections: true
+---
+
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| echo: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "faraway", "broom", "DHARMa", "emmeans", "performance")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+
+#knitr::opts_chunk$set(collapse = TRUE)
+```
+
+# Lecture Notes & Exercises
+
+Faraway, Ch. 1 & 2
+
+[Matrix math cheat sheet](https://www.gatsby.ucl.ac.uk/teaching/courses/sntn/sntn-2017/resources/Matrix_derivatives_cribsheet.pdf )
+
+```{r}
+#| label: exploring-gala
+
+data("gala")
+head(gala) # or glimpse(gala)
+
+gala <- gala %>% select(-Endemics) %>% clean_names()
+
+lmod <- lm(species ~ area + elevation + nearest + scruz + adjacent, data = gala)
+
+summary(lmod) # or faraway::sumary(lmod) or broom::tidy(lmod)
+
+x <- model.matrix(~ area + elevation + nearest + scruz + adjacent, data = gala)
+y <- gala$species
+  
+xtxi <- solve(t(x) %*% x)
+xtxi %*% t(x) %*% y
+
+solve(crossprod(x,x),crossprod(x,y))
+
+deviance(lmod) #RSS
+sqrt(deviance(lmod)/df.residual(lmod)) #sigma
+sigma <- summary(lmod)$sigma
+
+xtxi <- summary(lmod)$cov.unscaled
+
+#standard errors of the coefficients
+sqrt(diag(xtxi))*sigma #OR
+summary(lmod)$coef[,2]
+```
+
+
+## Exercises
+
+### 1
+
+```{r}
+#| label: ex1
+
+data("teengamb")
+
+gambmod <- lm(gamble ~ sex + status + income + verbal, data = teengamb)
+modsum<- summary(gambmod)
+modsum
+
+
+#A
+modsum$r.squared
+
+#B
+unname(which.max(modsum$residuals))
+
+#C
+mean(modsum$residuals)
+median(modsum$residuals)
+
+#D
+cor(gambmod$fitted.values, modsum$residuals)
+plot(gambmod, which = 1) # or DHARMa::plotConventionalResiduals(gambmod)
+
+DHARMa::plotQQunif(gambmod)
+
+#E
+cor(modsum$residuals, teengamb$gamble)
+
+#F 
+abs(modsum$coefficients["sex", "Estimate"])
+emmeans::emmeans(gambmod, "sex")
+
+emmplot <- plot(emmeans(gambmod, "sex"), colors=c("#003087")) # or marginal_effects::plot_predictions(gambmod, condition = "sex")
+emmplot+
+  mytheme+
+  labs(y="Sex", x="Estimated marginal mean")
+```
+
+### 2
+```{r}
+data("uswages")
+
+wagemod <- lm(wage ~ educ + exper, data=uswages)
+tidy(wagemod)
+
+wagemod$coefficients["educ"]
+# Each additional year of education increases the predicted weekly wage by around $51
+
+log_wagemod <- lm(log(wage) ~ educ + exper, data=uswages)
+summary(log_wagemod)
+
+compare_performance(wagemod, log_wagemod)
+check_model(wagemod)
+check_model(log_wagemod)
+```
+
+Although interpretation of the coefficients is less straightforward for the log-transformed model, it has much lower AIC/AICc and RMSE values and a higher R-squared, indicating it is a better fit for the data. The posterior predictive checks also look much better for the log model.
+
+# Lab
+
+[*Link to original lab handout*](https://qerm514.github.io/website/labs/week_02/fitting_lm.html)
+
+```{r}
+ggplot(gala, aes(x=area, y=species))+
+  geom_point()+mytheme+labs(x=expression("Area of island ("*km^2*")"), y="Number of species")
+```
+
+## Simple model
+
+### Estimating beta-hat and y-hat
+```{r}
+nn <- nrow(gala)
+yy <- matrix(data=gala$species, nrow = nn, ncol = 1)
+head(yy)
+
+intercept <- rep(1, nn)
+area <- gala$area
+XX <- cbind(intercept, area)
+head(XX)
+
+beta_hat <- solve(t(XX) %*% XX) %*% t(XX) %*% yy
+beta_hat
+
+HH <- XX %*% solve(t(XX) %*% XX) %*% t(XX)
+y_hat <- HH %*% yy
+head(y_hat)
+
+head(XX %*% beta_hat)
+
+```
+
+```{r}
+ggplot(gala, aes(x=area, y=species))+
+  geom_point()+
+  mytheme+
+  labs(x=expression("Area of island ("*km^2*")"), y="Number of species")+
+  geom_smooth(method="lm", se=FALSE, formula = y~x, color="black", linewidth=0.5)
+```
+
+### Automated model fitting
+```{r}
+simple_model <- lm(species ~ area, gala)
+simple_model
+
+## via fitted
+y_hat_f <- fitted(simple_model)
+## via predict
+y_hat_p <- predict(simple_model, type = "response")
+## compare these to each other
+all.equal(y_hat_f, y_hat_p)
+```
+
+### Goodness-of-fit
+```{r}
+## SSE
+resids <- yy - y_hat
+SSE <- sum(resids^2) # = t(resids) %*% resids
+
+## SSTO
+SSTO <- sum((yy - mean(yy))^2)
+
+## R^2
+1 - SSE / SSTO
+
+summary(simple_model)
+```
+
+### Adjusted R-squared
+```{r}
+set.seed(514)
+## generate a vector of Gaussian white noise
+WN <- rnorm(nn)
+## add this to our Galapagos data frame
+gala$WN <- WN 
+## fit a model with Area & WN
+summary(lm(species ~ area + WN, gala))
+
+1 - (SSE / (nn - 2)) / (SSTO / (nn - 1)) #adj r2
+```
+
+## Better model (lab example)
+
+```{r}
+## larger model
+full_mod <- lm(species ~ area + elevation + nearest, gala)
+full_mod
+```
+
+```{r}
+## get matrix of predictors
+XX <- model.matrix(full_mod)
+## estimate beta
+beta_hat <- solve(t(XX) %*% XX) %*% t(XX) %*% yy
+## total sum of squares
+SSE <- t(yy - XX %*% beta_hat) %*% (yy - XX %*% beta_hat)
+## error sum of squares
+SSTO <- t(yy - mean(yy)) %*% (yy - mean(yy))
+## F statistic
+F_stat <- ((SSTO - SSE) / (4 - 1)) / (SSE / (nn - 4))
+pf(F_stat, 4-1, nn-4, lower.tail = F) #F-test
+```
+
+```{r}
+## null model; the '1' indicates an intercept-only model
+null_mod <- lm(species ~ 1, gala)
+## use `anova('simple', 'complex')` to get the F-test results
+anova(null_mod, full_mod)
+
+full_mod_sum<-summary(full_mod)
+
+pf(full_mod_sum$fstatistic[1], full_mod_sum$fstatistic[2], full_mod_sum$fstatistic[3], lower.tail = F)
+
+```
+
+```{r}
+## reduced model without `nearest`
+reduced_mod <- lm(species ~ area + elevation, gala)
+## use `anova('reduced', 'full')` to get the F-test results
+anova(reduced_mod, full_mod)
+```
+
+### Testing a subspace
+
+```{r}
+## full model (with adjacent this time)
+full_mod2 <- lm(species ~ area + adjacent + elevation + nearest, gala)
+## reduced model without `elevation + nearest`
+comb_mod <- lm(species ~ I(area + adjacent) + elevation + nearest, gala)
+## use `anova('combined', 'full')` to get the F-test results
+anova(comb_mod, full_mod2)
+```
+
+```{r}
+## model with effect of `elevation` = 1
+fixed_mod <- lm(species ~ area + offset(1 * elevation) + nearest, gala)
+## use `anova('comb', 'full')` to get the F-test results
+anova(fixed_mod, full_mod)
+```
+
+```{r}
+sumary(full_mod)
+## t statistic
+(t_value <- (0.171336 - 1) / 0.054519)
+## p-value = t_alpha * Pr(t_value, df); `pt()` is the pdf for a t-dist
+(p_value <- 1.96 * pt(t_value, 26))
+## verify t^2 = F
+all.equal(t_value^2, anova(fixed_mod, full_mod)$F[2], tolerance = 0.0001)
+```
+
+### CIs for beta-hat
+
+```{r}
+## critical value for the t-dist
+## `qt()` is the quantile function for the t-dist; `p` is the (1-alpha/2) value 
+t_crit <- qt(p = 0.975, df = 30-4)
+## 95% CI
+CI95_beta <- 0.019085 + c(-1,1) * t_crit * 0.026764
+round(CI95_beta, 3)
+```
+
+```{r}
+## all of the 95% CI's
+confint(full_mod)
+```
+
+### Bootstrap confidence intervals
+
+```{r}
+## residuals from our full model
+resids <- residuals(full_mod)
+
+## number of bootstrap samples
+nb <- 1000
+## empty matrix for beta estimates
+beta_est <- matrix(NA, nb, 4)
+## fitted values from our full model = X*beta
+Xbeta <- fitted(full_mod)
+## sample many times
+for(i in 1:nb) {
+  ## 3a: sample w/ replacement from e
+  e_star <- sample(resids, rep = TRUE)
+  ## 3b: calculate y_star
+  y_star <- Xbeta + e_star
+  ## 3c: re-estimate beta_star from X & y_star
+  beta_star <- update(full_mod, y_star ~ .)
+  ## save estimated betas
+  beta_est[i,] <- coef(beta_star)
+}
+
+## extract 2.5% and 97.5% values
+CI95 <- apply(beta_est, 2, quantile, c(0.025, 0.975))
+colnames(CI95) <- c("Intercept", colnames(gala[,3:5]))
+t(round(CI95, 3))
+```
+
+### Boostrap coefficients and CIs using the rsample package
+```{r}
+set.seed(462)
+library(rsample)
+
+# Will be used to fit the models to different bootstrap data sets:
+fit_fun <- function(split, ...) {
+  # We could check for convergence, make new parameters, etc.
+  lm(species ~ area + elevation + nearest, data = analysis(split), ...) %>%
+    tidy()
+}
+
+bt <-
+  bootstraps(gala, times = 1000, apparent = TRUE) %>%
+  mutate(models = map(splits, fit_fun))
+
+int_pctl(bt, models)
+```
+
+### Confidence interval for new predictions
+
+#### By hand
+```{r}
+## matrix of predictors
+XX <- model.matrix(simple_model)
+## new X; vector for now
+X_star <- c(intercept = 1, area = 2000)
+## inside sqrt
+inner_X <- t(X_star) %*% solve(t(XX) %*% XX) %*% X_star
+## critical t-value
+t_crit <- qt(0.975, df = nn-2)
+## estimated SD
+sigma <- summary(simple_model)$sigma
+## predicted y
+y_star <- sum(X_star * coef(simple_model))
+## 95% CI
+c(y_star) + c(-1,1) * c(t_crit) * c(sigma) * c(sqrt(inner_X))
+```
+
+#### Using predict
+```{r}
+predict(simple_model, new = data.frame(t(X_star)),
+        level = 0.95, interval = "confidence")
+```
+
+### Prediction interval for new response
+
+```{r}
+## new X_star
+X_star <- c(intercept = 1, area = 2000)
+## inside sqrt
+inner_X <- 1 + t(X_star) %*% solve(t(XX) %*% XX) %*% X_star
+## 95% CI
+y_star + c(-1,1) * c(t_crit) * c(sigma) * c(sqrt(inner_X))
+
+predict(simple_model, new = data.frame(t(X_star)),
+        level = 0.95, interval = "prediction")
+```
+

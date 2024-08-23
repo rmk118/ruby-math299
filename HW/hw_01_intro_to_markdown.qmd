@@ -1,5 +1,5 @@
 ---
-title: "HW1"
+title: "HW1: Introduction"
 author: "Ruby Krasnow"
 date: "2024-08-22"
 link-external-newwindow: true 
