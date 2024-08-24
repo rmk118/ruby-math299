@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ruby Krasnow">
-<meta name="dcterms.date" content="2024-08-22">
 
-<title>Math 299 - HW1: Introduction</title>
+<title>Math 299 - Inference, Diagnostics, &amp; Errors</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -96,8 +61,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -186,13 +149,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#who-am-i-what-do-i-study" id="toc-who-am-i-what-do-i-study" class="nav-link active" data-scroll-target="#who-am-i-what-do-i-study">1) Who am I &amp; what do I study?</a>
-  <ul class="collapse">
-  <li><a href="#keywords" id="toc-keywords" class="nav-link" data-scroll-target="#keywords">Keywords</a></li>
-  </ul></li>
-  <li><a href="#what-do-i-want-from-this-course" id="toc-what-do-i-want-from-this-course" class="nav-link" data-scroll-target="#what-do-i-want-from-this-course">2) What do I want from this course?</a></li>
-  <li><a href="#plot-air-quality-data" id="toc-plot-air-quality-data" class="nav-link" data-scroll-target="#plot-air-quality-data">3) Plot air quality data</a></li>
-  <li><a href="#say-it-with-an-equation" id="toc-say-it-with-an-equation" class="nav-link" data-scroll-target="#say-it-with-an-equation">4) Say it with an equation</a></li>
+  <li><a href="#inference" id="toc-inference" class="nav-link active" data-scroll-target="#inference">Inference</a></li>
   </ul>
 </nav>
     </div>
@@ -201,7 +158,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">HW1: Introduction</h1>
+<h1 class="title">Inference, Diagnostics, &amp; Errors</h1>
 </div>
 
 
@@ -215,12 +172,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">August 22, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -228,60 +179,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><a href="https://qerm514.github.io/website/homework/week_01/hw_01_intro_to_markdown.pdf"><em>Link to original assignment PDF</em></a></p>
-<section id="who-am-i-what-do-i-study" class="level1">
-<h1>1) Who am I &amp; what do I study?</h1>
-<p>I am an aspiring marine ecologist with a strong interest in sustainable fisheries and aquaculture. I am especially passionate about using mathematical and statistical models to understand aquatic ecosystems, support sustainable fisheries management, and advance the kelp and shellfish aquaculture industries. I am currently a senior at Clark University, where I am majoring in Biology with a minor in Mathematics. After graduating with my B.A. in December 2024, I will start my PhD in Marine Biology at the University of Maine. I am one of the team captains for the <a href="https://clarkathletics.com/sports/womens-cross-country">Clark cross-country team</a> and am excited to continue my athletic as well as academic career by competing on the UMaine track and cross-country teams as a graduate student.</p>
-<p>A major focus of my research is enhancing the accuracy of kelp (Saccharina latissima) growth models by incorporating factors such as blade erosion, biofouling, genetic variation, and phenotypic plasticity. Additionally, I am collaborating with the NOAA Northeast Fisheries Science Center to model spatial variation in crustacean size-at-maturity, supporting the sustainable management of the emerging Jonah crab fishery in New England.</p>
-<p>To learn more about me, you can visit my personal website: <a href="https://rmk118.github.io/" class="uri">https://rmk118.github.io/</a></p>
-<section id="keywords" class="level3">
-<h3 class="anchored" data-anchor-id="keywords">Keywords</h3>
-<ul>
-<li>quantitative marine ecology</li>
-<li>fisheries &amp; aquaculture
-<ul>
-<li>kelp aquaculture</li>
-<li>modeling crustacean size-at-maturity</li>
-<li>population dynamics &amp; stock assessment</li>
-</ul></li>
-<li>synthesis research/meta-analyses</li>
-<li>open &amp; reproducible data science</li>
-</ul>
-</section>
-</section>
-<section id="what-do-i-want-from-this-course" class="level1">
-<h1>2) What do I want from this course?</h1>
-<ol type="1">
-<li>Develop a more solid theoretical understanding of the concepts underlying the modeling techniques I frequently use in my research</li>
-<li>Learn new techniques for model selection and inference (e.g., practice cross-validation)</li>
-<li>Become more familiar with distributions/models that can address common issues in ecological analyses, such as zero-inflated and hurdle models</li>
-</ol>
-</section>
-<section id="plot-air-quality-data" class="level1">
-<h1>3) Plot air quality data</h1>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(air)<span class="sc">+</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>wind, <span class="at">y=</span>temp))<span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()<span class="sc">+</span> <span class="co">#define custom theme for ggplots</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">0</span>, <span class="at">r =</span> <span class="dv">10</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">13</span>))<span class="sc">+</span><span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Wind speed (mph)"</span>, <span class="at">y=</span><span class="st">"Temperature (°F)"</span>)<span class="sc">+</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-windtemp" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hw_01_intro_to_markdown_files/figure-html/fig-windtemp-1.png" class="img-fluid figure-img" width="480"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Avg. wind speed (mph) and max. daily temperature (°F) at LaGuardia Airport, NY, from May-Sept.&nbsp;1973</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="say-it-with-an-equation" class="level1">
-<h1>4) Say it with an equation</h1>
-<p><span id="eq-linmod"><span class="math display">\[ Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon  \tag{1}\]</span></span> <span class="math display">\[ \varepsilon \sim N(0, \sigma^2)\]</span></p>
-<p>In <a href="#eq-linmod">Equation&nbsp;1</a>, the two different predictor variables are represented by <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>.</p>
+<section id="inference" class="level1">
+<h1>Inference</h1>
 
 
 </section>

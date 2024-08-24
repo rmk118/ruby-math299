@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Ruby Krasnow">
-<meta name="dcterms.date" content="2024-08-22">
 
-<title>Math 299 - HW1: Introduction</title>
+<title>Math 299 - HW 3: Model Diagnostics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -186,13 +151,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#who-am-i-what-do-i-study" id="toc-who-am-i-what-do-i-study" class="nav-link active" data-scroll-target="#who-am-i-what-do-i-study">1) Who am I &amp; what do I study?</a>
-  <ul class="collapse">
-  <li><a href="#keywords" id="toc-keywords" class="nav-link" data-scroll-target="#keywords">Keywords</a></li>
-  </ul></li>
-  <li><a href="#what-do-i-want-from-this-course" id="toc-what-do-i-want-from-this-course" class="nav-link" data-scroll-target="#what-do-i-want-from-this-course">2) What do I want from this course?</a></li>
-  <li><a href="#plot-air-quality-data" id="toc-plot-air-quality-data" class="nav-link" data-scroll-target="#plot-air-quality-data">3) Plot air quality data</a></li>
-  <li><a href="#say-it-with-an-equation" id="toc-say-it-with-an-equation" class="nav-link" data-scroll-target="#say-it-with-an-equation">4) Say it with an equation</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a></li>
   </ul>
 </nav>
     </div>
@@ -201,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">HW1: Introduction</h1>
+<h1 class="title">HW 3: Model Diagnostics</h1>
 </div>
 
 
@@ -215,12 +175,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">August 22, 2024</p>
-    </div>
-  </div>
   
     
   </div>
@@ -228,60 +182,76 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p><a href="https://qerm514.github.io/website/homework/week_01/hw_01_intro_to_markdown.pdf"><em>Link to original assignment PDF</em></a></p>
-<section id="who-am-i-what-do-i-study" class="level1">
-<h1>1) Who am I &amp; what do I study?</h1>
-<p>I am an aspiring marine ecologist with a strong interest in sustainable fisheries and aquaculture. I am especially passionate about using mathematical and statistical models to understand aquatic ecosystems, support sustainable fisheries management, and advance the kelp and shellfish aquaculture industries. I am currently a senior at Clark University, where I am majoring in Biology with a minor in Mathematics. After graduating with my B.A. in December 2024, I will start my PhD in Marine Biology at the University of Maine. I am one of the team captains for the <a href="https://clarkathletics.com/sports/womens-cross-country">Clark cross-country team</a> and am excited to continue my athletic as well as academic career by competing on the UMaine track and cross-country teams as a graduate student.</p>
-<p>A major focus of my research is enhancing the accuracy of kelp (Saccharina latissima) growth models by incorporating factors such as blade erosion, biofouling, genetic variation, and phenotypic plasticity. Additionally, I am collaborating with the NOAA Northeast Fisheries Science Center to model spatial variation in crustacean size-at-maturity, supporting the sustainable management of the emerging Jonah crab fishery in New England.</p>
-<p>To learn more about me, you can visit my personal website: <a href="https://rmk118.github.io/" class="uri">https://rmk118.github.io/</a></p>
-<section id="keywords" class="level3">
-<h3 class="anchored" data-anchor-id="keywords">Keywords</h3>
-<ul>
-<li>quantitative marine ecology</li>
-<li>fisheries &amp; aquaculture
-<ul>
-<li>kelp aquaculture</li>
-<li>modeling crustacean size-at-maturity</li>
-<li>population dynamics &amp; stock assessment</li>
-</ul></li>
-<li>synthesis research/meta-analyses</li>
-<li>open &amp; reproducible data science</li>
-</ul>
-</section>
-</section>
-<section id="what-do-i-want-from-this-course" class="level1">
-<h1>2) What do I want from this course?</h1>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>Section 7 of the U.S. Endangered Species Act (ESA) regulates situations in which a federal agency funds, permits, or otherwise has a “federal nexus” on any project that may influence a protected species. Federal agencies must seek a “consultation” on the project with either the U.S. Fish and Wildlife Service (USFWS) or the National Marine Fisheries Service (NMFS), depending on the species, and USFWS or NMFS must assure that any project does not cause “jeopardy” (a relatively high legal standard) for a protected species. A major conservation value of Section 7 consultation is the opportunity for USFWS and NMFS biologists to negotiate changes to projects that could minimize any negative impacts on species (or maximize any positive benefits).</p>
+<p>The USFWS office in Lacey, Washington wanted to identify the characteristics of projects that would make them worthwhile for focused consultation time, with an emphasis on projects potentially impacting ESA-listed bull trout (<em>Salvelinus confluentus</em>). Experts developed assessments of the potential improvement(s) in a project that could be realized from negotiating changes to projects such as nearshore construction, culvert improvements, and riparian restoration. These assessment generated a unitless score of the potential value for 38 projects.</p>
+<p>At this point the USFWS would like your assistance in evaluating a statistical model they hope to use for prioritizing project consultations. The accompanying data file <code>usfws_bull_trout.csv</code> contains 9 columns of information. They are</p>
 <ol type="1">
-<li>Develop a more solid theoretical understanding of the concepts underlying the modeling techniques I frequently use in my research</li>
-<li>Learn new techniques for model selection and inference (e.g., practice cross-validation)</li>
-<li>Become more familiar with distributions/models that can address common issues in ecological analyses, such as zero-inflated and hurdle models</li>
+<li><p><code>score</code>: a project’s potential value (numerical score on a scale of 0-15)</p></li>
+<li><p><code>stage</code>: 1 of 3 life history stage(s) occurring in the project area</p>
+<ul>
+<li>adults (<code>A</code>)</li>
+<li>juveniles/adults (<code>JA</code>)</li>
+<li>eggs/juveniles (<code>EJ</code>)</li>
+</ul></li>
+<li><p><code>form</code>: 1 of 2 life history form(s) occurring in the project area</p>
+<ul>
+<li>anadromous (<code>An</code>)</li>
+<li>fluvial/anadromous (<code>FlAn</code>)</li>
+</ul></li>
+<li><p><code>cond</code>: 1 of 3 habitat conditions in the project area</p>
+<ul>
+<li>pristine (<code>P</code>)</li>
+<li>degraded (<code>D</code>)</li>
+<li>highly degraded (<code>H</code>)</li>
+</ul></li>
+<li><p><code>risk</code>: 1 of 4 levels of extinction risk of the core population occurring in the project area</p>
+<ul>
+<li>outside core area (<code>OC</code>)</li>
+<li>low (<code>L</code>)</li>
+<li>medium (<code>M</code>)</li>
+<li>high (<code>H</code>)</li>
+</ul></li>
+<li><p><code>unit</code>: 1 of 4 habitat unit types in the project area</p>
+<ul>
+<li>inside a core area (<code>IC</code>)</li>
+<li>outside a core area in freshwater (<code>OF</code>)</li>
+<li>marine (<code>M</code>)</li>
+<li>other (<code>OT</code>)</li>
+</ul></li>
+<li><p><code>prog</code>: whether or not the set of detailed management guidelines for projects of that type have been established</p>
+<ul>
+<li><code>Yes</code></li>
+<li><code>No</code></li>
+</ul></li>
+<li><p><code>BMP</code>: whether or not established best management practices will be followed in the project</p>
+<ul>
+<li><code>Yes</code></li>
+<li><code>No</code></li>
+</ul></li>
+<li><p><code>degflex</code>: the degree of flexibility in project design, timing, and location</p>
+<ul>
+<li>low (<code>L</code>)</li>
+<li>medium (<code>M</code>)</li>
+</ul></li>
 </ol>
+<p>As you work through the following problems, make sure to explain your thought process and show all of your <strong>R</strong> code, so Mark can give you partial credit, if necessary.</p>
 </section>
-<section id="plot-air-quality-data" class="level1">
-<h1>3) Plot air quality data</h1>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(air)<span class="sc">+</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>wind, <span class="at">y=</span>temp))<span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()<span class="sc">+</span> <span class="co">#define custom theme for ggplots</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">0</span>, <span class="at">r =</span> <span class="dv">10</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">r =</span> <span class="dv">0</span>, <span class="at">b =</span> <span class="dv">0</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">13</span>))<span class="sc">+</span><span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Wind speed (mph)"</span>, <span class="at">y=</span><span class="st">"Temperature (°F)"</span>)<span class="sc">+</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>,<span class="cn">NA</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div id="fig-windtemp" class="quarto-figure quarto-figure-center anchored">
-<figure class="figure">
-<p><img src="hw_01_intro_to_markdown_files/figure-html/fig-windtemp-1.png" class="img-fluid figure-img" width="480"></p>
-<figcaption class="figure-caption">Figure&nbsp;1: Avg. wind speed (mph) and max. daily temperature (°F) at LaGuardia Airport, NY, from May-Sept.&nbsp;1973</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="say-it-with-an-equation" class="level1">
-<h1>4) Say it with an equation</h1>
-<p><span id="eq-linmod"><span class="math display">\[ Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \varepsilon  \tag{1}\]</span></span> <span class="math display">\[ \varepsilon \sim N(0, \sigma^2)\]</span></p>
-<p>In <a href="#eq-linmod">Equation&nbsp;1</a>, the two different predictor variables are represented by <span class="math inline">\(X_1\)</span> and <span class="math inline">\(X_2\)</span>.</p>
+<section id="problems" class="level1">
+<h1>Problems</h1>
+<ol type="a">
+<li>Fit a linear model to the dataset that includes all 8 predictor variables. What is the <span class="math inline">\(R^2\)</span> for the model? Does is seem like a promising model?</li>
+</ol>
+<!-- b) Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see? -->
+<!-- c) Make a plot of the residuals against the predictor variable `stage`. Do you find this plot useful? Why or why not? -->
+<!-- d) Produce a $Q$-$Q$ plot of the model residuals and include a $Q$-$Q$ line. Describe what you would hope to see here. Do you? -->
+<!-- e) Would it make sense to plot $e_t$ against $e_{t+1}$ for this model? Explain why or why not. -->
+<!-- f) Which projects have the 3 largest leverages? Briefly explain what this tells us. -->
+<!-- g) What rule of thumb could you use to assess whether any leverages are particularly large? Under this rule of thumb, do you have any particularly large leverages? If yes, which projects? -->
+<!-- h) Calculate the studentized residuals to look for outliers. Remember to use a Bonferroni correction, and explain why you should use it. What did you find? Which project has the largest studentized residual? -->
+<!-- i) Calculate Cook's Distances and produce a halfnormal plot of them. Label the 3 largest $D_i$ in the plot with the project names. Are these the same sites as the top 3 projects you identified in (g)? Briefly explain why or why not. -->
+<!-- j) In a few sentences, summarize what you have learned about this analysis in terms of heteroscedasticity, normality, and influential observations. -->
 
 
 </section>

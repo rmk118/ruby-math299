@@ -1,0 +1,39 @@
+---
+title: "Inference, Diagnostics, & Errors"
+author: "Ruby Krasnow"
+link-external-newwindow: true 
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| echo: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "faraway", "broom", "DHARMa", "emmeans", "performance")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+
+```
+
+# Inference

@@ -18,10 +18,16 @@ website:
           href: ./HW/hw_01_intro_to_markdown.qmd
         - text: HW2
           href: ./HW/hw_02_fitting_lm.qmd
+        - text: HW3
+          href: ./HW/hw_03_diagnostics.qmd
       - text: Labs
         menu: 
           - text: Lab 1
-            href: ./labs/lab1.qmd
+            href: ./Labs/lab1.qmd
+      - text: Notes
+        menu: 
+          - text: Inference, Diagnostics, & Errors
+            href: ./Notes/Inference.qmd
     
 format:
   html:
