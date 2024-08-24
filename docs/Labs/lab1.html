@@ -1136,14 +1136,14 @@ nearest      -2.11751249  2.25996697</code></pre>
 <span id="cb92-21"><a href="#cb92-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb92-22"><a href="#cb92-22" aria-hidden="true" tabindex="-1"></a><span class="do">## extract 2.5% and 97.5% values</span></span>
 <span id="cb92-23"><a href="#cb92-23" aria-hidden="true" tabindex="-1"></a>CI95 <span class="ot">&lt;-</span> <span class="fu">apply</span>(beta_est, <span class="dv">2</span>, quantile, <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span>
-<span id="cb92-24"><a href="#cb92-24" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(CI95) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Intercept"</span>, <span class="fu">colnames</span>(gala[,<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>]))</span>
+<span id="cb92-24"><a href="#cb92-24" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(CI95) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Intercept"</span>, <span class="st">"area"</span>, <span class="st">"elevation"</span> , <span class="st">"nearest"</span>)</span>
 <span id="cb92-25"><a href="#cb92-25" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(<span class="fu">round</span>(CI95, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             2.5%  97.5%
 Intercept -22.402 61.470
-elevation  -0.027  0.084
-nearest     0.073  0.277
-scruz      -1.918  2.150</code></pre>
+area       -0.027  0.084
+elevation   0.073  0.277
+nearest    -1.918  2.150</code></pre>
 </div>
 </div>
 </section>

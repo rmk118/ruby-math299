@@ -333,7 +333,7 @@ for(i in 1:nb) {
 
 ## extract 2.5% and 97.5% values
 CI95 <- apply(beta_est, 2, quantile, c(0.025, 0.975))
-colnames(CI95) <- c("Intercept", colnames(gala[,3:5]))
+colnames(CI95) <- c("Intercept", "area", "elevation" , "nearest")
 t(round(CI95, 3))
 ```
 
