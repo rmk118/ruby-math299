@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -61,6 +95,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -100,6 +136,17 @@ ul.task-list li input[type="checkbox"] {
   </li>  
     </ul>
   </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href=".././labs/lab1.qmd" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -123,7 +170,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#to-be-completed" id="toc-to-be-completed" class="nav-link active" data-scroll-target="#to-be-completed">To be completed</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#question-1" id="toc-question-1" class="nav-link" data-scroll-target="#question-1">Question 1</a></li>
+  <li><a href="#question-2" id="toc-question-2" class="nav-link" data-scroll-target="#question-2">Question 2</a></li>
   </ul>
 </nav>
     </div>
@@ -154,33 +203,508 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p><a href="https://qerm514.github.io/website/homework/week_02/hw_02_fitting_lm.pdf"><em>Link to original assignment PDF</em></a></p>
-<section id="to-be-completed" class="level1">
-<h1>To be completed</h1>
-<!-- ```{r setup, include=FALSE} -->
-<!-- knitr::opts_chunk$set(echo = TRUE) -->
-<!-- ``` -->
-<!-- # Background -->
-<!-- The goal of this assignment is to familiarize yourself with fitting linear models in **R**. We will be working some data from nearby Lake Washington that is part of a long-term monitoring program begun in the 1960s by the late, and rather famous, [Dr. W.T. Edmondson](http://www.nasonline.org/publications/biographical-memoirs/memoir-pdfs/edmondson-wt.pdf) and since continued by [Dr. Daniel Schindler](https://fish.uw.edu/faculty/daniel-schindler/). The accompanying data file `L_Washington_plankton.csv` contains information on the following four variables: -->
-<!-- * `Daphnia`: index of the density of the cladoceran *Daphnia* (unitless) -->
-<!-- * `Greens`: index of the density of green algae (unitless) -->
-<!-- * `Cyclops`: index of the density of the copepod *Cyclops* (unitless) -->
-<!-- * `Temp`: water temperature (C) -->
-<!-- *Daphnia* are an effective grazer on phytoplankton and green algae make up a large proportion of their diet. *Cyclops* are an inferior grazer compared to *Daphnia*, but a competitor nonetheless. *Daphnia* growth rates are also affected by water temperature. -->
-<!-- As you work through the following problems, make sure to explain your thought process and show your code, so Mark can give you partial credit, if necessary. -->
-<!-- # Question 1 -->
-<!-- a) Write out the equation for a linear regression model that expresses *Daphnia* abundance as a function of its preferred prey, green algae, and describe the terms in your model. -->
-<!-- b) Produce a scatterplot that shows the relationship between `Daphnia` and `Greens`. Make sure to label your plot accordingly and give it an informative caption. Describe the relationship between `Daphnia` and `Greens`. Does a linear model seem reasonable here? -->
-<!-- c) Produce the step-by-step **R** code required to fit your model **via linear algebra** to generate estimates the model parameters and the data. Be sure to show the construction of the design matrix $(\mathbf{X})$, the calculation of the parameter estimates $(\hat{\beta_i})$, the calculation of the hat matrix $(\mathbf{H})$, and the calculation of the model predictions $(\hat{y_i})$. -->
-<!-- d) Calculate and report your estimate of the residual variance $(\sigma^2)$. -->
-<!-- e) Give a prediction of what you might expect the specific abundance of *Daphnia* to be on the next sampling occasion if the abundance of green algae is 1.5 units. Also provide an estimate of the interval around your estimate that conveys 95% confidence in your prediction. Again, do so via direct calculations rather than relying on **R**'s built-in functions. -->
-<!-- # Question 2 -->
-<!-- a) Expand upon your model from Question 1 to include the additional effects of *Cyclops* and water temperature on *Daphnia*. Write out your equation and describe the terms in the model. -->
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>The goal of this assignment is to familiarize yourself with fitting linear models in <strong>R</strong>. We will be working some data from nearby Lake Washington that is part of a long-term monitoring program begun in the 1960s by the late, and rather famous, <a href="http://www.nasonline.org/publications/biographical-memoirs/memoir-pdfs/edmondson-wt.pdf">Dr.&nbsp;W.T. Edmondson</a> and since continued by <a href="https://fish.uw.edu/faculty/daniel-schindler/">Dr.&nbsp;Daniel Schindler</a>. The accompanying data file <code>L_Washington_plankton.csv</code> contains information on the following four variables:</p>
+<ul>
+<li><p><code>Daphnia</code>: index of the density of the cladoceran <em>Daphnia</em> (unitless)</p></li>
+<li><p><code>Greens</code>: index of the density of green algae (unitless)</p></li>
+<li><p><code>Cyclops</code>: index of the density of the copepod <em>Cyclops</em> (unitless)</p></li>
+<li><p><code>Temp</code>: water temperature (°C)</p></li>
+</ul>
+<p><em>Daphnia</em> are an effective grazer on phytoplankton and green algae make up a large proportion of their diet. <em>Cyclops</em> are an inferior grazer compared to <em>Daphnia</em>, but a competitor nonetheless. <em>Daphnia</em> growth rates are also affected by water temperature.</p>
+</section>
+<section id="question-1" class="level1">
+<h1>Question 1</h1>
+<ol type="a">
+<li>Write out the equation for a linear regression model that expresses <em>Daphnia</em> abundance as a function of its preferred prey, green algae, and describe the terms in your model.</li>
+</ol>
+<p><span class="math display">\[y_i =\beta_0 + \beta_1 x_i+e_i \]</span> Each observation of <em>Daphnia</em> abundance <span class="math inline">\((y_i)\)</span> is a function of an intercept <span class="math inline">\((\beta_0)\)</span> and the effect <span class="math inline">\((\beta_1)\)</span> of green algae density <span class="math inline">\((x_i)\)</span>. The model residuals are assumed to be independent and normally distributed with mean 0 and variance <span class="math inline">\(\sigma^2\)</span>, such that <span class="math inline">\(e_i \sim \mathrm{N}(0, \sigma^2)\)</span>.</p>
+<ol start="2" type="a">
+<li>Produce a scatterplot that shows the relationship between <code>Daphnia</code> and <code>Greens</code>. Make sure to label your plot accordingly and give it an informative caption. Describe the relationship between <code>Daphnia</code> and <code>Greens</code>. Does a linear model seem reasonable here?</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-daph1" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="hw_02_fitting_lm_files/figure-html/fig-daph1-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Relationship between the density of <em>Daphnia</em> and its preferred prey, green algae</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>There seems to be a weak positive relationship between green algae and <em>Daphnia</em> density that could be approximated with a linear model.</p>
+<ol start="3" type="a">
+<li>Produce the step-by-step <strong>R</strong> code required to fit your model <strong>via linear algebra</strong> to generate estimates the model parameters and the data. Be sure to show the construction of the design matrix <span class="math inline">\((\mathbf{X})\)</span>, the calculation of the parameter estimates <span class="math inline">\((\hat{\beta_i})\)</span>, the calculation of the hat matrix <span class="math inline">\((\mathbf{H})\)</span>, and the calculation of the model predictions <span class="math inline">\((\hat{y_i})\)</span>.</li>
+</ol>
+<p>First, we construct the design matrix:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>nn <span class="ot">&lt;-</span> <span class="fu">nrow</span>(daph)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>yy <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">data=</span>daph<span class="sc">$</span>Daphnia, <span class="at">nrow =</span> nn, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(yy)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      [,1]
+[1,] -1.15
+[2,] -1.73
+[3,] -1.89
+[4,] -0.94
+[5,] -0.05
+[6,]  0.99</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>intercept <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span>, nn)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>greens <span class="ot">&lt;-</span> daph<span class="sc">$</span>Greens</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>XX <span class="ot">&lt;-</span> <span class="fu">cbind</span>(intercept, greens)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(XX)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     intercept greens
+[1,]         1  -1.32
+[2,]         1  -1.51
+[3,]         1  -2.48
+[4,]         1  -0.69
+[5,]         1   0.02
+[6,]         1   0.82</code></pre>
+</div>
+</div>
+<p>Using the design matrix, we can find the parameter estimates <span class="math inline">\((\hat{\beta_i})\)</span> using the following formula: <span class="math display">\[
+\hat{\boldsymbol{\beta}} = (\mathbf{X}^{\top} \mathbf{X})^{-1} \mathbf{X}^{\top} \mathbf{y}.
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(XX) <span class="sc">%*%</span> XX) <span class="sc">%*%</span> <span class="fu">t</span>(XX) <span class="sc">%*%</span> yy <span class="co"># or solve(crossprod(XX,XX),crossprod(XX,yy))</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>beta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 [,1]
+intercept -0.04914691
+greens     0.42112528</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#check answer</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>daph_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>daph, Daphnia<span class="sc">~</span>Greens)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(daph_mod) <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="fu">c</span>(term, estimate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-0.0491469</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Greens</td>
+<td style="text-align: right;">0.4211253</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Now we find the hat matrix <span class="math inline">\((\mathbf{H})\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="do">## hat matrix</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>HH <span class="ot">&lt;-</span> XX <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(XX) <span class="sc">%*%</span> XX) <span class="sc">%*%</span> <span class="fu">t</span>(XX)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(HH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 36 36</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check answer</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>hat_auto <span class="ot">&lt;-</span> optR<span class="sc">::</span><span class="fu">hatMatrix</span>(XX)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(HH, hat_auto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>Finally, we find the model predictions <span class="math inline">\((\hat{y_i})\)</span>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> HH <span class="sc">%*%</span> yy</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">#or</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y_hat <span class="ot">&lt;-</span> XX <span class="sc">%*%</span> beta_hat</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="co"># alternative built-in methods</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(daph_mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           1            2            3            4            5            6 
+-0.605032288 -0.685046093 -1.093537619 -0.339723359 -0.040724407  0.296175821 
+           7            8            9           10           11           12 
+ 0.969976277 -0.095470694 -0.318667095  0.098246938  0.409879648  0.009810628 
+          13           14           15           16           17           18 
+-0.082836935  0.216162017  0.506738464  0.536217234  0.056134409 -0.002823131 
+          19           20           21           22           23           24 
+ 0.658343567  0.047711903 -0.015456889 -0.019668142 -0.074414429 -0.466060944 
+          25           26           27           28           29           30 
+ 0.152993225 -0.592398530 -0.238653290 -0.440793427  0.430935913  0.161415730 
+          31           32           33           34           35           36 
+ 0.334077097  0.110880696  0.169838236 -0.099681946  0.334077097 -0.078625682 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(broom<span class="sc">::</span><span class="fu">augment</span>(daph_mod)) <span class="co"># see fitted column</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Daphnia</th>
+<th style="text-align: right;">Greens</th>
+<th style="text-align: right;">.fitted</th>
+<th style="text-align: right;">.resid</th>
+<th style="text-align: right;">.hat</th>
+<th style="text-align: right;">.sigma</th>
+<th style="text-align: right;">.cooksd</th>
+<th style="text-align: right;">.std.resid</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">-1.15</td>
+<td style="text-align: right;">-1.32</td>
+<td style="text-align: right;">-0.6050323</td>
+<td style="text-align: right;">-0.5449677</td>
+<td style="text-align: right;">0.0916530</td>
+<td style="text-align: right;">0.8569811</td>
+<td style="text-align: right;">0.0228327</td>
+<td style="text-align: right;">-0.6727384</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-1.73</td>
+<td style="text-align: right;">-1.51</td>
+<td style="text-align: right;">-0.6850461</td>
+<td style="text-align: right;">-1.0449539</td>
+<td style="text-align: right;">0.1094821</td>
+<td style="text-align: right;">0.8409326</td>
+<td style="text-align: right;">0.1043338</td>
+<td style="text-align: right;">-1.3027983</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-1.89</td>
+<td style="text-align: right;">-2.48</td>
+<td style="text-align: right;">-1.0935376</td>
+<td style="text-align: right;">-0.7964624</td>
+<td style="text-align: right;">0.2346629</td>
+<td style="text-align: right;">0.8480611</td>
+<td style="text-align: right;">0.1758904</td>
+<td style="text-align: right;">-1.0711252</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">-0.94</td>
+<td style="text-align: right;">-0.69</td>
+<td style="text-align: right;">-0.3397234</td>
+<td style="text-align: right;">-0.6002766</td>
+<td style="text-align: right;">0.0482177</td>
+<td style="text-align: right;">0.8560678</td>
+<td style="text-align: right;">0.0132742</td>
+<td style="text-align: right;">-0.7239090</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">-0.05</td>
+<td style="text-align: right;">0.02</td>
+<td style="text-align: right;">-0.0407244</td>
+<td style="text-align: right;">-0.0092756</td>
+<td style="text-align: right;">0.0281488</td>
+<td style="text-align: right;">0.8627408</td>
+<td style="text-align: right;">0.0000018</td>
+<td style="text-align: right;">-0.0110699</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.82</td>
+<td style="text-align: right;">0.2961758</td>
+<td style="text-align: right;">0.6938242</td>
+<td style="text-align: right;">0.0422076</td>
+<td style="text-align: right;">0.8538700</td>
+<td style="text-align: right;">0.0153292</td>
+<td style="text-align: right;">0.8340942</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<ol start="4" type="a">
+<li>Calculate and report your estimate of the residual variance <span class="math inline">\((\sigma^2)\)</span>.</li>
+</ol>
+<p>We can use the following formula: <span class="math display">\[\sigma^2 = \frac{\mathrm{RSS}}{n-p}, \quad\text{where}\]</span> <span class="math display">\[\mathrm{RSS}= \mathbf{e^\top}\mathbf{e}=\left(\mathbf{y}-X\hat{\beta}\right)^\top\left(\mathbf{y}-X\hat{\beta}\right)\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rss <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">crossprod</span>(yy<span class="sc">-</span>XX <span class="sc">%*%</span> beta_hat) )</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.56271</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check answer</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(rss, <span class="fu">deviance</span>(daph_mod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sigma2 <span class="ot">&lt;-</span> rss<span class="sc">/</span>(nn<span class="dv">-2</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>sigma2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7224325</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># check answer</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(sigma2, <span class="fu">sigma</span>(daph_mod)<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<ol start="5" type="a">
+<li>Give a prediction of what you might expect the specific abundance of <em>Daphnia</em> to be on the next sampling occasion if the abundance of green algae is 1.5 units. Also provide an estimate of the interval around your estimate that conveys 95% confidence in your prediction. Again, do so via direct calculations rather than relying on <strong>R</strong>’s built-in functions.</li>
+</ol>
+<p>First, we use the <span class="math inline">\(\beta_0\)</span> and <span class="math inline">\(\beta_1\)</span> values we found above to estimate <span class="math inline">\(y\)</span> when <span class="math inline">\(x=1.5\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># y = b_0 + b_1 * x</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>y_star <span class="ot">&lt;-</span> <span class="fu">unname</span>(beta_hat[<span class="dv">1</span>,<span class="dv">1</span>])<span class="sc">+</span><span class="fu">unname</span>(beta_hat[<span class="dv">2</span>,<span class="dv">1</span>])<span class="sc">*</span><span class="fl">1.5</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>y_star</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.582541</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">#OR</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co">#vector of new data</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>X_star <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">intercept =</span> <span class="dv">1</span>, <span class="at">greens =</span> <span class="fl">1.5</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(X_star <span class="sc">*</span> beta_hat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.582541</code></pre>
+</div>
+</div>
+<p>Now we need to find the standard error of our estimate</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## inside sqrt</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>inner_X <span class="ot">&lt;-</span> <span class="fu">t</span>(X_star) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(XX) <span class="sc">%*%</span> XX) <span class="sc">%*%</span> X_star</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="do">## critical t-value</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>t_crit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> nn<span class="dv">-2</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="do">## estimated SD</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(sigma2)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 95% CI</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>y_star <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> t_crit <span class="sc">*</span> sigma <span class="sc">*</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(inner_X))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07980506 1.08527698</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for prediction interval, </span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>inner_X_pred <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">+</span> <span class="fu">t</span>(X_star) <span class="sc">%*%</span> <span class="fu">solve</span>(<span class="fu">t</span>(XX) <span class="sc">%*%</span> XX) <span class="sc">%*%</span> X_star</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>y_star <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>) <span class="sc">*</span> t_crit <span class="sc">*</span> sigma <span class="sc">*</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(inner_X_pred))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -1.216459  2.381541</code></pre>
+</div>
+</div>
+<p>Now let’s check our answer using the built-in functions in <strong>R</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(daph_mod, <span class="at">new =</span> <span class="fu">data.frame</span>(<span class="at">Greens=</span><span class="fl">1.5</span>),</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">level =</span> <span class="fl">0.95</span>, <span class="at">interval =</span> <span class="st">"confidence"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit        lwr      upr
+1 0.582541 0.07980506 1.085277</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(daph_mod, <span class="at">new =</span> <span class="fu">data.frame</span>(<span class="at">Greens=</span><span class="fl">1.5</span>),</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">level =</span> <span class="fl">0.95</span>, <span class="at">interval =</span> <span class="st">"pred"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit       lwr      upr
+1 0.582541 -1.216459 2.381541</code></pre>
+</div>
+</div>
+</section>
+<section id="question-2" class="level1">
+<h1>Question 2</h1>
+<ol type="a">
+<li>Expand upon your model from Question 1 to include the additional effects of <em>Cyclops</em> and water temperature on <em>Daphnia</em>. Write out your equation and describe the terms in the model.</li>
+</ol>
+<p><span class="math display">\[y_i =\beta_0 + \beta_1 x_{1,i}+\beta_2 x_{2,i}+\beta_3 x_{3,i}+e_i \]</span> Each observation of <em>Daphnia</em> abundance <span class="math inline">\((y_i)\)</span> is a function of an intercept <span class="math inline">\((\beta_0)\)</span>, the effect <span class="math inline">\((\beta_1)\)</span> of green algae density <span class="math inline">\((x_{1,i})\)</span>, the effect <span class="math inline">\((\beta_2)\)</span> of <em>Cyclops</em> density <span class="math inline">\((x_{2,i})\)</span>, and the effect <span class="math inline">\((\beta_3)\)</span> of water temperature <span class="math inline">\((x_{3,i})\)</span>. The model residuals are again assumed to be independent and normally distributed with mean 0 and variance <span class="math inline">\(\sigma^2\)</span>, such that <span class="math inline">\(e_i \sim \mathrm{N}(0, \sigma^2)\)</span>.</p>
+<ol start="2" type="a">
+<li>Using <strong>R</strong>’s built-in functions, fit the model from (a) and show the resulting table of results. For each of the <span class="math inline">\(p\)</span>-values shown in the table, describe the null hypothesis being tested.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>daphmod_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(Daphnia <span class="sc">~</span> Greens <span class="sc">+</span> Cyclops <span class="sc">+</span> Temp, <span class="at">data=</span>daph)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sumary</span>(daphmod_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Estimate Std. Error t value  Pr(&gt;|t|)
+(Intercept) -4.143339   0.650218 -6.3722 3.711e-07
+Greens       0.046216   0.099249  0.4657 0.6446140
+Cyclops      0.278715   0.075458  3.6936 0.0008212
+Temp         0.291675   0.045371  6.4286 3.157e-07
 
-<!-- b) Using **R**'s built-in functions, fit the model from (a) and show the resulting table of results. For each of the $p$-values shown in the table, describe the null hypothesis being tested. -->
-<!-- c) Test the hypothesis that $\beta_{Greens} = \beta_{Cyclops} = \beta_{Temp} = 0$. What is the $F$-statistic, the associated $df$, and the $p$-value? What can you conclude from this test? -->
-<!-- d) It has come to your attention that someone has done lab experiments suggesting the effect of temperature on *Daphnia* abundance is 0.4 per degree Celsius after controlling for the effects of prey (green algae) and competitors (*Cyclops*). Create a null hypothesis test to evaluate the evidence for this finding from the data collected in the field. Specify $H_0$ and report the results of your test. What do you conclude? -->
+n = 36, p = 4, Residual SE = 0.50245, R-Squared = 0.73</code></pre>
+</div>
+</div>
+<p>The first <span class="math inline">\(p\)</span>-value corresponds to a t-test that the intercept is 0, <span class="math inline">\(H_0: \beta_0=0\)</span>. The remaining three <span class="math inline">\(p\)</span>-values shown in the table correspond to null hypothesis tests that the given predictor can be dropped from the model.</p>
+<p>For example, can <code>Cyclops</code> be dropped from this model? We fit a reduced model and compare to it to the full model via an <span class="math inline">\(F\)</span>-test with <span class="math inline">\(H_0: \beta_\text{cyclops} = 0\)</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+\Theta: \text{Daphnia}_i &amp;= \beta_0 + \beta_1 \text{Greens}_i + \beta_2 \text{Cyclops}_i + \beta_3 \text{Temp}_i + e_i \\
+~ \\
+\theta: \text{Daphnia}_i &amp;= \beta_0 + \beta_1 \text{Greens}_i + \beta_2 \text{Temp}_i + e_i
+\end{aligned}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## reduced model without `Cyclops`</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>reduced_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Daphnia <span class="sc">~</span> Greens <span class="sc">+</span> Temp, <span class="at">data=</span>daph)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="do">## use `anova('reduced', 'full')` to get the F-test results</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(reduced_mod, daphmod_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Res.Df</th>
+<th style="text-align: right;">RSS</th>
+<th style="text-align: right;">Df</th>
+<th style="text-align: right;">Sum of Sq</th>
+<th style="text-align: right;">F</th>
+<th style="text-align: right;">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">11.522716</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">8.078507</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3.444209</td>
+<td style="text-align: right;">13.64295</td>
+<td style="text-align: right;">0.0008212</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We see that the resulting p-value is the same as the one displayed for the Cyclops estimate in the summary table for the full model.</p>
+<ol start="3" type="a">
+<li>Test the hypothesis that <span class="math inline">\(\beta_{Greens} = \beta_{Cyclops} = \beta_{Temp} = 0\)</span>. What is the <span class="math inline">\(F\)</span>-statistic, the associated <span class="math inline">\(df\)</span>, and the <span class="math inline">\(p\)</span>-value? What can you conclude from this test?</li>
+</ol>
+<p>We write the null hypothesis as <span class="math display">\[H_0: \beta_1 = \beta_2 = \beta_3 = 0\]</span> which corresponds to a model where we simply estimate the data based on their mean.</p>
+<p><span class="math display">\[\begin{align*}
+\Theta: \mathbf{y} &amp;= \mathbf{X} \boldsymbol{\beta} + \mathbf{e} \\
+\theta: \mathbf{y} &amp;= \boldsymbol{\mu} + \mathbf{e} \\
+\end{align*}\]</span></p>
+<p>We will base this test on an <span class="math inline">\(F\)</span>-distribution, such that</p>
+<p><span class="math display">\[\begin{align*}
+SSE_{\Theta} &amp;= \left( \mathbf{y} - \mathbf{X} \boldsymbol{\beta} \right)^{\top} \left( \mathbf{y} - \mathbf{X} \boldsymbol{\beta} \right) = \mathbf{e}^{\top} \mathbf{e} = SSE \\
+SSE_{\theta} &amp;= \left( \mathbf{y} - \bar{y} \right)^{\top} \left( \mathbf{y} - \bar{y} \right) =  SSTO \\
+&amp;\Downarrow \\
+F &amp;= \frac{ \left( SSTO - SSE \right)  / (k - 1) } { SSE  / (n - k)}
+\end{align*}\]</span></p>
+<section id="f-test-by-hand" class="level4">
+<h4 class="anchored" data-anchor-id="f-test-by-hand"><span class="math inline">\(F\)</span>-test by hand</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## get matrix of predictors</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>XX <span class="ot">&lt;-</span> daph <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Daphnia) <span class="sc">%&gt;%</span> <span class="fu">add_column</span>(<span class="at">Intercept=</span><span class="dv">1</span>, <span class="at">.before =</span> <span class="st">"Temp"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>()</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="do">## estimate beta</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>beta_hat <span class="ot">&lt;-</span> <span class="fu">solve</span>(<span class="fu">t</span>(XX) <span class="sc">%*%</span> XX) <span class="sc">%*%</span> <span class="fu">t</span>(XX) <span class="sc">%*%</span> yy</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="do">## total sum of squares</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>SSE <span class="ot">&lt;-</span> <span class="fu">t</span>(yy <span class="sc">-</span> XX <span class="sc">%*%</span> beta_hat) <span class="sc">%*%</span> (yy <span class="sc">-</span> XX <span class="sc">%*%</span> beta_hat)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="do">## error sum of squares</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>SSTO <span class="ot">&lt;-</span> <span class="fu">t</span>(yy <span class="sc">-</span> <span class="fu">mean</span>(yy)) <span class="sc">%*%</span> (yy <span class="sc">-</span> <span class="fu">mean</span>(yy))</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="do">## F statistic</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>(F_stat <span class="ot">&lt;-</span> ((SSTO <span class="sc">-</span> SSE) <span class="sc">/</span> (<span class="dv">4</span> <span class="sc">-</span> <span class="dv">1</span>)) <span class="sc">/</span> (SSE <span class="sc">/</span> (nn <span class="sc">-</span> <span class="dv">4</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]
+[1,] 29.47894</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="do">## F test</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pf</span>(F_stat, <span class="dv">4-1</span>, nn<span class="dv">-4</span>, <span class="at">lower.tail =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]
+[1,] 2.467335e-09</code></pre>
+</div>
+</div>
+<p>This <span class="math inline">\(F\)</span>-statistic is quite large and the <span class="math inline">\(p\)</span>-value is very small, so we would reject the null hypothesis that we would be justified in dropping the 3 predictors from this model in favor of a mean-only model.</p>
+<p>Checking using the built-in summary function, we see that the F-statistic and p-value reported at the bottom of the output are the same as our manually calculated values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(daphmod_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Daphnia ~ Greens + Cyclops + Temp, data = daph)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.74029 -0.41712 -0.04736  0.27781  1.16894 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -4.14334    0.65022  -6.372 3.71e-07 ***
+Greens       0.04622    0.09925   0.466 0.644614    
+Cyclops      0.27871    0.07546   3.694 0.000821 ***
+Temp         0.29168    0.04537   6.429 3.16e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.5024 on 32 degrees of freedom
+Multiple R-squared:  0.7343,    Adjusted R-squared:  0.7094 
+F-statistic: 29.48 on 3 and 32 DF,  p-value: 2.467e-09</code></pre>
+</div>
+</div>
+<ol start="4" type="a">
+<li>It has come to your attention that someone has done lab experiments suggesting the effect of temperature on <em>Daphnia</em> abundance is 0.4 per degree Celsius after controlling for the effects of prey (green algae) and competitors (<em>Cyclops</em>). Create a null hypothesis test to evaluate the evidence for this finding from the data collected in the field. Specify <span class="math inline">\(H_0\)</span> and report the results of your test. What do you conclude?</li>
+</ol>
+<p><span class="math display">\[
+\text{Daphnia}_i = \beta_0 + \beta_1 \text{Greens}_i + \beta_2 \text{Cyclops}_i + 0.4* \text{Temp}_i + e_i
+\]</span></p>
+<p>We write the null hypothesis as <span class="math display">\[H_0: \beta_{\text{temp}} = 0.4\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="do">## model with effect of `elevation` = 1</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>fixed_mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Daphnia <span class="sc">~</span> Greens <span class="sc">+</span> Cyclops <span class="sc">+</span> <span class="fu">offset</span>(<span class="fl">0.4</span> <span class="sc">*</span> Temp), <span class="at">data=</span>daph)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="do">## use `anova('comb', 'full')` to get the F-test results</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fixed_mod, daphmod_full)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Res.Df</th>
+<th style="text-align: right;">RSS</th>
+<th style="text-align: right;">Df</th>
+<th style="text-align: right;">Sum of Sq</th>
+<th style="text-align: right;">F</th>
+<th style="text-align: right;">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">9.517552</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">8.078507</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.439045</td>
+<td style="text-align: right;">5.700241</td>
+<td style="text-align: right;">0.0230387</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>We have found significant evidence to reject <span class="math inline">\(H_0\)</span>, suggesting that it may be worthwhile to re-run the lab experiments demonstrating the effect of temperature on <em>Daphnia</em> abundance is 0.4/°C after controlling for green algae and <em>Cyclops</em> density and determine if the findings can be replicated.</p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

@@ -6,53 +6,288 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| echo: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "faraway", "broom", "DHARMa", "emmeans", "performance")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+
+```
+
 [*Link to original assignment PDF*](https://qerm514.github.io/website/homework/week_02/hw_02_fitting_lm.pdf)
 
-# To be completed
+# Background
 
-<!-- ```{r setup, include=FALSE} -->
-<!-- knitr::opts_chunk$set(echo = TRUE) -->
-<!-- ``` -->
+The goal of this assignment is to familiarize yourself with fitting linear models in **R**. We will be working some data from nearby Lake Washington that is part of a long-term monitoring program begun in the 1960s by the late, and rather famous, [Dr. W.T. Edmondson](http://www.nasonline.org/publications/biographical-memoirs/memoir-pdfs/edmondson-wt.pdf) and since continued by [Dr. Daniel Schindler](https://fish.uw.edu/faculty/daniel-schindler/). The accompanying data file `L_Washington_plankton.csv` contains information on the following four variables:
 
-<!-- # Background -->
+* `Daphnia`: index of the density of the cladoceran *Daphnia* (unitless)
 
-<!-- The goal of this assignment is to familiarize yourself with fitting linear models in **R**. We will be working some data from nearby Lake Washington that is part of a long-term monitoring program begun in the 1960s by the late, and rather famous, [Dr. W.T. Edmondson](http://www.nasonline.org/publications/biographical-memoirs/memoir-pdfs/edmondson-wt.pdf) and since continued by [Dr. Daniel Schindler](https://fish.uw.edu/faculty/daniel-schindler/). The accompanying data file `L_Washington_plankton.csv` contains information on the following four variables: -->
+* `Greens`: index of the density of green algae (unitless)
 
-<!-- * `Daphnia`: index of the density of the cladoceran *Daphnia* (unitless) -->
+* `Cyclops`: index of the density of the copepod *Cyclops* (unitless)
 
-<!-- * `Greens`: index of the density of green algae (unitless) -->
+* `Temp`: water temperature (°C)
 
-<!-- * `Cyclops`: index of the density of the copepod *Cyclops* (unitless) -->
-
-<!-- * `Temp`: water temperature (C) -->
-
-<!-- *Daphnia* are an effective grazer on phytoplankton and green algae make up a large proportion of their diet. *Cyclops* are an inferior grazer compared to *Daphnia*, but a competitor nonetheless. *Daphnia* growth rates are also affected by water temperature. -->
-
-<!-- As you work through the following problems, make sure to explain your thought process and show your code, so Mark can give you partial credit, if necessary. -->
+*Daphnia* are an effective grazer on phytoplankton and green algae make up a large proportion of their diet. *Cyclops* are an inferior grazer compared to *Daphnia*, but a competitor nonetheless. *Daphnia* growth rates are also affected by water temperature.
 
 
-<!-- # Question 1 -->
+# Question 1
 
-<!-- a) Write out the equation for a linear regression model that expresses *Daphnia* abundance as a function of its preferred prey, green algae, and describe the terms in your model. -->
+a) Write out the equation for a linear regression model that expresses *Daphnia* abundance as a function of its preferred prey, green algae, and describe the terms in your model.
 
-<!-- b) Produce a scatterplot that shows the relationship between `Daphnia` and `Greens`. Make sure to label your plot accordingly and give it an informative caption. Describe the relationship between `Daphnia` and `Greens`. Does a linear model seem reasonable here? -->
+$$y_i =\beta_0 + \beta_1 x_i+e_i $$
+Each observation of *Daphnia* abundance $(y_i)$ is a function of an intercept $(\beta_0)$ and the effect $(\beta_1)$ of green algae density $(x_i)$. The model residuals are assumed to be independent and normally distributed with mean 0 and variance $\sigma^2$, such that $e_i \sim \mathrm{N}(0, \sigma^2)$.
 
-<!-- c) Produce the step-by-step **R** code required to fit your model **via linear algebra** to generate estimates the model parameters and the data. Be sure to show the construction of the design matrix $(\mathbf{X})$, the calculation of the parameter estimates $(\hat{\beta_i})$, the calculation of the hat matrix $(\mathbf{H})$, and the calculation of the model predictions $(\hat{y_i})$. -->
+b) Produce a scatterplot that shows the relationship between `Daphnia` and `Greens`. Make sure to label your plot accordingly and give it an informative caption. Describe the relationship between `Daphnia` and `Greens`. Does a linear model seem reasonable here?
 
-<!-- d) Calculate and report your estimate of the residual variance $(\sigma^2)$. -->
+```{r}
+#| label: fig-daph1
+#| fig-cap: Relationship between the density of *Daphnia* and its preferred prey, green algae
+#| echo: false
 
-<!-- e) Give a prediction of what you might expect the specific abundance of *Daphnia* to be on the next sampling occasion if the abundance of green algae is 1.5 units. Also provide an estimate of the interval around your estimate that conveys 95% confidence in your prediction. Again, do so via direct calculations rather than relying on **R**'s built-in functions. -->
+daph <- read.csv("../data/L_Washington_plankton.csv")
+
+ggplot(data=daph)+
+  geom_point(aes(x=Greens, y=Daphnia))+mytheme+
+  labs(x="Density of green algae", y=expression(paste("Density of ", italic("Daphnia"))))
+
+```
+
+There seems to be a weak positive relationship between green algae and *Daphnia* density that could be approximated with a linear model. 
+
+c) Produce the step-by-step **R** code required to fit your model **via linear algebra** to generate estimates the model parameters and the data. Be sure to show the construction of the design matrix $(\mathbf{X})$, the calculation of the parameter estimates $(\hat{\beta_i})$, the calculation of the hat matrix $(\mathbf{H})$, and the calculation of the model predictions $(\hat{y_i})$.
+
+First, we construct the design matrix:
+```{r}
+#| label: design-matrix
+
+nn <- nrow(daph)
+yy <- matrix(data=daph$Daphnia, nrow = nn, ncol = 1)
+head(yy)
+
+intercept <- rep(1, nn)
+greens <- daph$Greens
+XX <- cbind(intercept, greens)
+head(XX)
+```
+
+Using the design matrix, we can find the parameter estimates $(\hat{\beta_i})$ using the following formula:
+$$
+\hat{\boldsymbol{\beta}} = (\mathbf{X}^{\top} \mathbf{X})^{-1} \mathbf{X}^{\top} \mathbf{y}.
+$$
+```{r}
+beta_hat <- solve(t(XX) %*% XX) %*% t(XX) %*% yy # or solve(crossprod(XX,XX),crossprod(XX,yy))
+beta_hat
+
+#check answer
+daph_mod <- lm(data=daph, Daphnia~Greens)
+tidy(daph_mod) %>% select(c(term, estimate))
+```
+
+Now we find the hat matrix $(\mathbf{H})$:
+```{r}
+## hat matrix
+HH <- XX %*% solve(t(XX) %*% XX) %*% t(XX)
+dim(HH)
+
+# Check answer
+hat_auto <- optR::hatMatrix(XX)
+all.equal(HH, hat_auto)
+```
+
+Finally, we find the model predictions $(\hat{y_i})$:
+```{r}
+y_hat <- HH %*% yy
+#or
+y_hat <- XX %*% beta_hat
+
+# alternative built-in methods
+predict(daph_mod)
+head(broom::augment(daph_mod)) # see fitted column
+```
 
 
-<!-- # Question 2 -->
+d) Calculate and report your estimate of the residual variance $(\sigma^2)$.
 
-<!-- a) Expand upon your model from Question 1 to include the additional effects of *Cyclops* and water temperature on *Daphnia*. Write out your equation and describe the terms in the model. -->
+We can use the following formula:
+$$\sigma^2 = \frac{\mathrm{RSS}}{n-p}, \quad\text{where}$$
+$$\mathrm{RSS}= \mathbf{e^\top}\mathbf{e}=\left(\mathbf{y}-X\hat{\beta}\right)^\top\left(\mathbf{y}-X\hat{\beta}\right)$$
+```{r}
+rss <- as.numeric(crossprod(yy-XX %*% beta_hat) )
+rss
 
-<!-- b) Using **R**'s built-in functions, fit the model from (a) and show the resulting table of results. For each of the $p$-values shown in the table, describe the null hypothesis being tested. -->
+# check answer
+all.equal(rss, deviance(daph_mod))
 
-<!-- c) Test the hypothesis that $\beta_{Greens} = \beta_{Cyclops} = \beta_{Temp} = 0$. What is the $F$-statistic, the associated $df$, and the $p$-value? What can you conclude from this test? -->
+sigma2 <- rss/(nn-2)
+sigma2
 
-<!-- d) It has come to your attention that someone has done lab experiments suggesting the effect of temperature on *Daphnia* abundance is 0.4 per degree Celsius after controlling for the effects of prey (green algae) and competitors (*Cyclops*). Create a null hypothesis test to evaluate the evidence for this finding from the data collected in the field. Specify $H_0$ and report the results of your test. What do you conclude? -->
+# check answer
+all.equal(sigma2, sigma(daph_mod)^2)
+```
+
+e) Give a prediction of what you might expect the specific abundance of *Daphnia* to be on the next sampling occasion if the abundance of green algae is 1.5 units. Also provide an estimate of the interval around your estimate that conveys 95% confidence in your prediction. Again, do so via direct calculations rather than relying on **R**'s built-in functions.
+
+First, we use the $\beta_0$ and $\beta_1$ values we found above to estimate $y$ when $x=1.5$.
+```{r}
+# y = b_0 + b_1 * x
+y_star <- unname(beta_hat[1,1])+unname(beta_hat[2,1])*1.5
+y_star
+#OR
+
+#vector of new data
+X_star <- c(intercept = 1, greens = 1.5)
+sum(X_star * beta_hat)
+
+```
+
+Now we need to find the standard error of our estimate
+```{r}
+## inside sqrt
+inner_X <- t(X_star) %*% solve(t(XX) %*% XX) %*% X_star
+
+## critical t-value
+t_crit <- qt(0.975, df = nn-2)
+
+## estimated SD
+sigma <- sqrt(sigma2)
+
+## 95% CI
+y_star + c(-1,1) * t_crit * sigma * c(sqrt(inner_X))
+
+# for prediction interval, 
+inner_X_pred <- 1+ t(X_star) %*% solve(t(XX) %*% XX) %*% X_star
+y_star + c(-1,1) * t_crit * sigma * c(sqrt(inner_X_pred))
+```
+
+Now let's check our answer using the built-in functions in **R**
+```{r}
+predict(daph_mod, new = data.frame(Greens=1.5),
+        level = 0.95, interval = "confidence")
+
+predict(daph_mod, new = data.frame(Greens=1.5),
+        level = 0.95, interval = "pred")
+```
 
 
+# Question 2
 
+a) Expand upon your model from Question 1 to include the additional effects of *Cyclops* and water temperature on *Daphnia*. Write out your equation and describe the terms in the model.
+
+$$y_i =\beta_0 + \beta_1 x_{1,i}+\beta_2 x_{2,i}+\beta_3 x_{3,i}+e_i $$
+Each observation of *Daphnia* abundance $(y_i)$ is a function of an intercept $(\beta_0)$, the effect $(\beta_1)$ of green algae density $(x_{1,i})$, the effect $(\beta_2)$ of *Cyclops* density $(x_{2,i})$, and the effect $(\beta_3)$ of water temperature $(x_{3,i})$. The model residuals are again assumed to be independent and normally distributed with mean 0 and variance $\sigma^2$, such that $e_i \sim \mathrm{N}(0, \sigma^2)$.
+
+b) Using **R**'s built-in functions, fit the model from (a) and show the resulting table of results. For each of the $p$-values shown in the table, describe the null hypothesis being tested.
+
+```{r}
+daphmod_full <- lm(Daphnia ~ Greens + Cyclops + Temp, data=daph)
+sumary(daphmod_full)
+```
+
+The first $p$-value corresponds to a t-test that the intercept is 0, $H_0: \beta_0=0$. The remaining three $p$-values shown in the table correspond to null hypothesis tests that the given predictor can be dropped from the model.
+
+For example, can `Cyclops` be dropped from this model? We fit a reduced model and compare to it to the full model via an $F$-test with $H_0: \beta_\text{cyclops} = 0$
+
+$$
+\begin{aligned}
+\Theta: \text{Daphnia}_i &= \beta_0 + \beta_1 \text{Greens}_i + \beta_2 \text{Cyclops}_i + \beta_3 \text{Temp}_i + e_i \\
+~ \\ 
+\theta: \text{Daphnia}_i &= \beta_0 + \beta_1 \text{Greens}_i + \beta_2 \text{Temp}_i + e_i
+\end{aligned}
+$$
+
+```{r}
+## reduced model without `Cyclops`
+reduced_mod <- lm(Daphnia ~ Greens + Temp, data=daph)
+## use `anova('reduced', 'full')` to get the F-test results
+anova(reduced_mod, daphmod_full)
+```
+
+We see that the resulting p-value is the same as the one displayed for the Cyclops estimate in the summary table for the full model.
+
+c) Test the hypothesis that $\beta_{Greens} = \beta_{Cyclops} = \beta_{Temp} = 0$. What is the $F$-statistic, the associated $df$, and the $p$-value? What can you conclude from this test?
+
+
+We write the null hypothesis as
+$$H_0: \beta_1 = \beta_2 = \beta_3 = 0$$
+which corresponds to a model where we simply estimate the data based on their mean.
+
+\begin{align*}
+\Theta: \mathbf{y} &= \mathbf{X} \boldsymbol{\beta} + \mathbf{e} \\
+\theta: \mathbf{y} &= \boldsymbol{\mu} + \mathbf{e} \\
+\end{align*}
+
+We will base this test on an $F$-distribution, such that
+
+
+\begin{align*}
+SSE_{\Theta} &= \left( \mathbf{y} - \mathbf{X} \boldsymbol{\beta} \right)^{\top} \left( \mathbf{y} - \mathbf{X} \boldsymbol{\beta} \right) = \mathbf{e}^{\top} \mathbf{e} = SSE \\
+SSE_{\theta} &= \left( \mathbf{y} - \bar{y} \right)^{\top} \left( \mathbf{y} - \bar{y} \right) =  SSTO \\
+&\Downarrow \\
+F &= \frac{ \left( SSTO - SSE \right)  / (k - 1) } { SSE  / (n - k)}
+\end{align*}
+
+#### $F$-test by hand
+
+
+```{r F_test_by_hand}
+## get matrix of predictors
+XX <- daph %>% select(-Daphnia) %>% add_column(Intercept=1, .before = "Temp") %>% as.matrix()
+## estimate beta
+beta_hat <- solve(t(XX) %*% XX) %*% t(XX) %*% yy
+## total sum of squares
+SSE <- t(yy - XX %*% beta_hat) %*% (yy - XX %*% beta_hat)
+## error sum of squares
+SSTO <- t(yy - mean(yy)) %*% (yy - mean(yy))
+## F statistic
+(F_stat <- ((SSTO - SSE) / (4 - 1)) / (SSE / (nn - 4)))
+## F test
+pf(F_stat, 4-1, nn-4, lower.tail = F)
+```
+
+This $F$-statistic is quite large and the $p$-value is very small, so we would reject the null hypothesis that we would be justified in dropping the 3 predictors from this model in favor of a mean-only model.
+
+Checking using the built-in summary function, we see that the F-statistic and p-value reported at the bottom of the output are the same as our manually calculated values.
+```{r}
+summary(daphmod_full)
+```
+
+
+d) It has come to your attention that someone has done lab experiments suggesting the effect of temperature on *Daphnia* abundance is 0.4 per degree Celsius after controlling for the effects of prey (green algae) and competitors (*Cyclops*). Create a null hypothesis test to evaluate the evidence for this finding from the data collected in the field. Specify $H_0$ and report the results of your test. What do you conclude?
+
+$$
+\text{Daphnia}_i = \beta_0 + \beta_1 \text{Greens}_i + \beta_2 \text{Cyclops}_i + 0.4* \text{Temp}_i + e_i
+$$
+
+We write the null hypothesis as
+$$H_0: \beta_{\text{temp}} = 0.4$$
+```{r}
+## model with effect of `elevation` = 1
+fixed_mod <- lm(Daphnia ~ Greens + Cyclops + offset(0.4 * Temp), data=daph)
+## use `anova('comb', 'full')` to get the F-test results
+anova(fixed_mod, daphmod_full)
+```
+
+We have found significant evidence to reject $H_0$, suggesting that it may be worthwhile to re-run the lab experiments demonstrating the effect of temperature on *Daphnia* abundance is 0.4/°C after controlling for green algae and *Cyclops* density and determine if the findings can be replicated.
