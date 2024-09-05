@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -123,7 +157,7 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
-    <a class="dropdown-item" href="../Notes/Inference.html" rel="" target="">
+    <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
  <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
   </li>  
     </ul>
@@ -152,7 +186,10 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
-  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a></li>
+  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a>
+  <ul class="collapse">
+  <li><a href="#additional-content" id="toc-additional-content" class="nav-link" data-scroll-target="#additional-content">Additional content</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -243,9 +280,309 @@ ul.task-list li input[type="checkbox"] {
 <ol type="a">
 <li>Fit a linear model to the dataset that includes all 8 predictor variables. What is the <span class="math inline">\(R^2\)</span> for the model? Does is seem like a promising model?</li>
 </ol>
-<!-- b) Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see? -->
-<!-- c) Make a plot of the residuals against the predictor variable `stage`. Do you find this plot useful? Why or why not? -->
-<!-- d) Produce a $Q$-$Q$ plot of the model residuals and include a $Q$-$Q$ line. Describe what you would hope to see here. Do you? -->
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>fws<span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"../data/usfws_bull_trout.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">lm</span>(score <span class="sc">~</span> stage<span class="sc">+</span>form<span class="sc">+</span>cond<span class="sc">+</span>risk<span class="sc">+</span>unit<span class="sc">+</span>prog<span class="sc">+</span>BMP<span class="sc">+</span>degflex, <span class="at">data=</span>fws)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = score ~ stage + form + cond + risk + unit + prog + 
+    BMP + degflex, data = fws)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.8393 -0.4525  0.0465  0.6257  5.0838 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  3.27852    3.12978   1.048 0.305742    
+stageEJ      6.54996    1.67547   3.909 0.000704 ***
+stageJA      5.66124    1.48850   3.803 0.000916 ***
+formFlAn    -0.63393    2.38959  -0.265 0.793151    
+condH        0.62407    1.10026   0.567 0.576072    
+condP       -0.96800    1.55225  -0.624 0.539018    
+riskL        1.48544    2.70158   0.550 0.587728    
+riskM        0.64192    1.79215   0.358 0.723471    
+riskOC      -1.94297    4.11150  -0.473 0.640974    
+unitM        2.29973    3.26551   0.704 0.488348    
+unitOF       1.49315    2.84772   0.524 0.605065    
+unitOT       0.36718    3.17158   0.116 0.908839    
+progYes     -1.98726    1.05228  -1.889 0.071633 .  
+BMPYes       0.06842    1.34844   0.051 0.959970    
+degflexM     2.68433    0.91894   2.921 0.007685 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.152 on 23 degrees of freedom
+Multiple R-squared:  0.7549,    Adjusted R-squared:  0.6058 
+F-statistic: 5.061 on 14 and 23 DF,  p-value: 0.000314</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">Df</th>
+<th style="text-align: right;">Sum Sq</th>
+<th style="text-align: right;">Mean Sq</th>
+<th style="text-align: right;">F value</th>
+<th style="text-align: right;">Pr(&gt;F)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">stage</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">181.5597719</td>
+<td style="text-align: right;">90.7798860</td>
+<td style="text-align: right;">19.6083127</td>
+<td style="text-align: right;">0.0000107</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">form</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">11.6307302</td>
+<td style="text-align: right;">11.6307302</td>
+<td style="text-align: right;">2.5122194</td>
+<td style="text-align: right;">0.1266212</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cond</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.6778367</td>
+<td style="text-align: right;">1.8389184</td>
+<td style="text-align: right;">0.3972035</td>
+<td style="text-align: right;">0.6767199</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">risk</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">36.6117530</td>
+<td style="text-align: right;">12.2039177</td>
+<td style="text-align: right;">2.6360270</td>
+<td style="text-align: right;">0.0738824</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">unit</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">21.5314509</td>
+<td style="text-align: right;">7.1771503</td>
+<td style="text-align: right;">1.5502532</td>
+<td style="text-align: right;">0.2284705</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">prog</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">33.4703391</td>
+<td style="text-align: right;">33.4703391</td>
+<td style="text-align: right;">7.2295406</td>
+<td style="text-align: right;">0.0131082</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BMP</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.0287882</td>
+<td style="text-align: right;">0.0287882</td>
+<td style="text-align: right;">0.0062182</td>
+<td style="text-align: right;">0.9378296</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">degflex</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">39.5041792</td>
+<td style="text-align: right;">39.5041792</td>
+<td style="text-align: right;">8.5328406</td>
+<td style="text-align: right;">0.0076851</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Residuals</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">106.4822561</td>
+<td style="text-align: right;">4.6296633</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glance</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 2%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">r.squared</th>
+<th style="text-align: right;">adj.r.squared</th>
+<th style="text-align: right;">sigma</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">logLik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">deviance</th>
+<th style="text-align: right;">df.residual</th>
+<th style="text-align: right;">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.7549299</td>
+<td style="text-align: right;">0.6057568</td>
+<td style="text-align: right;">2.151665</td>
+<td style="text-align: right;">5.060764</td>
+<td style="text-align: right;">0.000314</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">-73.49712</td>
+<td style="text-align: right;">178.9942</td>
+<td style="text-align: right;">205.1956</td>
+<td style="text-align: right;">106.4823</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">38</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The <span class="math inline">\(R^2\)</span> for the model is around 0.755. While this is relatively high, the anova() table suggests that some of the predictors may not be necessary.</p>
+<ol start="2" type="a">
+<li>Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fish, <span class="at">which=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>res_fit <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">res =</span> fish<span class="sc">$</span>residuals, <span class="at">fit =</span> fish<span class="sc">$</span>fitted.values)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res_fit)<span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>fit, <span class="at">y=</span>res))<span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Model predictions"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)<span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)<span class="sc">+</span>mytheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Things to look for:</p>
+<ul>
+<li><p>No obvious nonlinear patterns</p></li>
+<li><p>Constant symmetrical variation (homoscedasticity) in the vertical (<span class="math inline">\(\hat{\varepsilon}\)</span>) direction (i.e., vertical spread of the points does not increase or decrease with the x-values)</p></li>
+</ul>
+<p>Although there are no clear nonlinear patterns suggesting nonlinearity in the structural part of the model, the magnitude of the residuals appears to be greater for points with larger predicted values, suggesting possible heteroscedasticity.</p>
+<section id="additional-content" class="level3" style="background-color: #daf0ea;">
+<h3 class="anchored" data-anchor-id="additional-content">Additional content</h3>
+<p>Since the diagnostic plot has indicated potential heteroscedasticity, we can confirm our suspicion with a formal diagnostic test like the Breusch-Pagan test.</p>
+<p>The <code>check_heteroscedasticity</code> function from the <code>performance</code> package computes the BP-test non-studentized and uses the fitted values for the potential explanatory variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroscedasticity</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Heteroscedasticity (non-constant error variance) detected (p = 0.002).</code></pre>
+</div>
+</div>
+<p>This function has the additional benefit of a built-in plot method:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">check_heteroscedasticity</span>(fish) <span class="sc">%&gt;%</span> <span class="fu">plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As a default, the <code>bptest</code> function from the <code>lmtest</code> package uses the same explanatory variables as in the regression model you specify (and studentizes as well).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> <span class="cn">TRUE</span>) <span class="co">#studentized Breusch-Pagan test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  fish
+BP = 17.194, df = 14, p-value = 0.246</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> <span class="cn">FALSE</span>) <span class="co">#Breusch-Pagan test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Breusch-Pagan test
+
+data:  fish
+BP = 39.311, df = 14, p-value = 0.0003265</code></pre>
+</div>
+</div>
+<p>We can obtain matching results to the <code>check_heteroscedasticity</code> function by explicitly using the fitted values of the model:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> F, <span class="at">varformula =</span> <span class="sc">~</span><span class="fu">fitted.values</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Breusch-Pagan test
+
+data:  fish
+BP = 9.1824, df = 1, p-value = 0.002444</code></pre>
+</div>
+</div>
+<p>The same result can also be obtained using the <code>ncvTest</code> (Non-constant Variance Score Test) function from the package <code>car</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">ncvTest</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Non-constant Variance Score Test 
+Variance formula: ~ fitted.values 
+Chisquare = 9.182395, Df = 1, p = 0.0024435</code></pre>
+</div>
+</div>
+<p>For additional functionality related to checking for heteroscedasticity, see <a href="https://cran.r-project.org/web/packages/olsrr/vignettes/heteroskedasticity.html">this vignette from the olsrr package</a>.</p>
+</section>
+<ol start="3" type="a">
+<li>Make a plot of the residuals against the predictor variable <code>stage</code>. Do you find this plot useful? Why or why not?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>res_fit <span class="ot">&lt;-</span> res_fit <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">stage =</span> fws<span class="sc">$</span>stage)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res_fit)<span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>stage, <span class="at">y=</span>res))<span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Life history stage"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)<span class="sc">+</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)<span class="sc">+</span>mytheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="4" type="a">
+<li>Produce a <span class="math inline">\(Q\)</span>-<span class="math inline">\(Q\)</span> plot of the model residuals and include a <span class="math inline">\(Q\)</span>-<span class="math inline">\(Q\)</span> line. Describe what you would hope to see here. Do you?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(fish),<span class="at">ylab=</span><span class="st">"Residuals"</span>,<span class="at">main=</span><span class="st">""</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">residuals</span>(fish))) <span class="sc">+</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">residuals</span>(fish))) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  mytheme<span class="sc">+</span><span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Theoretical Quantiles"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 <!-- e) Would it make sense to plot $e_t$ against $e_{t+1}$ for this model? Explain why or why not. -->
 <!-- f) Which projects have the 3 largest leverages? Briefly explain what this tells us. -->
 <!-- g) What rule of thumb could you use to assess whether any leverages are particularly large? Under this rule of thumb, do you have any particularly large leverages? If yes, which projects? -->

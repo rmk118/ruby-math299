@@ -1,0 +1,301 @@
+---
+title: "Inference, Diagnostics, & Errors"
+author: "Ruby Krasnow"
+link-external-newwindow: true 
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "faraway", "broom", "DHARMa", "emmeans", "performance", "ellipse")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+
+data("gala")
+
+```
+
+# Chapter 3: Inference
+
+Consider a larger model $\Omega$ with $p$ parameters and a smaller model $\omega$ that consists of a subset of $q$ predictors from the $p$ predictors that are in $\Omega$. The F-statistic used in a hypothesis test comparing the two models is:
+
+$$F = \frac{\left(RSS_\omega -RSS_\Omega\right)/(p-q)}{RSS_\Omega/(n-p)} $$
+
+Overall F-test compares to null model:
+Are any of the predictors useful in predicting the response? Let the full model
+$(\Omega)$ be $y = X \beta + \varepsilon$ where $X$ is a full-rank $ n \times p$ matrix and the reduced model $(\omega)$ be $y = \mu + \varepsilon$. We estimate $\mu$ by $\bar{y}$. We write the null hypothesis as:
+$$H_0: \beta_1 = \ldots\beta_{p-1}=0 $$
+RSS for the full model:
+$$RSS_\Omega=\left(y-X\hat{\beta} \right)^T\left(y-X\hat{\beta} \right) =\hat{\varepsilon}^T\hat{\varepsilon}$$
+RSS for the smaller model, in this case called TSS, the total sum of squares corrected for the mean
+$$TSS=\left(y-\bar{y} \right)^T\left(y-\bar{y}\right) $$
+The F-statistic is then
+$$\frac{(TSS-RSS_\Omega)/(p-1)}{RSS_\Omega/(n-p)}$$
+
+## Examples
+
+```{r}
+data("gala")
+lmod <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, gala)
+nullmod <- lm(Species ~ 1, gala)
+anova(lmod, nullmod)
+```
+
+We can compute this by hand:
+```{r}
+rss0 <- deviance(nullmod)
+rss <- deviance(lmod)
+df0 <- df.residual(nullmod)
+df <- df.residual(lmod)
+fstat <- ((rss-rss0)/(df-df0))/(rss/df)
+
+1-pf(fstat, df0-df, df)
+```
+
+#### Testing 1 predictor
+```{r}
+lmods <- lm(Species ~ Elevation + Nearest + Scruz + Adjacent, gala)
+anova(lmods, lmod)
+sumary(lmod)
+```
+
+```{r}
+sumary(lm(Species ~ Area, gala))
+```
+
+#### Testing a pair of predictors
+```{r}
+lmods <- lm(Species ~ Elevation + Nearest + Scruz, gala)
+anova(lmods, lmod)
+```
+
+#### Testing a subspace
+
+$$H_0:\beta_\text{Area}= \beta_\text{Adjacent}$$
+```{r}
+lmods <- lm(Species ~ I(Area+Adjacent) + Elevation + Nearest + Scruz, gala)
+anova(lmods, lmod)
+```
+
+$$H_0:\beta_\text{Elevation}= 0.5$$
+```{r}
+lmods <- lm(Species ~ Area+ offset(0.5*Elevation) + Nearest + Scruz + Adjacent, gala)
+anova(lmods, lmod)
+```
+
+
+A simpler way to test such point hypotheses is to use a t-statistic:
+$$t = (\hat{\beta}−c)/\text{se}(\hat{\beta})$$
+where $c$ is the point hypothesis. In this example, the statistic and corresponding p-value are:
+```{r}
+b_hat <- unname(lmod$coefficients["Elevation"])
+se_b_hat <- summary(lmod)$coef["Elevation", "Std. Error"]
+(tstat <- (b_hat-0.5)/se_b_hat)
+
+2*pt(tstat, 24)
+tstat^2
+```
+
+## Permutation Tests
+
+### Overall model
+```{r}
+lmod <- lm(Species ~ Nearest + Scruz, gala)
+lms <- summary(lmod)
+lms$fstatistic
+pf(lms$fstatistic[1],lms$fstatistic[2],lms$fstatistic[3],lower.tail=F)
+```
+
+```{r}
+set.seed(123)
+
+nreps <- 4000
+fstats <- numeric(nreps)
+
+for(i in 1:nreps){
+     lmods <- lm(sample(Species) ~ Nearest+Scruz , gala)
+     fstats[i] <- summary(lmods)$fstat[1]
+}
+
+mean(fstats > lms$fstat[1])
+```
+
+### Single predictor
+```{r}
+summary(lmod)$coef[3,]
+tstats <- numeric(nreps)
+
+set.seed(123)
+
+for(i in 1:nreps){
+  lmods <- lm(Species ~ Nearest+sample(Scruz), gala)
+  tstats[i] <- summary(lmods)$coef[3,3]
+}
+
+mean(abs(tstats) > abs(lms$coef[3,3]))
+```
+
+## Confidence Intervals
+
+### Single parameter
+
+$$\hat{\beta_i}\pm t^{(\alpha/2)}_{n-p}\text{se}(\hat{\beta}) $$
+```{r}
+lmod <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, gala)
+sumary(lmod)
+```
+
+We can construct individual 95% CIs for $\beta_\text{Area}$ for which we need the 2.5% and
+97.5% percentiles of the t-distribution with 30−6 = 24 degrees of freedom.
+```{r}
+(t_stat<-qt(0.975, 30-6))
+b_hat <- summary(lmod)$coefficients["Area", "Estimate"]
+se_b_hat <- summary(lmod)$coefficients["Area", "Std. Error"]
+
+b_hat + c(-1, 1)*t_stat*se_b_hat
+
+confint(lmod, "Area")
+```
+
+### Multiple parameters
+
+If you are interested in more than one parameter, you can construct a $100(1−\alpha)$%
+confidence region for $\beta$ using:
+$$\left(\hat{\beta}-\beta \right)^TX^TX\left(\hat{\beta}-\beta \right) \leq p \hat{\sigma}^2 F^{(\alpha)}_{p, n-p} $$
+These regions are ellipsoidally shaped. Because these ellipsoids lie in higher dimensions, they cannot easily be visualized except for the two-dimensional case. Let’s see how these compare to the univariate confidence intervals. For example, we can construct the joint 95% confidence region for $\beta_\text{Area}$ and $\beta_\text{Adjacent}$.
+We have added the point of the least squares estimates which lies at the center of the
+ellipse and the univariate confidence intervals for both dimensions as dotted lines:
+
+Using base `R`:
+```{r}
+plot(ellipse(lmod,c(2,6)),type="l",ylim=c(-0.13,0), xlim = c(-0.09, 0.04))
+points(coef(lmod)[2], coef(lmod)[6], pch=19)
+abline(v=confint(lmod)[2,],lty=2)
+abline(h=confint(lmod)[6,],lty=2)
+```
+
+A `ggplot` version:
+```{r}
+#| warning: FALSE
+
+# ggplot version
+
+data.frame(ellipse(lmod,c(2,6))) %>% 
+  ggplot(aes(x=Area, y=Adjacent))+
+ # geom_point()+
+  geom_density_2d(stat="identity", color="black")+
+  lims(y=c(-0.13,0), x=c(-0.09, 0.04))+
+  geom_vline(xintercept = confint(lmod)[2,],lty=2)+
+  geom_hline(yintercept = confint(lmod)[6,],lty=2)+
+  annotate(geom="point", x=coef(lmod)[2], y=coef(lmod)[6])+
+  mytheme+
+  theme(panel.grid = element_blank())
+```
+
+We can determine the outcome of various hypotheses from the plot. The joint hypothesis $H_0 : \beta_\text{Area} = \beta_\text{Adjacent} = 0$ is rejected because the origin does not lie inside the ellipse. The hypothesis $H_0 : \beta_\text{Area} = 0$ is not rejected because zero does lie within the vertical dashed lines, whereas the horizontal dashed lines do not encompass zero and so $H_0: \beta_\text{Adjacent} = 0$ is rejected.
+
+## Bootstrap Confidence Intervals
+
+```{r}
+set.seed(123)
+nb <- 4000
+coefmat <- matrix(NA,nb,6)
+resids <- residuals(lmod)
+preds <- fitted(lmod)
+ 
+for(i in 1:nb){
+boot <- preds + sample(resids , rep=TRUE)
+bmod <- update(lmod , boot ~ .)
+coefmat[i,] <- coef(bmod)
+}
+
+colnames(coefmat) <- c("Intercept",colnames(gala[,3:7]))
+coefmat <- data.frame(coefmat)
+apply(coefmat,2,function(x) quantile(x,c(0.025,0.975)))
+```
+
+# Chapter 4: Prediction
+
+Given a new set of predictors, $x_0$, the predicted response is 
+$$\hat{y_0}=x_0^T \hat{\beta}$$
+
+## CIs for predictions
+
+There are two kinds of predictions made from regression models. One is a predicted mean response and the other is a prediction of a future observation. For example, suppose we have built a regression model that predicts the rental price of houses in a given area based on predictors such as the number of bedrooms and closeness to a major highway. There are two kinds of predictions that can be made for a given $x_0$:
+
+1. Suppose a specific house comes on the market with characteristics $x_0$. Its rental
+price will be $x_0^T \beta +\varepsilon$. Since $E(\varepsilon)=0$, the predicted price is $x_0^T \hat{\beta}$, but in assessing the variance of this prediction, we must include the variance of $\varepsilon$.
+
+2. Suppose we ask the question — “What would a house with characteristics $x_0$ rent
+for on average?” This selling price is $x_0^T \beta$ and is again predicted by $x_0^T \hat{\beta}$, but now only the variance in $\hat{\beta}$ needs to be taken into account.
+
+Most times, we will want the first case, which is called “prediction of a future value,” while the second case, called “prediction of the mean response” is less commonly required. We have:
+
+$$\text{var}(x_0^T \hat{\beta})= x_0^T (X^TX)^{-1}x_0\sigma^2$$
+
+We assume that the future $\varepsilon$ is independent of $\hat{\beta}$. So a $100(1-\alpha)$% CI for a single future response is
+
+$$\hat{y_0}\pm t^{(\alpha/2)}_{n-p}\hat{\sigma}\sqrt{1+x_0^T(X^TX)^{-1}x_0}$$
+
+There is a conceptual difference here because previous confidence intervals have been for parameters. Parameters are considered to be fixed but unknown — they are not random under the Frequentist approach we are using here. However, a future observation is a random variable. For this reason, it is better to call this a prediction interval. We are saying there is a 95% chance that the future value falls within this interval whereas it would be incorrect to say that for a parameter.
+
+## Example
+
+```{r}
+data(fat,package="faraway")
+lmod <- lm(brozek ~ age + weight + height + neck + chest + abdom + hip + thigh + knee + ankle + biceps + forearm + wrist, data=fat)
+
+ x <- model.matrix(lmod)
+(x0 <- apply(x,2,median))
+(y0 <- sum(x0*coef(lmod)))
+predict(lmod,new=data.frame(t(x0)))
+predict(lmod,new=data.frame(t(x0)),interval="prediction")
+predict(lmod,new=data.frame(t(x0)),interval="confidence")
+```
+
+**Skipping autoregression section b/c would use explicit ARIMA model or other method of time-series analysis where appropriate**
+
+# Chaption 6: Diagnostics
+
+The estimation of and inference from the regression model depend on several assumptions. These assumptions should be checked using regression diagnostics before using the model in earnest. We divide the potential problems into three categories:
+
+- **Error**: We have assumed that $\varepsilon \sim N(0,\sigma^2I)$ or in words, that the errors are independent, have equal variance and are normally distributed.
+- **Model**: We have assumed that the structural part of the model, $E(y) = X\beta$, is correct.
+- **Unusual observations**: Sometimes just a few observations do not fit the model. These
+few observations might change the choice and fit of the model.
+
+## Checking Error Assumptions
+
+We wish to check the independence, constant variance and normality of the errors,
+$\varepsilon$. The errors are not observable, but we can examine the residuals, $\hat{\varepsilon}$. These are not interchangeable with the error, as they have somewhat different properties. Recall that $\hat{y}=X(X^TX)^{-1}Xy=Hy$, where $H$ is the hat matrix, so that
+$$\hat{\varepsilon}=y-\hat{y}=(I-H)y=(I-H)X\beta+(I-H)\varepsilon=(I-H)\varepsilon $$
+
+Therefore, $\text{var}\hat{\varepsilon} = \text{var} (I-H)\varepsilon = (I-H)\sigma^2$ assuming that $\text{var}\varepsilon= \sigma^2I$. We see that although the errors may have equal variance and be uncorrelated, the residuals do not. 
+
+## Constant Variance
+
+Is the variance in the residuals related to some other quantity?
+
+The most useful diagnostic is a plot of $\hat{\varepsilon}$ against $\hat{y}$. If all is well, you should see constant symmetrical variation (homoscedasticity) in the vertical ($\hat{\varepsilon}$) direction. Nonlinearity in the structural part of the model can also be detected in this plot.

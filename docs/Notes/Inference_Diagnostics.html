@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
-    <a class="dropdown-item" href="../Notes/Inference.html" rel="" target="">
+    <a class="dropdown-item" href=".././Notes/Inference.qmd" rel="" target="">
  <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
   </li>  
     </ul>
@@ -198,6 +198,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#single-parameter" id="toc-single-parameter" class="nav-link" data-scroll-target="#single-parameter">Single parameter</a></li>
   <li><a href="#multiple-parameters" id="toc-multiple-parameters" class="nav-link" data-scroll-target="#multiple-parameters">Multiple parameters</a></li>
   </ul></li>
+  <li><a href="#bootstrap-confidence-intervals" id="toc-bootstrap-confidence-intervals" class="nav-link" data-scroll-target="#bootstrap-confidence-intervals">Bootstrap Confidence Intervals</a></li>
+  </ul></li>
+  <li><a href="#chapter-4-prediction" id="toc-chapter-4-prediction" class="nav-link" data-scroll-target="#chapter-4-prediction">Chapter 4: Prediction</a>
+  <ul class="collapse">
+  <li><a href="#cis-for-predictions" id="toc-cis-for-predictions" class="nav-link" data-scroll-target="#cis-for-predictions">CIs for predictions</a></li>
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  </ul></li>
+  <li><a href="#chaption-6-diagnostics" id="toc-chaption-6-diagnostics" class="nav-link" data-scroll-target="#chaption-6-diagnostics">Chaption 6: Diagnostics</a>
+  <ul class="collapse">
+  <li><a href="#checking-error-assumptions" id="toc-checking-error-assumptions" class="nav-link" data-scroll-target="#checking-error-assumptions">Checking Error Assumptions</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -624,7 +634,7 @@ Area -0.0702158 0.02233912</code></pre>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">v=</span><span class="fu">confint</span>(lmod)[<span class="dv">2</span>,],<span class="at">lty=</span><span class="dv">2</span>)</span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span><span class="fu">confint</span>(lmod)[<span class="dv">6</span>,],<span class="at">lty=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Inference_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="Inference_Diagnostics_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>A <code>ggplot</code> version:</p>
@@ -639,14 +649,110 @@ Area -0.0702158 0.02233912</code></pre>
 <span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">confint</span>(lmod)[<span class="dv">2</span>,],<span class="at">lty=</span><span class="dv">2</span>)<span class="sc">+</span></span>
 <span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">confint</span>(lmod)[<span class="dv">6</span>,],<span class="at">lty=</span><span class="dv">2</span>)<span class="sc">+</span></span>
 <span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="at">geom=</span><span class="st">"point"</span>, <span class="at">x=</span><span class="fu">coef</span>(lmod)[<span class="dv">2</span>], <span class="at">y=</span><span class="fu">coef</span>(lmod)[<span class="dv">6</span>])<span class="sc">+</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  mytheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  mytheme<span class="sc">+</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="Inference_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="Inference_Diagnostics_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-
-
+<p>We can determine the outcome of various hypotheses from the plot. The joint hypothesis <span class="math inline">\(H_0 : \beta_\text{Area} = \beta_\text{Adjacent} = 0\)</span> is rejected because the origin does not lie inside the ellipse. The hypothesis <span class="math inline">\(H_0 : \beta_\text{Area} = 0\)</span> is not rejected because zero does lie within the vertical dashed lines, whereas the horizontal dashed lines do not encompass zero and so <span class="math inline">\(H_0: \beta_\text{Adjacent} = 0\)</span> is rejected.</p>
 </section>
+</section>
+<section id="bootstrap-confidence-intervals" class="level2">
+<h2 class="anchored" data-anchor-id="bootstrap-confidence-intervals">Bootstrap Confidence Intervals</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="dv">4000</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>coefmat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,nb,<span class="dv">6</span>)</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>resids <span class="ot">&lt;-</span> <span class="fu">residuals</span>(lmod)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">fitted</span>(lmod)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nb){</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>boot <span class="ot">&lt;-</span> preds <span class="sc">+</span> <span class="fu">sample</span>(resids , <span class="at">rep=</span><span class="cn">TRUE</span>)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>bmod <span class="ot">&lt;-</span> <span class="fu">update</span>(lmod , boot <span class="sc">~</span> .)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>coefmat[i,] <span class="ot">&lt;-</span> <span class="fu">coef</span>(bmod)</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(coefmat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Intercept"</span>,<span class="fu">colnames</span>(gala[,<span class="dv">3</span><span class="sc">:</span><span class="dv">7</span>]))</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>coefmat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(coefmat)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(coefmat,<span class="dv">2</span>,<span class="cf">function</span>(x) <span class="fu">quantile</span>(x,<span class="fu">c</span>(<span class="fl">0.025</span>,<span class="fl">0.975</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Intercept        Area Elevation   Nearest      Scruz    Adjacent
+2.5%  -25.31406 -0.06236506 0.2310989 -1.716588 -0.6061978 -0.10545278
+97.5%  42.69309  0.01807403 0.4207570  2.122722  0.1677720 -0.03979658</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="chapter-4-prediction" class="level1">
+<h1>Chapter 4: Prediction</h1>
+<p>Given a new set of predictors, <span class="math inline">\(x_0\)</span>, the predicted response is <span class="math display">\[\hat{y_0}=x_0^T \hat{\beta}\]</span></p>
+<section id="cis-for-predictions" class="level2">
+<h2 class="anchored" data-anchor-id="cis-for-predictions">CIs for predictions</h2>
+<p>There are two kinds of predictions made from regression models. One is a predicted mean response and the other is a prediction of a future observation. For example, suppose we have built a regression model that predicts the rental price of houses in a given area based on predictors such as the number of bedrooms and closeness to a major highway. There are two kinds of predictions that can be made for a given <span class="math inline">\(x_0\)</span>:</p>
+<ol type="1">
+<li><p>Suppose a specific house comes on the market with characteristics <span class="math inline">\(x_0\)</span>. Its rental price will be <span class="math inline">\(x_0^T \beta +\varepsilon\)</span>. Since <span class="math inline">\(E(\varepsilon)=0\)</span>, the predicted price is <span class="math inline">\(x_0^T \hat{\beta}\)</span>, but in assessing the variance of this prediction, we must include the variance of <span class="math inline">\(\varepsilon\)</span>.</p></li>
+<li><p>Suppose we ask the question — “What would a house with characteristics <span class="math inline">\(x_0\)</span> rent for on average?” This selling price is <span class="math inline">\(x_0^T \beta\)</span> and is again predicted by <span class="math inline">\(x_0^T \hat{\beta}\)</span>, but now only the variance in <span class="math inline">\(\hat{\beta}\)</span> needs to be taken into account.</p></li>
+</ol>
+<p>Most times, we will want the first case, which is called “prediction of a future value,” while the second case, called “prediction of the mean response” is less commonly required. We have:</p>
+<p><span class="math display">\[\text{var}(x_0^T \hat{\beta})= x_0^T (X^TX)^{-1}x_0\sigma^2\]</span></p>
+<p>We assume that the future <span class="math inline">\(\varepsilon\)</span> is independent of <span class="math inline">\(\hat{\beta}\)</span>. So a <span class="math inline">\(100(1-\alpha)\)</span>% CI for a single future response is</p>
+<p><span class="math display">\[\hat{y_0}\pm t^{(\alpha/2)}_{n-p}\hat{\sigma}\sqrt{1+x_0^T(X^TX)^{-1}x_0}\]</span></p>
+<p>There is a conceptual difference here because previous confidence intervals have been for parameters. Parameters are considered to be fixed but unknown — they are not random under the Frequentist approach we are using here. However, a future observation is a random variable. For this reason, it is better to call this a prediction interval. We are saying there is a 95% chance that the future value falls within this interval whereas it would be incorrect to say that for a parameter.</p>
+</section>
+<section id="example" class="level2">
+<h2 class="anchored" data-anchor-id="example">Example</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(fat,<span class="at">package=</span><span class="st">"faraway"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(brozek <span class="sc">~</span> age <span class="sc">+</span> weight <span class="sc">+</span> height <span class="sc">+</span> neck <span class="sc">+</span> chest <span class="sc">+</span> abdom <span class="sc">+</span> hip <span class="sc">+</span> thigh <span class="sc">+</span> knee <span class="sc">+</span> ankle <span class="sc">+</span> biceps <span class="sc">+</span> forearm <span class="sc">+</span> wrist, <span class="at">data=</span>fat)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a> x <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(lmod)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>(x0 <span class="ot">&lt;-</span> <span class="fu">apply</span>(x,<span class="dv">2</span>,median))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)         age      weight      height        neck       chest 
+       1.00       43.00      176.50       70.00       38.00       99.65 
+      abdom         hip       thigh        knee       ankle      biceps 
+      90.95       99.30       59.00       38.50       22.80       32.05 
+    forearm       wrist 
+      28.70       18.30 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>(y0 <span class="ot">&lt;-</span> <span class="fu">sum</span>(x0<span class="sc">*</span><span class="fu">coef</span>(lmod)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17.49322</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmod,<span class="at">new=</span><span class="fu">data.frame</span>(<span class="fu">t</span>(x0)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       1 
+17.49322 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmod,<span class="at">new=</span><span class="fu">data.frame</span>(<span class="fu">t</span>(x0)),<span class="at">interval=</span><span class="st">"prediction"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit     lwr      upr
+1 17.49322 9.61783 25.36861</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(lmod,<span class="at">new=</span><span class="fu">data.frame</span>(<span class="fu">t</span>(x0)),<span class="at">interval=</span><span class="st">"confidence"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 17.49322 16.94426 18.04219</code></pre>
+</div>
+</div>
+<p><strong>Skipping autoregression section b/c would use explicit ARIMA model or other method of time-series analysis where appropriate</strong></p>
+</section>
+</section>
+<section id="chaption-6-diagnostics" class="level1">
+<h1>Chaption 6: Diagnostics</h1>
+<p>The estimation of and inference from the regression model depend on several assumptions. These assumptions should be checked using regression diagnostics before using the model in earnest. We divide the potential problems into three categories:</p>
+<ul>
+<li><strong>Error</strong>: We have assumed that <span class="math inline">\(\varepsilon \sim N(0,\sigma^2I)\)</span> or in words, that the errors are independent, have equal variance and are normally distributed.</li>
+<li><strong>Model</strong>: We have assumed that the structural part of the model, <span class="math inline">\(E(y) = X\beta\)</span>, is correct.</li>
+<li><strong>Unusual observations</strong>: Sometimes just a few observations do not fit the model. These few observations might change the choice and fit of the model.</li>
+</ul>
+<section id="checking-error-assumptions" class="level2">
+<h2 class="anchored" data-anchor-id="checking-error-assumptions">Checking Error Assumptions</h2>
+<p>We wish to check the independence, constant variance and normality of the errors, <span class="math inline">\(\varepsilon\)</span>. The errors are not observable, but we can examine the residuals, <span class="math inline">\(\hat{\varepsilon}\)</span>. These are not interchangeable with the error, as they have somewhat different properties. Recall that <span class="math inline">\(\hat{y}=X(X^TX)^{-1}Xy=Hy\)</span>, where <span class="math inline">\(H\)</span> is the hat matrix, so that <span class="math display">\[\hat{\varepsilon}=y-\hat{y}=(I-H)y=(I-H)X\beta+(I-H)\varepsilon=(I-H)\varepsilon \]</span></p>
+<p>Therefore, <span class="math inline">\(\text{var}\hat{\varepsilon} = \text{var} (I-H)\varepsilon = (I-H)\sigma^2\)</span> assuming that <span class="math inline">\(\text{var}\varepsilon= \sigma^2I\)</span>. We see that although the errors may have equal variance and be uncorrelated, the residuals do not.</p>
+
+
 </section>
 </section>
 

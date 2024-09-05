@@ -6,6 +6,36 @@ editor_options:
   chunk_output_type: console
 ---
 
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| warning: FALSE
+#| output: FALSE
+#| echo: false
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "faraway", "broom", "DHARMa", "emmeans", "performance")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+
+```
+
 # Background
 
 Section 7 of the U.S. Endangered Species Act (ESA) regulates situations in which a federal agency funds, permits, or otherwise has a "federal nexus" on any project that may influence a protected species. Federal agencies must seek a "consultation" on the project with either the U.S. Fish and Wildlife Service (USFWS) or the National Marine Fisheries Service (NMFS), depending on the species, and USFWS or NMFS must assure that any project does not cause "jeopardy" (a relatively high legal standard) for a protected species. A major conservation value of Section 7 consultation is the opportunity for USFWS and NMFS biologists to negotiate changes to projects that could minimize any negative impacts on species (or maximize any positive benefits).
@@ -68,13 +98,107 @@ As you work through the following problems, make sure to explain your thought pr
 
 a) Fit a linear model to the dataset that includes all 8 predictor variables. What is the $R^2$ for the model? Does is seem like a promising model?
 
-<!-- b) Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see? -->
+```{r}
+fws<- read.csv("../data/usfws_bull_trout.csv")
 
-<!-- c) Make a plot of the residuals against the predictor variable `stage`. Do you find this plot useful? Why or why not? -->
+fish <- lm(score ~ stage+form+cond+risk+unit+prog+BMP+degflex, data=fws)
 
-<!-- d) Produce a $Q$-$Q$ plot of the model residuals and include a $Q$-$Q$ line. Describe what you would hope to see here. Do you? -->
+summary(fish)
+anova(fish)
+glance(fish)
+```
+
+The $R^2$ for the model is around 0.755. While this is relatively high, the anova() table suggests that some of the predictors may not be necessary.
+
+b) Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see?
+```{r}
+# base R
+plot(fish, which=1)
+
+# ggplot
+res_fit <- data.frame(res = fish$residuals, fit = fish$fitted.values)
+
+ggplot(res_fit)+
+  geom_point(aes(x=fit, y=res))+
+  labs(x="Model predictions", y="Residuals")+
+  geom_hline(yintercept = 0, lty=2)+mytheme
+```
+
+Things to look for:
+
+- No obvious nonlinear patterns
+
+- Constant symmetrical variation (homoscedasticity) in the vertical ($\hat{\varepsilon}$) direction (i.e., vertical spread of the points does not increase or decrease with the x-values)
+
+Although there are no clear nonlinear patterns suggesting nonlinearity in the structural part of the model, the magnitude of the residuals appears to be greater for points with larger predicted values, suggesting possible heteroscedasticity.
+
+<div style="background-color: #daf0ea;">
+
+### Additional content
+
+Since the diagnostic plot has indicated potential heteroscedasticity, we can confirm our suspicion with a formal diagnostic test like the Breusch-Pagan test.
+
+The `check_heteroscedasticity` function from the `performance` package computes the BP-test non-studentized and uses the fitted values for the potential explanatory variables.
+```{r}
+check_heteroscedasticity(fish)
+```
+
+This function has the additional benefit of a built-in plot method:
+```{r}
+#| warning: false
+
+
+check_heteroscedasticity(fish) %>% plot()
+```
+
+As a default, the `bptest` function from the `lmtest` package uses the same explanatory variables as in the regression model you specify (and studentizes as well).
+```{r}
+lmtest::bptest(fish, studentize = TRUE) #studentized Breusch-Pagan test
+lmtest::bptest(fish, studentize = FALSE) #Breusch-Pagan test
+```
+
+We can obtain matching results to the `check_heteroscedasticity` function by explicitly using the fitted values of the model:
+```{r}
+lmtest::bptest(fish, studentize = F, varformula = ~fitted.values(fish))
+```
+
+The same result can also be obtained using the `ncvTest` (Non-constant Variance Score Test) function from the package `car`:
+```{r}
+car::ncvTest(fish)
+```
+
+For additional functionality related to checking for heteroscedasticity, see [this vignette from the olsrr package](https://cran.r-project.org/web/packages/olsrr/vignettes/heteroskedasticity.html).
+
+</div>
+
+
+c) Make a plot of the residuals against the predictor variable `stage`. Do you find this plot useful? Why or why not?
+```{r}
+res_fit <- res_fit %>% mutate(stage = fws$stage)
+
+ggplot(res_fit)+
+  geom_point(aes(x=stage, y=res))+
+  labs(x="Life history stage", y="Residuals")+
+  geom_hline(yintercept = 0, lty=2)+mytheme
+```
+
+
+d) Produce a $Q$-$Q$ plot of the model residuals and include a $Q$-$Q$ line. Describe what you would hope to see here. Do you?
+```{r}
+# base R
+qqnorm(residuals(fish),ylab="Residuals",main="")
+qqline(residuals(fish))
+
+# ggplot
+ggplot() + 
+  stat_qq(aes(sample = residuals(fish))) + 
+  stat_qq_line(aes(sample = residuals(fish))) +
+  mytheme+labs(x="Theoretical Quantiles", y="Residuals")
+```
+
 
 <!-- e) Would it make sense to plot $e_t$ against $e_{t+1}$ for this model? Explain why or why not. -->
+
 
 <!-- f) Which projects have the 3 largest leverages? Briefly explain what this tells us. -->
 

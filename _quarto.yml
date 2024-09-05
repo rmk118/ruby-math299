@@ -27,7 +27,7 @@ website:
       - text: Notes
         menu: 
           - text: Inference, Diagnostics, & Errors
-            href: ./Notes/Inference.qmd
+            href: ./Notes/Inference_Diagnostics.qmd
     
 format:
   html:
