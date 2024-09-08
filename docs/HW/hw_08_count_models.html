@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Math 299</title>
+<title>Math 299 – hw_08_count_models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,21 +23,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -59,6 +60,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -69,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Math 299</span>
     </a>
   </div>
@@ -80,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -89,16 +92,27 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hw">    
         <li>
-    <a class="dropdown-item" href="./HW/hw_01_intro_to_markdown.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_01_intro_to_markdown.html" rel="" target="">
  <span class="dropdown-text">HW1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_02_fitting_lm.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_02_fitting_lm.html" rel="" target="">
  <span class="dropdown-text">HW2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_03_diagnostics.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_03_diagnostics.html" rel="" target="">
  <span class="dropdown-text">HW3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../Labs/lab1.html" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
   </li>  
     </ul>
   </li>
@@ -108,12 +122,8 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
-    <a class="dropdown-item" href="./Notes/lab1.html" rel="" target="">
- <span class="dropdown-text">Lab 1</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./Notes/Inference_Diagnostics.html" rel="" target="">
- <span class="dropdown-text">Inference &amp; Diagnostics</span></a>
+    <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
+ <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
   </li>  
     </ul>
   </li>
@@ -138,35 +148,54 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
+   
   <ul>
-  <li><a href="#math-299-directed-study-environmental-data-analysis" id="toc-math-299-directed-study-environmental-data-analysis" class="nav-link active" data-scroll-target="#math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#questions" id="toc-questions" class="nav-link" data-scroll-target="#questions">Questions</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gamma_distribution_pdf.svg/650px-Gamma_distribution_pdf.svg.png" class="about-image
-  rounded " style="width: 10cm;">
-    <div class="about-links">
-  <a href="https://github.com/rmk118/ruby-math299" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<section id="math-299-directed-study-environmental-data-analysis" class="level2">
-<h2 data-anchor-id="math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</h2>
-<p><strong>Ruby Krasnow</strong></p>
-<p>This website will house my assignments as I work through the course material for <a href="https://qerm514.github.io/website/index.html">QERM 514: Analysis of Ecological and Environmental Data</a>, one of the core requirements for graduate students in the Quantitative Ecology &amp; Resource Management (QERM) program at the University of Washington. The QERM 514 course materials developed and made publicly available online by Dr.&nbsp;Mark Scheuerell will serve as a foundation for a directed study I will complete during my final semester at Clark, supervised by <a href="https://www.clarku.edu/faculty/profiles/michael-satz/">Michael Satz</a> (Clark University, Department of Mathematics).</p>
+
+
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>This week’s homework assignment focuses on fitting and evaluating models for count data. One of your colleagues is interested in the theory of island biogeography and has acquired a data set with which to examine how species richness varies with the area of an island, the island’s elevation, the distance to the nearest island, and the area of the nearest island. In particular, her expectation is that the number of plant species should increase with island area, and a plot of the data suggests this to indeed be the case, but her initial modeling effort has yielded the opposite result. Recognizing that she does not have much experience with this type of data analysis, she has turned to you for assistance.</p>
+<p>Her data are contained in the accompanying file <code>plant_richness.csv</code>, which has the following columns of information:</p>
+<ul>
+<li><p><code>island</code>: name of the island</p></li>
+<li><p><code>species</code>: number of plant species on the island</p></li>
+<li><p><code>area</code> the area of the island (km<span class="math inline">\(^2\)</span>)</p></li>
+<li><p><code>elevation</code>: the highest elevation of the island (m)</p></li>
+<li><p><code>distance</code>: the distance to the nearest island (km)</p></li>
+<li><p><code>adjacent</code> the area of the nearest island (km<span class="math inline">\(^2\)</span>)</p></li>
+</ul>
+</section>
+<section id="questions" class="level1">
+<h1>Questions</h1>
+<ol type="a">
+<li><p>Plot the number of species versus island area and describe any patterns you observe. Does your colleague’s assumption of a positive relationship between richness and area seem to hold?</p></li>
+<li><p>Your colleague explains that she fit the following model, which yielded the surprising result. Fit the model for yourself and verify if there is indeed a negative effect of <code>area</code> on <code>species</code>. Do the signs of the other coefficients seem to make sense from an ecological perspective? Why or why not?</p></li>
+</ol>
+<p><span class="math display">\[
+\text{species}_i = \beta_0 + \beta_1 \text{area}_i + \beta_2 \text{elevation}_i + \beta_3 \text{nearest}_i + \beta_4 \text{adjacent}_i + e_i
+\]</span></p>
+<ol start="3" type="a">
+<li><p>Offer one explanation for the unexpected effect of <code>area</code> given the apparent relationship in (a). Based on this evaluation, offer a possible suggestion for estimating the effect of <code>area</code> on <code>species</code>.</p></li>
+<li><p>Does it seem reasonable to use <code>species</code> as a response variable in a linear model like the one your colleague fit initially? Why or why not? What would be a more appropriate response variable in a linear model like this?</p></li>
+<li><p>Based upon your knowledge of models for count data, offer a <em>simple</em> alternative regression model that models <code>species</code> as a function of <code>area</code>, <code>nearest</code>, and <code>adjacent</code>. What are the important components to this model?</p></li>
+<li><p>Fit the model you recommended in (e) and examine the summary information. Does the effect of <code>area</code> seem more reasonable in this model? Do you see any problems with this model?</p></li>
+<li><p>Based on your assessment of the model in (f), identify three possible alternatives for estimating the model parameters and their associated uncertainty, and show how you would do so in <strong>R</strong>. How do the these alternative models compare the the estimates in (f).</p></li>
+<li><p>For one of your alternatives in (g), evaluate whether a model that includes only <code>area</code> as a predictor is better than a model with all three predictors. Show the <strong>R</strong> code necessary to estimate the model and any test(s) or comparison(s) you might use.</p></li>
+<li><p>Evaluate the diagnostics for your model from (h) with <code>species</code> as a function of <code>area</code> only. Do you see any problems with this model?</p></li>
+</ol>
 
 
 </section>
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main></div>
-</div>
- <!-- /main -->
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -187,6 +216,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

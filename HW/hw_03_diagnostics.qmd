@@ -92,8 +92,6 @@ At this point the USFWS would like your assistance in evaluating a statistical m
     * low (`L`)
     * medium (`M`)
 
-As you work through the following problems, make sure to explain your thought process and show all of your **R** code, so Mark can give you partial credit, if necessary.
-
 # Problems
 
 a) Fit a linear model to the dataset that includes all 8 predictor variables. What is the $R^2$ for the model? Does is seem like a promising model?
@@ -108,7 +106,7 @@ anova(fish)
 glance(fish)
 ```
 
-The $R^2$ for the model is around 0.755. While this is relatively high, the anova() table suggests that some of the predictors may not be necessary.
+The $R^2$ for the model is around 0.755 and the adjusted $R^2$ is around 0.606. While these are relatively high, the anova() table suggests that some of the predictors may not be necessary.
 
 b) Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see?
 ```{r}
@@ -128,13 +126,13 @@ Things to look for:
 
 - No obvious nonlinear patterns
 
-- Constant symmetrical variation (homoscedasticity) in the vertical ($\hat{\varepsilon}$) direction (i.e., vertical spread of the points does not increase or decrease with the x-values)
+- Constant symmetrical variation (homoscedasticity) in the vertical ($\hat{\varepsilon}$) direction (i.e., vertical spread of the points does not increase or decrease with the x-values - no non-constant variance in $e$)
 
-Although there are no clear nonlinear patterns suggesting nonlinearity in the structural part of the model, the magnitude of the residuals appears to be greater for points with larger predicted values, suggesting possible heteroscedasticity.
+ - Outliers and leverage points
+
+Although there are no clear nonlinear patterns suggesting nonlinearity in the structural part of the model, the magnitude of the residuals appears to be greater for points with larger predicted values (increasing variance in $e$ with increasing $\hat{y}$), suggesting possible heteroscedasticity.
 
 <div style="background-color: #daf0ea;">
-
-### Additional content
 
 Since the diagnostic plot has indicated potential heteroscedasticity, we can confirm our suspicion with a formal diagnostic test like the Breusch-Pagan test.
 
@@ -182,6 +180,7 @@ ggplot(res_fit)+
   geom_hline(yintercept = 0, lty=2)+mytheme
 ```
 
+This plot is not particularly useful because there are only three life stages present and the design is unbalanced; the overall sample size is small and not all stages are equally represented. For example, the "EJ" stage only has three observations, making it difficult to determine if the possible difference in residual variance between stages is actually meaningful.
 
 d) Produce a $Q$-$Q$ plot of the model residuals and include a $Q$-$Q$ line. Describe what you would hope to see here. Do you?
 ```{r}
@@ -194,20 +193,134 @@ ggplot() +
   stat_qq(aes(sample = residuals(fish))) + 
   stat_qq_line(aes(sample = residuals(fish))) +
   mytheme+labs(x="Theoretical Quantiles", y="Residuals")
+
+# performance
+plot(performance::check_residuals(fish))
+
+# Shapiro-Wilk test
+shapiro.test(residuals(fish))
 ```
 
+Normal residuals should approximately follow the Q-Q line. However, this plot shows large deviations from the line at both ends, somewhat like a leptokurtic (heavy-tailed) distribution.
 
-<!-- e) Would it make sense to plot $e_t$ against $e_{t+1}$ for this model? Explain why or why not. -->
+<div style="background-color: #daf0ea;">
+
+```{r}
+datawizard::kurtosis(residuals(fish), type="1") # 
+confintr::kurtosis(residuals(fish))-3 #Pearson's Measure of Kurtosis
+moments::kurtosis(residuals(fish))-3
+
+moments::anscombe.test(residuals(fish))
+summary(datawizard::kurtosis(residuals(fish)), test = TRUE)
+```
+
+Indeed, we see that the distribution of residuals has an (excess) kurtosis value significantly larger than zero, indicating a leptokurtic distribution.
+</div>
+
+e) Would it make sense to plot $e_t$ against $e_{t+1}$ for this model? Explain why or why not.
+
+It would not make sense to plot $e_t$ against $e_{t+1}$ because the structure of these data would not result in serial autocorrelation. Plotting lagged residuals and formal diagnostic tests for residual autocorrelation are more relevant for temporal, spatial, and blocked data.
+
+f) Which projects have the 3 largest leverages? Briefly explain what this tells us.
+
+```{r}
+## leverages of points
+hv <- hatvalues(fish)
+## assign their names
+names(hv) <- fws$ProjectName
+
+slice_max(data.frame(hat=hv), hat, n=3)
+
+```
+
+Vernon, Gail, Turner, and Forgotten have the largest leverages. This means that they are extreme in the predictor $(X)$ space and may have had a large influence on the model fit.
+
+g) What rule of thumb could you use to assess whether any leverages are particularly large? Under this rule of thumb, do you have any particularly large leverages? If yes, which projects?
+
+A rule of thumb is that a leverage point is large if $h_{ii} \geq 2\bar{h} = \frac{2p}{n}$.
+```{r}
+## threshold value for h_i ~= 0.78
+p <-length(coefficients(fish))
+n <- length(residuals(fish))
+
+th <- 2 * ( p/n)
+th
+
+## are any h_i > Eh?
+hv > th
+
+hv[hv>th]
+```
+
+Using this rule of thumb, Gail and Vernon have particularly large leverages.
+
+We can confirm this with a half-normal plot:
+```{r}
+halfnorm(hv,labs=fws$ProjectName)
+```
+
+h) Calculate the studentized residuals to look for outliers. Remember to use a Bonferroni correction, and explain why you should use it. What did you find? Which project has the largest studentized residual?
+
+We can compute the studentized residuals as
+$$t_i = \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i}} $$
+
+which are distributed as a $t$-distribution with $n-p-1$ df. Fortunately, there is an easier way to compute $t_i$ that avoids doing $n$ regressions:
+$$t_i=\frac{\hat{e_i}}{\hat{\sigma}_{(i)} \sqrt{1-h_i}}= r_i \left(\frac{n-p-1}{n-p-r_i^2} \right)^{1/2} $$
+
+```{r}
+std <- rstandard(fish)
+std_manual <- residuals(fish)/(sigma(fish)*na_if(sqrt(1-hv), 0))
+all.equal(std, std_manual)
+
+stu <- rstudent(fish)
+stu_manual <- std*sqrt(((n-p-1)/(n-p-std^2)))
+all.equal(stu, stu_manual)
+```
+
+We need to use a Bonferroni correction when performing significance tests to determine if case $i$ is an outlier because otherwise we would identify an excess of outliers (making Type I errors) just because of the number of cases that we are testing. The level of statistical significance $(\alpha)$ determines probability of committing a type I error (rejecting the null hypothesis when it is actually true): if we had $n=100$ and tested all of the cases with $\alpha=0.05$, we might expect to find around 5 outliers using this procedure even if the null hypothesis was true. Even though we might explicitly test only one or two large $t_i$'s, we are implicitly testing all cases since we need to consider all the residuals to find out which ones are large.
+
+```{r}
+# Part A
+max_res <- stu[which.max(abs(stu))]
+max_res <- unname(max_res)
+max_res
+
+# Part B
+df_fish <- df.residual(fish)-1 #df=22
+
+# Part C
+un_p <- 2*(1-pt(max_res, df=df_fish, lower.tail = TRUE)) #unadjusted p-value
+
+# Part D: adjusted p-value. These agree with each other
+2*(1-pt(max_res, df=df_fish, lower.tail = TRUE))*nrow(fws)
+p.adjust(un_p, method = "bonferroni", n = nrow(fws))
+
+p.adjust(un_p, method = "bonferroni", n = nrow(fws)-2)
+
+2*(1-pt(max_res, df=df_fish, lower.tail = TRUE))*sum(!is.na(stu))
+p.adjust(un_p, method = "bonferroni", n = sum(!is.na(stu)))
+
+# Part E
+t <- qt(p=.05/(nrow(fws)*2), df=df_fish) #find adjusted test statistic, -3.678813, which has abs > max_res, indicating that with the correction, the outlier is not significant
+
+# Part F. Here, the rstudet and unadjusted p-val columns agree with the results of Parts A and C, respectively, but the Bonferroni p-value uses the number of non-NA studentized residuals rather than the number of observations in the data set.
+
+car::outlierTest(fish)
+```
+
+i) Calculate Cook's Distances and produce a halfnormal plot of them. Label the 3 largest $D_i$ in the plot with the project names. Are these the same sites as the top 3 projects you identified in (g)? Briefly explain why or why not.
 
 
-<!-- f) Which projects have the 3 largest leverages? Briefly explain what this tells us. -->
+Cook's D:
+$$D_i=\frac{e_i^2}{p} \left(\frac{h_i}{1-h_i} \right) $$
 
-<!-- g) What rule of thumb could you use to assess whether any leverages are particularly large? Under this rule of thumb, do you have any particularly large leverages? If yes, which projects? -->
+This metric combines the residual effect and leverage to quantify the influence. A half-normal plot of $D_i$ can be used to identify influential observations.
 
-<!-- h) Calculate the studentized residuals to look for outliers. Remember to use a Bonferroni correction, and explain why you should use it. What did you find? Which project has the largest studentized residual? -->
+```{r}
+cook_fish <- cooks.distance(fish)
+halfnorm(cook_fish,3,labs=fws$ProjectName,ylab="Cook’s distances")
 
-<!-- i) Calculate Cook's Distances and produce a halfnormal plot of them. Label the 3 largest $D_i$ in the plot with the project names. Are these the same sites as the top 3 projects you identified in (g)? Briefly explain why or why not. -->
+plot(check_outliers(fish))
 
-<!-- j) In a few sentences, summarize what you have learned about this analysis in terms of heteroscedasticity, normality, and influential observations. -->
-
+```
 

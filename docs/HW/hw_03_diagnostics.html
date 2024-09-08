@@ -141,24 +141,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Labs</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
-        <li>
-    <a class="dropdown-item" href="../Labs/lab1.html" rel="" target="">
- <span class="dropdown-text">Lab 1</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-notes" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">Notes</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
+    <a class="dropdown-item" href="../Notes/lab1.html" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
- <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
+ <span class="dropdown-text">Inference &amp; Diagnostics</span></a>
   </li>  
     </ul>
   </li>
@@ -186,10 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
-  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a>
-  <ul class="collapse">
-  <li><a href="#additional-content" id="toc-additional-content" class="nav-link" data-scroll-target="#additional-content">Additional content</a></li>
-  </ul></li>
+  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a></li>
   </ul>
 </nav>
     </div>
@@ -273,7 +263,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>medium (<code>M</code>)</li>
 </ul></li>
 </ol>
-<p>As you work through the following problems, make sure to explain your thought process and show all of your <strong>R</strong> code, so Mark can give you partial credit, if necessary.</p>
 </section>
 <section id="problems" class="level1">
 <h1>Problems</h1>
@@ -465,7 +454,7 @@ F-statistic: 5.061 on 14 and 23 DF,  p-value: 0.000314</code></pre>
 </div>
 </div>
 </div>
-<p>The <span class="math inline">\(R^2\)</span> for the model is around 0.755. While this is relatively high, the anova() table suggests that some of the predictors may not be necessary.</p>
+<p>The <span class="math inline">\(R^2\)</span> for the model is around 0.755 and the adjusted <span class="math inline">\(R^2\)</span> is around 0.606. While these are relatively high, the anova() table suggests that some of the predictors may not be necessary.</p>
 <ol start="2" type="a">
 <li>Make a plot of the residuals against the model predictions. Name at least two things you should be looking for in a plot like this. What do you see?</li>
 </ol>
@@ -489,11 +478,11 @@ F-statistic: 5.061 on 14 and 23 DF,  p-value: 0.000314</code></pre>
 <p>Things to look for:</p>
 <ul>
 <li><p>No obvious nonlinear patterns</p></li>
-<li><p>Constant symmetrical variation (homoscedasticity) in the vertical (<span class="math inline">\(\hat{\varepsilon}\)</span>) direction (i.e., vertical spread of the points does not increase or decrease with the x-values)</p></li>
+<li><p>Constant symmetrical variation (homoscedasticity) in the vertical (<span class="math inline">\(\hat{\varepsilon}\)</span>) direction (i.e., vertical spread of the points does not increase or decrease with the x-values - no non-constant variance in <span class="math inline">\(e\)</span>)</p></li>
+<li><p>Outliers and leverage points</p></li>
 </ul>
-<p>Although there are no clear nonlinear patterns suggesting nonlinearity in the structural part of the model, the magnitude of the residuals appears to be greater for points with larger predicted values, suggesting possible heteroscedasticity.</p>
-<section id="additional-content" class="level3" style="background-color: #daf0ea;">
-<h3 class="anchored" data-anchor-id="additional-content">Additional content</h3>
+<p>Although there are no clear nonlinear patterns suggesting nonlinearity in the structural part of the model, the magnitude of the residuals appears to be greater for points with larger predicted values (increasing variance in <span class="math inline">\(e\)</span> with increasing <span class="math inline">\(\hat{y}\)</span>), suggesting possible heteroscedasticity.</p>
+<div style="background-color: #daf0ea;">
 <p>Since the diagnostic plot has indicated potential heteroscedasticity, we can confirm our suspicion with a formal diagnostic test like the Breusch-Pagan test.</p>
 <p>The <code>check_heteroscedasticity</code> function from the <code>performance</code> package computes the BP-test non-studentized and uses the fitted values for the potential explanatory variables.</p>
 <div class="cell">
@@ -549,7 +538,7 @@ Chisquare = 9.182395, Df = 1, p = 0.0024435</code></pre>
 </div>
 </div>
 <p>For additional functionality related to checking for heteroscedasticity, see <a href="https://cran.r-project.org/web/packages/olsrr/vignettes/heteroskedasticity.html">this vignette from the olsrr package</a>.</p>
-</section>
+</div>
 <ol start="3" type="a">
 <li>Make a plot of the residuals against the predictor variable <code>stage</code>. Do you find this plot useful? Why or why not?</li>
 </ol>
@@ -564,6 +553,7 @@ Chisquare = 9.182395, Df = 1, p = 0.0024435</code></pre>
 <p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>This plot is not particularly useful because there are only three life stages present and the design is unbalanced; the overall sample size is small and not all stages are equally represented. For example, the “EJ” stage only has three observations, making it difficult to determine if the possible difference in residual variance between stages is actually meaningful.</p>
 <ol start="4" type="a">
 <li>Produce a <span class="math inline">\(Q\)</span>-<span class="math inline">\(Q\)</span> plot of the model residuals and include a <span class="math inline">\(Q\)</span>-<span class="math inline">\(Q\)</span> line. Describe what you would hope to see here. Do you?</li>
 </ol>
@@ -582,13 +572,264 @@ Chisquare = 9.182395, Df = 1, p = 0.0024435</code></pre>
 <div class="cell-output-display">
 <p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
 </div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># performance</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(performance<span class="sc">::</span><span class="fu">check_residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
 </div>
-<!-- e) Would it make sense to plot $e_t$ against $e_{t+1}$ for this model? Explain why or why not. -->
-<!-- f) Which projects have the 3 largest leverages? Briefly explain what this tells us. -->
-<!-- g) What rule of thumb could you use to assess whether any leverages are particularly large? Under this rule of thumb, do you have any particularly large leverages? If yes, which projects? -->
-<!-- h) Calculate the studentized residuals to look for outliers. Remember to use a Bonferroni correction, and explain why you should use it. What did you find? Which project has the largest studentized residual? -->
-<!-- i) Calculate Cook's Distances and produce a halfnormal plot of them. Label the 3 largest $D_i$ in the plot with the project names. Are these the same sites as the top 3 projects you identified in (g)? Briefly explain why or why not. -->
-<!-- j) In a few sentences, summarize what you have learned about this analysis in terms of heteroscedasticity, normality, and influential observations. -->
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shapiro-Wilk test</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals(fish)
+W = 0.90503, p-value = 0.003547</code></pre>
+</div>
+</div>
+<p>Normal residuals should approximately follow the Q-Q line. However, this plot shows large deviations from the line at both ends, somewhat like a leptokurtic (heavy-tailed) distribution.</p>
+<div style="background-color: #daf0ea;">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>datawizard<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish), <span class="at">type=</span><span class="st">"1"</span>) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Kurtosis</th>
+<th style="text-align: right;">SE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">2.572732</td>
+<td style="text-align: right;">0.654624</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>confintr<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish))<span class="sc">-</span><span class="dv">3</span> <span class="co">#Pearson's Measure of Kurtosis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.572732</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish))<span class="sc">-</span><span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2.572732</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">anscombe.test</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Anscombe-Glynn kurtosis test
+
+data:  residuals(fish)
+kurt = 5.5727, z = 2.5940, p-value = 0.009486
+alternative hypothesis: kurtosis is not equal to 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datawizard<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish)), <span class="at">test =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Kurtosis</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">z</th>
+<th style="text-align: right;">p</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3.122581</td>
+<td style="text-align: right;">0.654624</td>
+<td style="text-align: right;">4.770038</td>
+<td style="text-align: right;">1.8e-06</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Indeed, we see that the distribution of residuals has an (excess) kurtosis value significantly larger than zero, indicating a leptokurtic distribution.</p>
+</div>
+<ol start="5" type="a">
+<li>Would it make sense to plot <span class="math inline">\(e_t\)</span> against <span class="math inline">\(e_{t+1}\)</span> for this model? Explain why or why not.</li>
+</ol>
+<p>It would not make sense to plot <span class="math inline">\(e_t\)</span> against <span class="math inline">\(e_{t+1}\)</span> because the structure of these data would not result in serial autocorrelation. Plotting lagged residuals and formal diagnostic tests for residual autocorrelation are more relevant for temporal, spatial, and blocked data.</p>
+<ol start="6" type="a">
+<li>Which projects have the 3 largest leverages? Briefly explain what this tells us.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## leverages of points</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>hv <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(fish)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">## assign their names</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hv) <span class="ot">&lt;-</span> fws<span class="sc">$</span>ProjectName</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">data.frame</span>(<span class="at">hat=</span>hv), hat, <span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">hat</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Gail</td>
+<td style="text-align: right;">1.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Vernon</td>
+<td style="text-align: right;">1.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Turner</td>
+<td style="text-align: right;">0.7332097</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Forgotten</td>
+<td style="text-align: right;">0.7332097</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Vernon, Gail, Turner, and Forgotten have the largest leverages. This means that they are extreme in the predictor <span class="math inline">\((X)\)</span> space and may have had a large influence on the model fit.</p>
+<ol start="7" type="a">
+<li>What rule of thumb could you use to assess whether any leverages are particularly large? Under this rule of thumb, do you have any particularly large leverages? If yes, which projects?</li>
+</ol>
+<p>A rule of thumb is that a leverage point is large if <span class="math inline">\(h_{ii} \geq 2\bar{h} = \frac{2p}{n}\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## threshold value for h_i ~= 0.78</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">coefficients</span>(fish))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">residuals</span>(fish))</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>th <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> ( p<span class="sc">/</span>n)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.7894737</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## are any h_i &gt; Eh?</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>hv <span class="sc">&gt;</span> th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Bethune         SR522           SPU        Boeing      Wilkeson 
+        FALSE         FALSE         FALSE         FALSE         FALSE 
+      Turner   Geotechnical  SR542Boulder     SR542Coal         Lummi 
+        FALSE         FALSE         FALSE         FALSE         FALSE 
+         ONP    SeattlePort       Griffen         Lopex   Bridgehaven 
+        FALSE         FALSE         FALSE         FALSE         FALSE 
+       Zornes     Bremerton        Sisney    Longfellow       Hartley 
+        FALSE         FALSE         FALSE         FALSE         FALSE 
+      Glacier          Gail      Heritage Stillaguamish    Bituminous 
+        FALSE          TRUE         FALSE         FALSE         FALSE 
+         Weed     Recycling        Vernon       Tukwila        Lynden 
+        FALSE         FALSE          TRUE         FALSE         FALSE 
+    Snohomish       I5Inter       Whatcom          SR20      Thompson 
+        FALSE         FALSE         FALSE         FALSE         FALSE 
+       Yeager       Century     Forgotten 
+        FALSE         FALSE         FALSE </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>hv[hv<span class="sc">&gt;</span>th]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Gail Vernon 
+     1      1 </code></pre>
+</div>
+</div>
+<p>Using this rule of thumb, Gail and Vernon have particularly large leverages.</p>
+<p>We can confirm this with a half-normal plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(hv,<span class="at">labs=</span>fws<span class="sc">$</span>ProjectName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<ol start="8" type="a">
+<li>Calculate the studentized residuals to look for outliers. Remember to use a Bonferroni correction, and explain why you should use it. What did you find? Which project has the largest studentized residual?</li>
+</ol>
+<p>We can compute the studentized residuals as <span class="math display">\[t_i = \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i}} \]</span></p>
+<p>which are distributed as a <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(n-p-1\)</span> df. Fortunately, there is an easier way to compute <span class="math inline">\(t_i\)</span> that avoids doing <span class="math inline">\(n\)</span> regressions: <span class="math display">\[t_i=\frac{\hat{e_i}}{\hat{\sigma}_{(i)} \sqrt{1-h_i}}= r_i \left(\frac{n-p-1}{n-p-r_i^2} \right)^{1/2} \]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="fu">rstandard</span>(fish)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>std_manual <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fish)<span class="sc">/</span>(<span class="fu">sigma</span>(fish)<span class="sc">*</span><span class="fu">na_if</span>(<span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">-</span>hv), <span class="dv">0</span>))</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(std, std_manual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>stu <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(fish)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>stu_manual <span class="ot">&lt;-</span> std<span class="sc">*</span><span class="fu">sqrt</span>(((n<span class="sc">-</span>p<span class="dv">-1</span>)<span class="sc">/</span>(n<span class="sc">-</span>p<span class="sc">-</span>std<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(stu, stu_manual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<p>We need to use a Bonferroni correction when performing significance tests to determine if case <span class="math inline">\(i\)</span> is an outlier because otherwise we would identify an excess of outliers (making Type I errors) just because of the number of cases that we are testing. The level of statistical significance <span class="math inline">\((\alpha)\)</span> determines probability of committing a type I error (rejecting the null hypothesis when it is actually true): if we had <span class="math inline">\(n=100\)</span> and tested all of the cases with <span class="math inline">\(\alpha=0.05\)</span>, we might expect to find around 5 outliers using this procedure even if the null hypothesis was true. Even though we might explicitly test only one or two large <span class="math inline">\(t_i\)</span>’s, we are implicitly testing all cases since we need to consider all the residuals to find out which ones are large.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part A</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>max_res <span class="ot">&lt;-</span> stu[<span class="fu">which.max</span>(<span class="fu">abs</span>(stu))]</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>max_res <span class="ot">&lt;-</span> <span class="fu">unname</span>(max_res)</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>max_res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.523815</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part B</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>df_fish <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(fish)<span class="sc">-</span><span class="dv">1</span> <span class="co">#df=22</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Part C</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>un_p <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>)) <span class="co">#unadjusted p-value</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Part D: adjusted p-value. These agree with each other</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>))<span class="sc">*</span><span class="fu">nrow</span>(fws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07264217</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">nrow</span>(fws))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.07264217</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">nrow</span>(fws)<span class="sc">-</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0688189</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>))<span class="sc">*</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(stu))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0688189</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(stu)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0688189</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part E</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p=</span>.<span class="dv">05</span><span class="sc">/</span>(<span class="fu">nrow</span>(fws)<span class="sc">*</span><span class="dv">2</span>), <span class="at">df=</span>df_fish) <span class="co">#find adjusted test statistic, -3.678813, which has abs &gt; max_res, indicating that with the correction, the outlier is not significant</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Part F. Here, the rstudet and unadjusted p-val columns agree with the results of Parts A and C, respectively, but the Bonferroni p-value uses the number of non-NA studentized residuals rather than the number of observations in the data set.</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">outlierTest</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>No Studentized residuals with Bonferroni p &lt; 0.05
+Largest |rstudent|:
+   rstudent unadjusted p-value Bonferroni p
+10 3.523815          0.0019116     0.068819</code></pre>
+</div>
+</div>
+<ol type="i">
+<li>Calculate Cook’s Distances and produce a halfnormal plot of them. Label the 3 largest <span class="math inline">\(D_i\)</span> in the plot with the project names. Are these the same sites as the top 3 projects you identified in (g)? Briefly explain why or why not.</li>
+</ol>
+<p>Cook’s D: <span class="math display">\[D_i=\frac{e_i^2}{p} \left(\frac{h_i}{1-h_i} \right) \]</span></p>
+<p>This metric combines the residual effect and leverage to quantify the influence. A half-normal plot of <span class="math inline">\(D_i\)</span> can be used to identify influential observations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>cook_fish <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(fish)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(cook_fish,<span class="dv">3</span>,<span class="at">labs=</span>fws<span class="sc">$</span>ProjectName,<span class="at">ylab=</span><span class="st">"Cook’s distances"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
 </section>

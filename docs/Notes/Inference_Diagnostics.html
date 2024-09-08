@@ -8,7 +8,7 @@
 
 <meta name="author" content="Ruby Krasnow">
 
-<title>Math 299 - Inference, Diagnostics, &amp; Errors</title>
+<title>Math 299 - Inference &amp; Diagnostics</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -141,24 +141,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
   </li>
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
- <span class="menu-text">Labs</span>
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
-        <li>
-    <a class="dropdown-item" href="../Labs/lab1.html" rel="" target="">
- <span class="dropdown-text">Lab 1</span></a>
-  </li>  
-    </ul>
-  </li>
-  <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-notes" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
  <span class="menu-text">Notes</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
-    <a class="dropdown-item" href=".././Notes/Inference.qmd" rel="" target="">
- <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
+    <a class="dropdown-item" href="../Notes/lab1.html" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
+ <span class="dropdown-text">Inference &amp; Diagnostics</span></a>
   </li>  
     </ul>
   </li>
@@ -208,6 +201,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#chaption-6-diagnostics" id="toc-chaption-6-diagnostics" class="nav-link" data-scroll-target="#chaption-6-diagnostics">Chaption 6: Diagnostics</a>
   <ul class="collapse">
   <li><a href="#checking-error-assumptions" id="toc-checking-error-assumptions" class="nav-link" data-scroll-target="#checking-error-assumptions">Checking Error Assumptions</a></li>
+  <li><a href="#constant-variance" id="toc-constant-variance" class="nav-link" data-scroll-target="#constant-variance">Constant Variance</a>
+  <ul class="collapse">
+  <li><a href="#normality" id="toc-normality" class="nav-link" data-scroll-target="#normality">6.1.2 - Normality</a></li>
+  </ul></li>
+  <li><a href="#unusual-observations" id="toc-unusual-observations" class="nav-link" data-scroll-target="#unusual-observations">6.2 - Unusual Observations</a>
+  <ul class="collapse">
+  <li><a href="#leverages" id="toc-leverages" class="nav-link" data-scroll-target="#leverages">6.2.1 - Leverages</a></li>
+  </ul></li>
+  <li><a href="#standardized-residuals" id="toc-standardized-residuals" class="nav-link" data-scroll-target="#standardized-residuals">Standardized residuals</a></li>
+  <li><a href="#studentized-residuals" id="toc-studentized-residuals" class="nav-link" data-scroll-target="#studentized-residuals">Studentized residuals</a></li>
+  <li><a href="#influential-observations" id="toc-influential-observations" class="nav-link" data-scroll-target="#influential-observations">6.2.3 Influential Observations</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -217,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Inference, Diagnostics, &amp; Errors</h1>
+<h1 class="title">Inference &amp; Diagnostics</h1>
 </div>
 
 
@@ -751,6 +755,163 @@ Area -0.0702158 0.02233912</code></pre>
 <h2 class="anchored" data-anchor-id="checking-error-assumptions">Checking Error Assumptions</h2>
 <p>We wish to check the independence, constant variance and normality of the errors, <span class="math inline">\(\varepsilon\)</span>. The errors are not observable, but we can examine the residuals, <span class="math inline">\(\hat{\varepsilon}\)</span>. These are not interchangeable with the error, as they have somewhat different properties. Recall that <span class="math inline">\(\hat{y}=X(X^TX)^{-1}Xy=Hy\)</span>, where <span class="math inline">\(H\)</span> is the hat matrix, so that <span class="math display">\[\hat{\varepsilon}=y-\hat{y}=(I-H)y=(I-H)X\beta+(I-H)\varepsilon=(I-H)\varepsilon \]</span></p>
 <p>Therefore, <span class="math inline">\(\text{var}\hat{\varepsilon} = \text{var} (I-H)\varepsilon = (I-H)\sigma^2\)</span> assuming that <span class="math inline">\(\text{var}\varepsilon= \sigma^2I\)</span>. We see that although the errors may have equal variance and be uncorrelated, the residuals do not.</p>
+</section>
+<section id="constant-variance" class="level2">
+<h2 class="anchored" data-anchor-id="constant-variance">Constant Variance</h2>
+<p>Is the variance in the residuals related to some other quantity?</p>
+<p>The most useful diagnostic is a plot of <span class="math inline">\(\hat{\varepsilon}\)</span> against <span class="math inline">\(\hat{y}\)</span>. If all is well, you should see constant symmetrical variation (homoscedasticity) in the vertical (<span class="math inline">\(\hat{\varepsilon}\)</span>) direction. Nonlinearity in the structural part of the model can also be detected in this plot.</p>
+<section id="normality" class="level3">
+<h3 class="anchored" data-anchor-id="normality">6.1.2 - Normality</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15<span class="sc">+</span>pop75<span class="sc">+</span>dpi<span class="sc">+</span>ddpi,savings)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(lmod),<span class="at">ylab=</span><span class="st">"Residuals"</span>,<span class="at">main=</span><span class="st">""</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(lmod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Inference_Diagnostics_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">residuals</span>(lmod),<span class="at">xlab=</span><span class="st">"Residuals"</span>,<span class="at">main=</span><span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Inference_Diagnostics_files/figure-html/unnamed-chunk-19-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(lmod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals(lmod)
+W = 0.98698, p-value = 0.8524</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="unusual-observations" class="level2">
+<h2 class="anchored" data-anchor-id="unusual-observations">6.2 - Unusual Observations</h2>
+<ul>
+<li><em>Outliers</em>: observations that do not fit the model well</li>
+<li><em>Influential observations</em>: observations that change the fit of the model in a substantive manner</li>
+<li>A <em>leverage point</em> is extreme in the predictor space. It has the potential to influence the fit, but does not necessarily do so.</li>
+</ul>
+<section id="leverages" class="level3">
+<h3 class="anchored" data-anchor-id="leverages">6.2.1 - Leverages</h3>
+<p>Leverages <span class="math inline">\(h_i\)</span> are useful diagnostics that depend only on <span class="math inline">\(X\)</span> and not <span class="math inline">\(y\)</span>.</p>
+<p><em>Wikipedia definition that I found helpful</em></p>
+<p>The leverage score for the <span class="math inline">\({i}^{th}\)</span> observation <span class="math inline">\(\mathbf{x}_i\)</span> is given as <span class="math display">\[h_{ii}=[H] _{ii}=x_i^\top (X^\top X)^{-1} x_i,\]</span> the <span class="math inline">\({i}^{th}\)</span> diagonal element of the hat (projection) matrix, <span class="math inline">\(H=X (X^\top X)^{-1} X^\top\)</span></p>
+<p>Thus the <span class="math inline">\({i}^{th}\)</span> leverage score can be viewed as the ‘weighted’ distance between <span class="math inline">\(x_i\)</span> to the mean of <span class="math inline">\(x_i\)</span>’s. Leverage is closely related to the squared Mahalanobis distance: <span class="math display">\[D^2(x_i)=(x_i-\bar{x})^\top S^{-1}(x_i-\bar{x})\]</span> where <span class="math inline">\(S=X^\top X\)</span> is the estimated covariance matrix of <span class="math inline">\(x_i\)</span>’s.</p>
+<p>It can also be interpreted as the degree by which the <span class="math inline">\({i}^{th}\)</span> measured (dependent) value (i.e., <span class="math inline">\(y_i\)</span> influences the <span class="math inline">\({i}^{th}\)</span> fitted (predicted) value (i.e., <span class="math inline">\(\hat{y_i}\)</span>: mathematically,</p>
+<p><span class="math display">\[h_{ii}=\frac{\partial\hat{y_i}}{\partial y_i} \]</span></p>
+<p><a href="https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/e/8375/files/2017/08/Lecture10-2n22q1q.pdf"><em>Properties of $h_{ii}</em></a> - <span class="math inline">\(0 \leq h_{ii} \leq 1\)</span> - Fixed <span class="math inline">\(i: \sum^n_{j=1} h_{ij}=1\)</span> - <span class="math inline">\(\bar{h}=\sum^n_{i=1}h_{ii}/n=p/n\)</span> - Fixed <span class="math inline">\(i: h_{ii}=\sum^n_{j=1} h_{ij}^2\)</span></p>
+<p><span class="math display">\[\text{Var}(\hat{e}_i)=\sigma^2(1-h_i) \]</span></p>
+<p>Large <span class="math inline">\(h_i\)</span> lead to small variances of <span class="math inline">\(e_i\)</span> and hence <span class="math inline">\(\hat{y_i}\)</span> tends to <span class="math inline">\(y_i\)</span>.</p>
+<p>Traditionally, a leverage point is one that satisfies <span class="math inline">\(h_{ii} \geq 2\bar{h} = \frac{2p}{n}\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15 <span class="sc">+</span> pop75 <span class="sc">+</span> dpi <span class="sc">+</span> ddpi, savings)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>hatv <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(lmod)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(hatv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Australia    Austria    Belgium    Bolivia     Brazil     Canada 
+0.06771343 0.12038393 0.08748248 0.08947114 0.06955944 0.15840239 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(hatv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="do">## threshold value for h_i ~= 0.2</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>thv <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="fu">length</span>(<span class="fu">coefficients</span>(lmod)) <span class="sc">/</span> <span class="fu">length</span>(hatv))</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="do">## are any h_i &gt; Eh?</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>hatv <span class="sc">&gt;</span> thv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Australia        Austria        Belgium        Bolivia         Brazil 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+        Canada          Chile          China       Colombia     Costa Rica 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+       Denmark        Ecuador        Finland         France        Germany 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+        Greece      Guatamala       Honduras        Iceland          India 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+       Ireland          Italy          Japan          Korea     Luxembourg 
+          TRUE          FALSE           TRUE          FALSE          FALSE 
+         Malta         Norway    Netherlands    New Zealand      Nicaragua 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+        Panama       Paraguay           Peru    Philippines       Portugal 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+  South Africa South Rhodesia          Spain         Sweden    Switzerland 
+         FALSE          FALSE          FALSE          FALSE          FALSE 
+        Turkey        Tunisia United Kingdom  United States      Venezuela 
+         FALSE          FALSE          FALSE           TRUE          FALSE 
+        Zambia        Jamaica        Uruguay          Libya       Malaysia 
+         FALSE          FALSE          FALSE           TRUE          FALSE </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>hatv[hatv<span class="sc">&gt;</span>thv]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Ireland         Japan United States         Libya 
+    0.2122363     0.2233099     0.3336880     0.5314568 </code></pre>
+</div>
+</div>
+<p>We verify that the sum of the leverages is indeed 5 — the number of parameters in the model.</p>
+<p>We can also identify high leverages using half-normal plots, where the data are plotted against positive normal quantiles. We do not usually expect a straight line relationship since we do not necessarily expect a positive normal distribution for quantities like leverages. We are looking for outliers, which will be apparent as points that diverge substantially from the rest of the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>countries <span class="ot">&lt;-</span> <span class="fu">row.names</span>(savings)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(hatv,<span class="at">labs=</span>countries,<span class="at">ylab=</span><span class="st">"Leverages"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Inference_Diagnostics_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="standardized-residuals" class="level2">
+<h2 class="anchored" data-anchor-id="standardized-residuals">Standardized residuals</h2>
+<p>We can use the leverages to scale the residuals so their variance is 1 <span class="math display">\[r_i=\frac{\hat{e_i}}{\sigma \sqrt{1-h_i}} \]</span></p>
+<p>Doing so allows for easy examination via <span class="math inline">\(Q-Q\)</span> plots, as values should lie on the 1:1 line.</p>
+</section>
+<section id="studentized-residuals" class="level2">
+<h2 class="anchored" data-anchor-id="studentized-residuals">Studentized residuals</h2>
+<p>One way to detect outliers is to estimate <span class="math inline">\(n\)</span> different models where we exclude one data point from each model. <span class="math display">\[\hat{y}_{(i)}=X_{(i)}\hat{\beta}_{(i)}\]</span> where <span class="math inline">\((i)\)</span> indicates that the <span class="math inline">\(i^{th}\)</span> datum has been omitted. If <span class="math inline">\(y_i-\hat{y}_{(i)}\)</span> is large, then observation <span class="math inline">\(i\)</span> is an outlier. To judge the size of a potential outlier, we need an appropriate scaling. We find <span class="math display">\[\widehat{\text{var}}(y_i-\hat{y}_{(i)})=\hat{\sigma}_{(i)}^2 (1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i) \]</span></p>
+<p>So we can compute the studentized residuals as <span class="math display">\[t_i = \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i}} \]</span></p>
+<p>which are distributed as a <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(n-p-1\)</span> df. Fortunately, there is an easier way to compute <span class="math inline">\(t_i\)</span> that avoids doing <span class="math inline">\(n\)</span> regressions: <span class="math display">\[t_i=\frac{\hat{e_i}}{\hat{\sigma}_{(i)} \sqrt{1-h_i}}= r_i \left(\frac{n-p-1}{n-p-r_i^2} \right)^{1/2} \]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>stud <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(lmod)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>stud[<span class="fu">which.max</span>(<span class="fu">abs</span>(stud))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Zambia 
+2.853558 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(lmod)<span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qt</span>(<span class="at">p=</span>.<span class="dv">05</span><span class="sc">/</span>(<span class="fu">length</span>(countries)<span class="sc">*</span><span class="dv">2</span>), <span class="at">df=</span>df) <span class="co">#find test statistic, which is greater than the absolute value of the studentized residual</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -3.525801</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>((<span class="fu">unname</span>(<span class="sc">-</span>stud[<span class="fu">which.max</span>(<span class="fu">abs</span>(stud))])), <span class="at">df=</span>df, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>) <span class="co">#p-value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.006566663</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>((<span class="fu">unname</span>(<span class="sc">-</span>stud[<span class="fu">which.max</span>(<span class="fu">abs</span>(stud))])), <span class="at">df=</span>df, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>)<span class="sc">*</span><span class="fu">nrow</span>(savings) <span class="co">#corrected</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3283332</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">outlierTest</span>(lmod) <span class="co">#easier</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>No Studentized residuals with Bonferroni p &lt; 0.05
+Largest |rstudent|:
+       rstudent unadjusted p-value Bonferroni p
+Zambia 2.853558          0.0065667      0.32833</code></pre>
+</div>
+</div>
+</section>
+<section id="influential-observations" class="level2">
+<h2 class="anchored" data-anchor-id="influential-observations">6.2.3 Influential Observations</h2>
+<p>An influential point is one whose removal from the dataset would cause a large change in the fit. An influential point may or may not be an outlier and may or may not have large leverage, but it will tend to have at least one of these two properties.</p>
+<p>Cook’s D: <span class="math display">\[D_i=\frac{e_i^2}{p} \left(\frac{h_i}{1-h_i} \right) \]</span></p>
+<p>This metric combines the residual effect and leverage to quantify the influence. A half-normal plot of <span class="math inline">\(D_i\)</span> can be used to identify influential observations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(sr <span class="sc">~</span> pop15<span class="sc">+</span>pop75<span class="sc">+</span>dpi<span class="sc">+</span>ddpi,savings)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(lmod)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(cook,<span class="dv">3</span>,<span class="at">labs=</span>countries,<span class="at">ylab=</span><span class="st">"Cook’s distances"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="Inference_Diagnostics_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 
 
 </section>

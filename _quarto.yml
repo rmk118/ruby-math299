@@ -20,13 +20,11 @@ website:
           href: ./HW/hw_02_fitting_lm.qmd
         - text: HW3
           href: ./HW/hw_03_diagnostics.qmd
-      - text: Labs
-        menu: 
-          - text: Lab 1
-            href: ./Labs/lab1.qmd
       - text: Notes
         menu: 
-          - text: Inference, Diagnostics, & Errors
+          - text: Lab 1
+            href: ./Notes/lab1.qmd
+          - text: Inference & Diagnostics
             href: ./Notes/Inference_Diagnostics.qmd
     
 format:

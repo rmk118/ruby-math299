@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Math 299</title>
+<title>Math 299 – hw_05_model_selection</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,21 +23,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -59,6 +60,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -69,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Math 299</span>
     </a>
   </div>
@@ -80,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -89,16 +92,27 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hw">    
         <li>
-    <a class="dropdown-item" href="./HW/hw_01_intro_to_markdown.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_01_intro_to_markdown.html" rel="" target="">
  <span class="dropdown-text">HW1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_02_fitting_lm.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_02_fitting_lm.html" rel="" target="">
  <span class="dropdown-text">HW2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_03_diagnostics.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_03_diagnostics.html" rel="" target="">
  <span class="dropdown-text">HW3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../Labs/lab1.html" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
   </li>  
     </ul>
   </li>
@@ -108,12 +122,8 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
-    <a class="dropdown-item" href="./Notes/lab1.html" rel="" target="">
- <span class="dropdown-text">Lab 1</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./Notes/Inference_Diagnostics.html" rel="" target="">
- <span class="dropdown-text">Inference &amp; Diagnostics</span></a>
+    <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
+ <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
   </li>  
     </ul>
   </li>
@@ -138,35 +148,47 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
+   
   <ul>
-  <li><a href="#math-299-directed-study-environmental-data-analysis" id="toc-math-299-directed-study-environmental-data-analysis" class="nav-link active" data-scroll-target="#math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gamma_distribution_pdf.svg/650px-Gamma_distribution_pdf.svg.png" class="about-image
-  rounded " style="width: 10cm;">
-    <div class="about-links">
-  <a href="https://github.com/rmk118/ruby-math299" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<section id="math-299-directed-study-environmental-data-analysis" class="level2">
-<h2 data-anchor-id="math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</h2>
-<p><strong>Ruby Krasnow</strong></p>
-<p>This website will house my assignments as I work through the course material for <a href="https://qerm514.github.io/website/index.html">QERM 514: Analysis of Ecological and Environmental Data</a>, one of the core requirements for graduate students in the Quantitative Ecology &amp; Resource Management (QERM) program at the University of Washington. The QERM 514 course materials developed and made publicly available online by Dr.&nbsp;Mark Scheuerell will serve as a foundation for a directed study I will complete during my final semester at Clark, supervised by <a href="https://www.clarku.edu/faculty/profiles/michael-satz/">Michael Satz</a> (Clark University, Department of Mathematics).</p>
+
+
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>This week’s home work will require you to use all of the information you have learned so far in class. Your task is to analyze some data on the concentration of nitrogen in the soil at 41 locations on the island of Maui in the Hawaiian Archipelago. Along with the nitrogen measurements, there are 4 possible predictor variables that may help to explain the variation in soil nitrogen concentration. The accompanying data file <code>soil_nitrogen.csv</code> has the following 5 columns of data:</p>
+<ul>
+<li><p><code>nitrogen</code>: concentration of soil nitrogen (mg nitrogen kg<span class="math inline">\(^{-1}\)</span> soil)</p></li>
+<li><p><code>temp</code>: average air temperature (<span class="math inline">\(^\circ\)</span>C)</p></li>
+<li><p><code>precip</code>: average precipitation (cm)</p></li>
+<li><p><code>slope</code>: slope of the hillside (degrees)</p></li>
+<li><p><code>aspect</code>: aspect of the hillside (N, S)</p></li>
+</ul>
+<p>As you work through the following problems, be sure to show all of the code necessary to produce your answers.</p>
+</section>
+<section id="problems" class="level1">
+<h1>Problems</h1>
+<ol type="a">
+<li><p>Begin by building a global model that contains all four of the predictors plus an intercept. Show the resulting ANOVA table, and report the multiple and adjusted <span class="math inline">\(R^3\)</span> values. Also report the estimate of the residual variance <span class="math inline">\(\hat{\sigma}^2\)</span>.</p></li>
+<li><p>Check the residuals from your full model for possible violations of the assumption that the <span class="math inline">\(e_i \sim \text{N}(0, \sigma^2)\)</span>.</p></li>
+<li><p>Does this seem like a reasonable model for these data? Why or why not?</p></li>
+<li><p>Now fit various models using all possible combinations of the 4 predictors, including an intercept-only model (ie, there should be a total of 16 models). Compute the AIC, AICc, and BIC for each of your models and compare the relative rankings of the different models.</p></li>
+<li><p>Conduct a leave-one-out cross-validation for all of the models in part (d), using the root mean squared prediction error (RMSPE) as your scale-dependent measure of fit. Report your results alongside your results from part (d). Do all of the methods agree on which of these models is the best?</p></li>
+<li><p>Given some uncertainty that one of these models is the true data-generating model, compute the weights of evidence for each of the models in your set. Which model has the greatest support from the data? What are the odds against the intercept-only model compared to the best model?</p></li>
+<li><p>Calculate the model-averaged parameters across all models in your set. Use these parameters to predict what the soil nitrogen concentration would be on the nearby island of Moloka’i if the average precipitation was 150 cm, the average temperature was 22 <span class="math inline">\(^\circ\)</span>C, and the hillside faced south with a slope of 11 degrees.</p></li>
+<li><p>Compare your prediction from part (g) to a prediction from the model identified as the best in part (e), using the same inputs. How much do they differ from one another?</p></li>
+</ol>
 
 
 </section>
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main></div>
-</div>
- <!-- /main -->
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -187,6 +209,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

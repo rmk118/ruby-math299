@@ -1,5 +1,5 @@
 ---
-title: "Inference, Diagnostics, & Errors"
+title: "Inference & Diagnostics"
 author: "Ruby Krasnow"
 link-external-newwindow: true 
 editor_options: 
@@ -299,3 +299,126 @@ Therefore, $\text{var}\hat{\varepsilon} = \text{var} (I-H)\varepsilon = (I-H)\si
 Is the variance in the residuals related to some other quantity?
 
 The most useful diagnostic is a plot of $\hat{\varepsilon}$ against $\hat{y}$. If all is well, you should see constant symmetrical variation (homoscedasticity) in the vertical ($\hat{\varepsilon}$) direction. Nonlinearity in the structural part of the model can also be detected in this plot.
+
+### 6.1.2 - Normality
+
+```{r}
+lmod <- lm(sr ~ pop15+pop75+dpi+ddpi,savings)
+qqnorm(residuals(lmod),ylab="Residuals",main="")
+qqline(residuals(lmod))
+
+hist(residuals(lmod),xlab="Residuals",main="")
+shapiro.test(residuals(lmod))
+```
+
+## 6.2 - Unusual Observations
+
+- *Outliers*: observations that do not fit the model well
+- *Influential observations*: observations that change the fit of the model in a substantive manner
+- A *leverage point* is extreme in the predictor space. It has the potential to influence the fit, but does not necessarily do so.
+
+### 6.2.1 - Leverages
+
+Leverages $h_i$ are useful diagnostics that depend only on $X$ and not $y$.
+
+*Wikipedia definition that I found helpful*
+
+The leverage score for the ${i}^{th}$ observation $\mathbf{x}_i$ is given as
+$$h_{ii}=[H] _{ii}=x_i^\top (X^\top X)^{-1} x_i,$$
+the ${i}^{th}$ diagonal element of the hat (projection) matrix, $H=X (X^\top X)^{-1} X^\top$
+
+Thus the ${i}^{th}$ leverage score can be viewed as the 'weighted' distance between $x_i$ to the mean of $x_i$'s. Leverage is closely related to the squared Mahalanobis distance:
+$$D^2(x_i)=(x_i-\bar{x})^\top S^{-1}(x_i-\bar{x})$$
+where $S=X^\top X$ is the estimated covariance matrix of $x_i$'s.
+
+It can also be interpreted as the degree by which the ${i}^{th}$ measured (dependent) value (i.e., $y_i$ influences the ${i}^{th}$ fitted (predicted) value (i.e., $\hat{y_i}$: mathematically,
+
+$$h_{ii}=\frac{\partial\hat{y_i}}{\partial y_i} $$
+
+[*Properties of $h_{ii}*](https://bpb-us-e1.wpmucdn.com/blogs.rice.edu/dist/e/8375/files/2017/08/Lecture10-2n22q1q.pdf)
+- $0 \leq h_{ii} \leq 1$
+- Fixed $i: \sum^n_{j=1} h_{ij}=1$
+- $\bar{h}=\sum^n_{i=1}h_{ii}/n=p/n$
+- Fixed $i: h_{ii}=\sum^n_{j=1} h_{ij}^2$
+
+$$\text{Var}(\hat{e}_i)=\sigma^2(1-h_i) $$
+
+Large $h_i$ lead to small variances of $e_i$ and hence $\hat{y_i}$ tends to $y_i$.
+
+Traditionally, a leverage point is one that satisfies $h_{ii} \geq 2\bar{h} = \frac{2p}{n}$
+
+```{r}
+lmod <- lm(sr ~ pop15 + pop75 + dpi + ddpi, savings)
+hatv <- hatvalues(lmod)
+head(hatv)
+sum(hatv)
+
+## threshold value for h_i ~= 0.2
+thv <- 2 * (length(coefficients(lmod)) / length(hatv))
+
+## are any h_i > Eh?
+hatv > thv
+
+hatv[hatv>thv]
+```
+
+We verify that the sum of the leverages is indeed 5 — the number of parameters in the model.
+
+We can also identify high leverages using half-normal plots, where the data are plotted against positive normal quantiles. We do not usually expect a straight line relationship since we do not necessarily expect a positive normal distribution for quantities like leverages. We are looking for
+outliers, which will be apparent as points that diverge substantially from the rest of the data
+
+```{r}
+countries <- row.names(savings)
+halfnorm(hatv,labs=countries,ylab="Leverages")
+```
+
+## Standardized residuals
+
+We can use the leverages to scale the residuals so their variance is 1
+$$r_i=\frac{\hat{e_i}}{\sigma \sqrt{1-h_i}} $$
+
+Doing so allows for easy examination via $Q-Q$ plots, as values should lie on the 1:1 line.
+
+## Studentized residuals
+
+One way to detect outliers is to estimate $n$ different models where we exclude one data point from each model.
+$$\hat{y}_{(i)}=X_{(i)}\hat{\beta}_{(i)}$$
+where $(i)$ indicates that the $i^{th}$ datum has been omitted. If $y_i-\hat{y}_{(i)}$ is large, then observation $i$ is an outlier. To judge the size of a potential outlier, we need an appropriate scaling. We find
+$$\widehat{\text{var}}(y_i-\hat{y}_{(i)})=\hat{\sigma}_{(i)}^2 (1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i) $$
+
+So we can compute the studentized residuals as
+$$t_i = \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i}} $$
+
+which are distributed as a $t$-distribution with $n-p-1$ df. Fortunately, there is an easier way to compute $t_i$ that avoids doing $n$ regressions:
+$$t_i=\frac{\hat{e_i}}{\hat{\sigma}_{(i)} \sqrt{1-h_i}}= r_i \left(\frac{n-p-1}{n-p-r_i^2} \right)^{1/2} $$
+
+```{r}
+stud <- rstudent(lmod)
+stud[which.max(abs(stud))]
+
+df <- df.residual(lmod)-1
+
+qt(p=.05/(length(countries)*2), df=df) #find test statistic, which is greater than the absolute value of the studentized residual
+
+2*pt((unname(-stud[which.max(abs(stud))])), df=df, lower.tail = TRUE) #p-value
+2*pt((unname(-stud[which.max(abs(stud))])), df=df, lower.tail = TRUE)*nrow(savings) #corrected
+
+car::outlierTest(lmod) #easier
+
+```
+
+## 6.2.3 Influential Observations
+
+An influential point is one whose removal from the dataset would cause a large change in the fit. An influential point may or may not be an outlier and may or may not have large leverage, but it will tend to have at least one of these two properties. 
+
+Cook's D:
+$$D_i=\frac{e_i^2}{p} \left(\frac{h_i}{1-h_i} \right) $$
+
+This metric combines the residual effect and leverage to quantify the influence. A half-normal plot of $D_i$ can be used to identify influential observations.
+
+```{r}
+lmod <- lm(sr ~ pop15+pop75+dpi+ddpi,savings)
+cook <- cooks.distance(lmod)
+halfnorm(cook,3,labs=countries,ylab="Cook’s distances")
+```
+

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Math 299</title>
+<title>Math 299 – hw_06_mixed_models</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,21 +23,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -59,6 +60,8 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -69,7 +72,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">Math 299</span>
     </a>
   </div>
@@ -80,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" rel="" target="" aria-current="page">
+    <a class="nav-link" href="../index.html" rel="" target="">
  <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -89,16 +92,27 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-hw">    
         <li>
-    <a class="dropdown-item" href="./HW/hw_01_intro_to_markdown.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_01_intro_to_markdown.html" rel="" target="">
  <span class="dropdown-text">HW1</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_02_fitting_lm.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_02_fitting_lm.html" rel="" target="">
  <span class="dropdown-text">HW2</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./HW/hw_03_diagnostics.html" rel="" target="">
+    <a class="dropdown-item" href="../HW/hw_03_diagnostics.html" rel="" target="">
  <span class="dropdown-text">HW3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-labs" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Labs</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-labs">    
+        <li>
+    <a class="dropdown-item" href="../Labs/lab1.html" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
   </li>  
     </ul>
   </li>
@@ -108,12 +122,8 @@ ul.task-list li input[type="checkbox"] {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
         <li>
-    <a class="dropdown-item" href="./Notes/lab1.html" rel="" target="">
- <span class="dropdown-text">Lab 1</span></a>
-  </li>  
-        <li>
-    <a class="dropdown-item" href="./Notes/Inference_Diagnostics.html" rel="" target="">
- <span class="dropdown-text">Inference &amp; Diagnostics</span></a>
+    <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
+ <span class="dropdown-text">Inference, Diagnostics, &amp; Errors</span></a>
   </li>  
     </ul>
   </li>
@@ -138,35 +148,130 @@ ul.task-list li input[type="checkbox"] {
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
+   
   <ul>
-  <li><a href="#math-299-directed-study-environmental-data-analysis" id="toc-math-299-directed-study-environmental-data-analysis" class="nav-link active" data-scroll-target="#math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a>
+  <ul class="collapse">
+  <li><a href="#ricker-model" id="toc-ricker-model" class="nav-link" data-scroll-target="#ricker-model">Ricker model</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  </ul></li>
+  <li><a href="#problems" id="toc-problems" class="nav-link" data-scroll-target="#problems">Problems</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Gamma_distribution_pdf.svg/650px-Gamma_distribution_pdf.svg.png" class="about-image
-  rounded " style="width: 10cm;">
-    <div class="about-links">
-  <a href="https://github.com/rmk118/ruby-math299" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
-<section id="math-299-directed-study-environmental-data-analysis" class="level2">
-<h2 data-anchor-id="math-299-directed-study-environmental-data-analysis">MATH 299: Directed Study – Environmental Data Analysis</h2>
-<p><strong>Ruby Krasnow</strong></p>
-<p>This website will house my assignments as I work through the course material for <a href="https://qerm514.github.io/website/index.html">QERM 514: Analysis of Ecological and Environmental Data</a>, one of the core requirements for graduate students in the Quantitative Ecology &amp; Resource Management (QERM) program at the University of Washington. The QERM 514 course materials developed and made publicly available online by Dr.&nbsp;Mark Scheuerell will serve as a foundation for a directed study I will complete during my final semester at Clark, supervised by <a href="https://www.clarku.edu/faculty/profiles/michael-satz/">Michael Satz</a> (Clark University, Department of Mathematics).</p>
+
+
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>This week’s homework assignment focuses on fitting and evaluating linear mixed models. In particular, you will consider different forms for a stock-recruit relationship that describes the density-dependent relationship between fish spawning biomass in “brood year” <span class="math inline">\(t\)</span> <span class="math inline">\((S_t)\)</span> and the biomass of fish arising from that brood year that subsequently “recruit” to the fishery <span class="math inline">\((R_t)\)</span>.</p>
+<section id="ricker-model" class="level2">
+<h2 class="anchored" data-anchor-id="ricker-model">Ricker model</h2>
+<p>The Ricker model (<a href="https://doi.org/10.1139%2Ff54-039">Ricker 1954</a>) is one of the classical forms for describing the stock-recruit relationship. The deterministic form of the model is given by</p>
+<p><span class="math display">\[
+R_t = S_t \exp \left[ r \left( 1 - \frac{S_t}{k} \right) \right]
+\]</span></p>
+<p>where <span class="math inline">\(r\)</span> is the intrinsic growth rate and <span class="math inline">\(k\)</span> is the carrying capacity of the environment. In fisheries science, the model is often rewritten as</p>
+<p><span class="math display">\[
+R_t = a S_t \exp \left( -b S_t \right)
+\]</span></p>
+<p>where <span class="math inline">\(a = \exp r\)</span> and <span class="math inline">\(b = r / k\)</span>. We can make the model stochastic by including a multiplicative error term <span class="math inline">\(\epsilon_t \sim \text{N}(0, \sigma^2)\)</span>, such that</p>
+<p><span class="math display">\[
+R_t = a S_t \exp \left( -b S_t \right) \exp(\epsilon_t)
+\]</span></p>
+<p>This model is clearly non-linear, but we can use a log-transform to linearize it. Specifically, we have</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log R_t &amp;= \log a + \log S_t - b S_t + \epsilon_t \\
+&amp;\Downarrow \\
+\log R_t - \log S_t &amp;= \log a - b S_t + \epsilon_t \\
+&amp;\Downarrow \\
+\log (R_t / S_t) &amp;= \log a - b S_t + \epsilon_t \\
+&amp;\Downarrow \\
+y_t &amp;= \alpha - \beta S_t + \epsilon_t
+\end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(y_t =\log (R_t / S_t)\)</span>, <span class="math inline">\(\alpha = \log a\)</span>, and <span class="math inline">\(\beta = b\)</span>.</p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>The data for this assignment come from 21 populations of Chinook salmon (<em>Oncorhynchus tshawytscha</em>) in Puget Sound. The original data come from the NOAA Fisheries Salmon Population Summary (SPS) <a href="https://www.webapps.nwfsc.noaa.gov/apex/f?p=261:HOME::::::">database</a>, which was subsequently cleaned and summarized for use in a recent paper by <a href="https://doi.org/10.1016/j.ecolmodel.2018.04.012">Bal et al.&nbsp;(2019)</a>. The data are contained in the accompanying file <code>ps_chinook.csv</code>, which contains the following columns:</p>
+<ul>
+<li><p><code>pop</code>: name of the population</p></li>
+<li><p><code>pop_n</code>: integer ID for population (1-21)</p></li>
+<li><p><code>year</code>: year of spawning</p></li>
+<li><p><code>spawners</code>: total number of spawning adults (1000s)</p></li>
+<li><p><code>recruits</code>: total number of surviving offspring that “recruit” to the fishery (1000s)</p></li>
+</ul>
+</section>
+</section>
+<section id="problems" class="level1">
+<h1>Problems</h1>
+<p>As you work through the following problems, be sure to show all of the code necessary to produce your answers. (Hint: You will need to define a new response variable before you can do any model fitting.)</p>
+<ol type="a">
+<li><p>Plot the number of recruits by population <span class="math inline">\((y)\)</span> against the number of spawners by population <span class="math inline">\((x)\)</span>, and add a line indicating the replacement level where recruits = spawners. Describe what you see.</p></li>
+<li><p>Fit the following model and report your estimates for <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span>. Also report your estimate of <span class="math inline">\(\sigma_\epsilon^2\)</span>. Based on the <span class="math inline">\(R^2\)</span> value, does this seem like a promising model?</p></li>
+</ol>
+<p><span class="math display">\[\begin{equation}
+\begin{gathered} \nonumber
+\log (R_{i,t} / S_{i,t}) = \alpha - \beta S_{i,t} + \epsilon_{i,t} \\
+\epsilon_{i,t} \sim \text{N}(0, \sigma_\epsilon^2)
+\end{gathered}
+\end{equation}\]</span></p>
+<ol start="3" type="a">
+<li>Fit the following model and report your estimates for <span class="math inline">\(\alpha\)</span>, each of the <span class="math inline">\(\delta_i\)</span>, and <span class="math inline">\(\beta\)</span>. Also report your estimate of <span class="math inline">\(\sigma_\epsilon^2\)</span> and <span class="math inline">\(\sigma_\delta^2\)</span>. Based on the <span class="math inline">\(R^2\)</span> value, how does this model compare to that from part (b)?</li>
+</ol>
+<p><span class="math display">\[\begin{equation}
+\begin{gathered} \nonumber
+\log (R_{i,t} / S_{i,t}) = (\alpha + \delta_i) - \beta S_{i,t} + \epsilon_{i,t} \\
+\delta_{i} \sim \text{N}(0, \sigma_\delta^2) \\
+\epsilon_{i,t} \sim \text{N}(0, \sigma_\epsilon^2)
+\end{gathered}
+\end{equation}\]</span></p>
+<ol start="4" type="a">
+<li>Fit the following model and report your estimates for <span class="math inline">\(\alpha\)</span>, each of the <span class="math inline">\(\eta_i\)</span>, and <span class="math inline">\(\beta\)</span>. Also report your estimate of <span class="math inline">\(\sigma_\epsilon^2\)</span> and <span class="math inline">\(\sigma_\eta^2\)</span>. Based on the <span class="math inline">\(R^2\)</span> value, how does this model compare to that from part (c)?</li>
+</ol>
+<p><span class="math display">\[\begin{equation}
+\begin{gathered} \nonumber
+\log (R_{i,t} / S_{i,t}) = \alpha - (\beta + \eta_i) S_{i,t} + \epsilon_{i,t} \\
+\eta_{i} \sim \text{N}(0, \sigma_\eta^2) \\
+\epsilon_{i,t} \sim \text{N}(0, \sigma_\epsilon^2)
+\end{gathered}
+\end{equation}\]</span></p>
+<ol start="5" type="a">
+<li>Fit the following model and report your estimates for <span class="math inline">\(\alpha\)</span>, each of the <span class="math inline">\(\delta_i\)</span>, <span class="math inline">\(\beta\)</span>, and each of the <span class="math inline">\(\eta_i\)</span>. Also report your estimate of <span class="math inline">\(\sigma_\epsilon^2\)</span>, <span class="math inline">\(\sigma_\delta^2\)</span>, and <span class="math inline">\(\sigma_\eta^2\)</span>. Based on the <span class="math inline">\(R^2\)</span> value, how does this model compare to that from part (d)?</li>
+</ol>
+<p><span class="math display">\[\begin{equation}
+\begin{gathered} \nonumber
+\log (R_{i,t} / S_{i,t}) = (\alpha + \delta_i) - (\beta + \eta_i) S_{i,t} + \epsilon_{i,t} \\
+\delta_{i} \sim \text{N}(0, \sigma_\delta^2) \\
+\eta_{i} \sim \text{N}(0, \sigma_\eta^2) \\
+\epsilon_{i,t} \sim \text{N}(0, \sigma_\epsilon^2)
+\end{gathered}
+\end{equation}\]</span></p>
+<ol start="6" type="a">
+<li><p>Based on the 3 models you fit in parts (c - e), test whether or not there is data support for including a random effect for population-level intercepts. Also test whether or not there is data support for including a random effect for population-level slopes. Make sure to specify your null hypothesis for both of the tests.</p></li>
+<li><p>Now fit the following model and report your estimates for <span class="math inline">\(\alpha\)</span>, each of the <span class="math inline">\(\delta_i\)</span>, <span class="math inline">\(\beta\)</span>, each of the <span class="math inline">\(\eta_i\)</span>, and each of the <span class="math inline">\(\gamma_t\)</span>. Also report your estimate of <span class="math inline">\(\sigma_\epsilon^2\)</span>, <span class="math inline">\(\sigma_\delta^2\)</span>, <span class="math inline">\(\sigma_\gamma^2\)</span>, and <span class="math inline">\(\sigma_\eta^2\)</span>. Based on the <span class="math inline">\(R^2\)</span> value, how does this model compare to that from part (d)?</p></li>
+</ol>
+<p><span class="math display">\[\begin{equation}
+\begin{gathered} \nonumber
+\log (R_{i,t} / S_{i,t}) = (\alpha + \delta_i + \gamma_t) - (\beta + \eta_i) S_{i,t} + \epsilon_{i,t} \\
+\delta_{i} \sim \text{N}(0, \sigma_\delta^2) \\
+\gamma_{t} \sim \text{N}(0, \sigma_\gamma^2) \\
+\eta_{i} \sim \text{N}(0, \sigma_\eta^2) \\
+\epsilon_{i,t} \sim \text{N}(0, \sigma_\epsilon^2)
+\end{gathered}
+\end{equation}\]</span></p>
+<ol start="8" type="a">
+<li>Conduct a diagnostic check of the model you fit in (g) to evaluate the adequacy of the model assumptions. Do you see any cause for concern?</li>
+</ol>
 
 
 </section>
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main></div>
-</div>
- <!-- /main -->
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -187,6 +292,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     
