@@ -26,6 +26,8 @@ website:
             href: ./Notes/lab1.qmd
           - text: Inference & Diagnostics
             href: ./Notes/Inference_Diagnostics.qmd
+          - text: Design Matrices
+            href: ./Notes/design_matrices.qmd
     
 format:
   html:

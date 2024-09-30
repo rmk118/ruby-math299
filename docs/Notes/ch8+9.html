@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ruby Krasnow">
+
+<title>Math 299 - Problems with Model Errors</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Math 299</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hw" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">HW</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hw">    
+        <li>
+    <a class="dropdown-item" href="../HW/hw_01_intro_to_markdown.html" rel="" target="">
+ <span class="dropdown-text">HW1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../HW/hw_02_fitting_lm.html" rel="" target="">
+ <span class="dropdown-text">HW2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../HW/hw_03_diagnostics.html" rel="" target="">
+ <span class="dropdown-text">HW3</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-notes" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Notes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-notes">    
+        <li>
+    <a class="dropdown-item" href="../Notes/lab1.html" rel="" target="">
+ <span class="dropdown-text">Lab 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Notes/Inference_Diagnostics.html" rel="" target="">
+ <span class="dropdown-text">Inference &amp; Diagnostics</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/rmk118/ruby-math299" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#chapter-8-problems-with-the-error" id="toc-chapter-8-problems-with-the-error" class="nav-link active" data-scroll-target="#chapter-8-problems-with-the-error">Chapter 8: Problems with the Error</a>
+  <ul class="collapse">
+  <li><a href="#generalized-least-squares" id="toc-generalized-least-squares" class="nav-link" data-scroll-target="#generalized-least-squares">8.1 Generalized Least Squares</a></li>
+  <li><a href="#weighted-least-squares-wls" id="toc-weighted-least-squares-wls" class="nav-link" data-scroll-target="#weighted-least-squares-wls">8.2 Weighted Least Squares (WLS)</a>
+  <ul class="collapse">
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  </ul></li>
+  <li><a href="#robust-regression" id="toc-robust-regression" class="nav-link" data-scroll-target="#robust-regression">8.4 Robust Regression</a>
+  <ul class="collapse">
+  <li><a href="#m-estimation" id="toc-m-estimation" class="nav-link" data-scroll-target="#m-estimation">M-Estimation</a></li>
+  <li><a href="#least-trimmed-squares-lts" id="toc-least-trimmed-squares-lts" class="nav-link" data-scroll-target="#least-trimmed-squares-lts">Least Trimmed Squares (LTS)</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#chapter-9-transformation" id="toc-chapter-9-transformation" class="nav-link" data-scroll-target="#chapter-9-transformation">Chapter 9: Transformation</a>
+  <ul class="collapse">
+  <li><a href="#transforming-the-response" id="toc-transforming-the-response" class="nav-link" data-scroll-target="#transforming-the-response">9.1 Transforming the response</a>
+  <ul class="collapse">
+  <li><a href="#box-cox" id="toc-box-cox" class="nav-link" data-scroll-target="#box-cox">Box-Cox</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Problems with Model Errors</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Ruby Krasnow </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># List of packages required:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"PNWColors"</span>, <span class="st">"janitor"</span>, <span class="st">"faraway"</span>, <span class="st">"broom"</span>, <span class="st">"DHARMa"</span>, <span class="st">"emmeans"</span>, <span class="st">"performance"</span>, <span class="st">"nlme"</span>, <span class="st">"MASS"</span>, <span class="st">"broom.helpers"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages into session</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(packages, require, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(packages)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure functions with duplicate names are from the correct package</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>select <span class="ot">&lt;-</span> dplyr<span class="sc">::</span>select</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>map <span class="ot">&lt;-</span> purrr<span class="sc">::</span>map</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>summarize <span class="ot">&lt;-</span> dplyr<span class="sc">::</span>summarize</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>clean_names <span class="ot">&lt;-</span> janitor<span class="sc">::</span>clean_names</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>margin <span class="ot">&lt;-</span> ggplot2<span class="sc">::</span>margin</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co">#Set seed for pseudo-random number generator, for reproducibility</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>mytheme <span class="ot">&lt;-</span> <span class="fu">theme_light</span>()<span class="sc">+</span> <span class="co">#define custom theme for ggplots</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">0</span>, <span class="at">r =</span> <span class="dv">10</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">10</span>, <span class="at">l =</span> <span class="dv">0</span>)),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="chapter-8-problems-with-the-error" class="level1">
+<h1>Chapter 8: Problems with the Error</h1>
+<section id="generalized-least-squares" class="level2">
+<h2 class="anchored" data-anchor-id="generalized-least-squares">8.1 Generalized Least Squares</h2>
+<p>We have previously assumed <span class="math inline">\(\text{var}(e)=\sigma^2 I\)</span>, but suppose that the errors have non-constant variance, <span class="math inline">\(\text{var}(e)=\sigma^2 \Sigma\)</span>, where <span class="math inline">\(\sigma^2\)</span> is unknown and <span class="math inline">\(\Sigma\)</span> is known: we know the correlation and relative variance between the errors, but not the absolute scale of the variation.</p>
+<p>We can write <span class="math inline">\(\Sigma = SS^\top\)</span> , where S is a triangular matrix using the Choleski decomposition, which be can be viewed as a square root for a matrix. We can transform the regression model as follows: <span class="math display">\[\begin{align*}
+y &amp;= X\beta +e
+S^{-1}y &amp;=S^{-1}X \beta+S^{-1}e
+y' &amp;= X'\beta+e'
+\end{align*}\]</span> Then, <span class="math inline">\(\text{var}(e')=\text{var}(S^{-1}e)=S^{-1}(\text{var }e)S^{-\top}=S^{-1}\sigma^2 SS^\top S^{-\top}=\sigma^2 I\)</span></p>
+<p>So we can reduce GLS to OLS by a regression of <span class="math inline">\(y′ = S^{-1}y\)</span> on <span class="math inline">\(X′ = S^{-1}X\)</span> which has error <span class="math inline">\(e'=S^{-1}e\)</span> that is i.i.d. We have transformed the problem to the standard case.</p>
+<p>Errors between successive observations <span class="math inline">\(\rightarrow\)</span> autoregressive model, <span class="math inline">\(e_{i+1}=\phi e_i+\delta_i\)</span> where <span class="math inline">\(\delta \sim N(0, \tau^2)\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(nhtemp <span class="sc">~</span> wusa <span class="sc">+</span> jasper <span class="sc">+</span> westgreen <span class="sc">+</span> chesapeake <span class="sc">+</span> tornetrask <span class="sc">+</span> urals <span class="sc">+</span> mongolia <span class="sc">+</span> tasman, globwarm)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="fu">residuals</span>(lmod)[<span class="sc">-</span><span class="dv">1</span>],<span class="fu">residuals</span>(lmod)[<span class="sc">-</span><span class="fu">length</span>(<span class="fu">residuals</span>(lmod))])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.583339</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">dwtest</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Durbin-Watson test
+
+data:  lmod
+DW = 0.81661, p-value = 1.402e-15
+alternative hypothesis: true autocorrelation is greater than 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">durbinWatsonTest</span>(lmod) <span class="co">#tidy(car::durbinWatsonTest(lmod))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> lag Autocorrelation D-W Statistic p-value
+   1       0.5710535     0.8166064       0
+ Alternative hypothesis: rho != 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>performance<span class="sc">::</span><span class="fu">check_autocorrelation</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Autocorrelated residuals detected (p &lt; .001).</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>glmod <span class="ot">&lt;-</span> <span class="fu">gls</span>(nhtemp <span class="sc">~</span> wusa <span class="sc">+</span> jasper <span class="sc">+</span> westgreen <span class="sc">+</span> chesapeake <span class="sc">+</span> tornetrask <span class="sc">+</span> urals <span class="sc">+</span> mongolia <span class="sc">+</span> tasman, <span class="at">correlation=</span><span class="fu">corAR1</span>(<span class="at">form=</span> <span class="sc">~</span>year), <span class="at">data=</span><span class="fu">na.omit</span>(globwarm))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(glmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized least squares fit by REML
+  Model: nhtemp ~ wusa + jasper + westgreen + chesapeake + tornetrask +      urals + mongolia + tasman 
+  Data: na.omit(globwarm) 
+        AIC       BIC   logLik
+  -108.2074 -76.16822 65.10371
+
+Correlation Structure: AR(1)
+ Formula: ~year 
+ Parameter estimate(s):
+      Phi 
+0.7109922 
+
+Coefficients:
+                  Value  Std.Error   t-value p-value
+(Intercept) -0.23010624 0.06702406 -3.433188  0.0008
+wusa         0.06673819 0.09877211  0.675678  0.5004
+jasper      -0.20244335 0.18802773 -1.076668  0.2835
+westgreen   -0.00440299 0.08985321 -0.049002  0.9610
+chesapeake  -0.00735289 0.07349791 -0.100042  0.9205
+tornetrask   0.03835169 0.09482515  0.404446  0.6865
+urals        0.24142199 0.22871028  1.055580  0.2930
+mongolia     0.05694978 0.10489786  0.542907  0.5881
+tasman       0.12034918 0.07456983  1.613913  0.1089
+
+ Correlation: 
+           (Intr) wusa   jasper wstgrn chespk trntrs urals  mongol
+wusa       -0.517                                                 
+jasper     -0.058 -0.299                                          
+westgreen   0.330 -0.533  0.121                                   
+chesapeake  0.090 -0.314  0.230  0.147                            
+tornetrask -0.430  0.499 -0.197 -0.328 -0.441                     
+urals      -0.110 -0.142 -0.265  0.075 -0.064 -0.346              
+mongolia    0.459 -0.437 -0.205  0.217  0.449 -0.343 -0.371       
+tasman      0.037 -0.322  0.065  0.134  0.116 -0.434  0.416 -0.017
+
+Standardized residuals:
+        Min          Q1         Med          Q3         Max 
+-2.31122523 -0.53484054  0.02342908  0.50015642  2.97224724 
+
+Residual standard error: 0.204572 
+Degrees of freedom: 145 total; 136 residual</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">intervals</span>(glmod,<span class="at">which=</span><span class="st">"var-cov"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Approximate 95% confidence intervals
+
+ Correlation structure:
+       lower      est.     upper
+Phi 0.509981 0.7109922 0.8383726
+
+ Residual standard error:
+    lower      est.     upper 
+0.1540719 0.2045720 0.2716246 </code></pre>
+</div>
+</div>
+<p>Also arises in spatial data &amp; blocked designs, for example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>glmod <span class="ot">&lt;-</span> <span class="fu">gls</span>(yield <span class="sc">~</span> variety, oatvar, <span class="at">correlation =</span> <span class="fu">corCompSymm</span>(form</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ot">=</span> <span class="er">~</span><span class="dv">1</span> <span class="sc">|</span> block))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">intervals</span>(glmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Approximate 95% confidence intervals
+
+ Coefficients:
+                 lower  est.       upper
+(Intercept) 291.542999 334.4 377.2570009
+variety2     -4.903898  42.2  89.3038984
+variety3    -18.903898  28.2  75.3038984
+variety4    -94.703898 -47.6  -0.4961016
+variety5     57.896102 105.0 152.1038984
+variety6    -50.903898  -3.8  43.3038984
+variety7    -63.103898 -16.0  31.1038984
+variety8      2.696102  49.8  96.9038984
+
+ Correlation structure:
+         lower      est.     upper
+Rho 0.05100649 0.3959955 0.7665766
+
+ Residual standard error:
+   lower     est.    upper 
+33.02434 47.04679 67.02329 </code></pre>
+</div>
+</div>
+<p>There is evidence of a non-zero correlation of ~0.4 between the errors within the blocks.</p>
+</section>
+<section id="weighted-least-squares-wls" class="level2">
+<h2 class="anchored" data-anchor-id="weighted-least-squares-wls">8.2 Weighted Least Squares (WLS)</h2>
+<ul>
+<li>A special case of GLS</li>
+<li>Errors are uncorrelated, but have unequal variance where the form of the inequality is known.</li>
+<li><span class="math inline">\(\Sigma\)</span> is diagonal but the entries are not equal</li>
+<li>Set <span class="math inline">\(\Sigma = \text{diag}(1/w_1,\ldots,1/w_n)\)</span>, where the <span class="math inline">\(w_i\)</span> are the weights so <span class="math inline">\(S=\text{diag}(\sqrt{1/w_1},\ldots,\sqrt{1/w_n})\)</span></li>
+<li>Then regress <span class="math inline">\(\sqrt{w_i}y_i\)</span> on <span class="math inline">\(\sqrt{w_i}x_i\)</span> (although the column of ones in the X-matrix needs to be replaced with <span class="math inline">\(\sqrt{w_i}\)</span>)</li>
+<li>Residuals are modified to use <span class="math inline">\(\sqrt{w_i}\hat{e}_i\)</span></li>
+<li>Cases with low variability get a high weight and those with high variability a low weight.</li>
+</ul>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<ul>
+<li>Errors proportional to a predictor: <span class="math inline">\(\text{var}(e) \propto x_i\)</span> suggests <span class="math inline">\(w_i = x^{−1}_i\)</span>. One might choose this option after observing a positive relationship in a plot of <span class="math inline">\(\lvert \hat{e}_i \rvert\)</span> against <span class="math inline">\(x_i\)</span>.</li>
+<li>When the <span class="math inline">\(Y_i\)</span> are the averages of <span class="math inline">\(n_i\)</span> observations, then <span class="math inline">\(\text{var}(y_i)= \text{var}(e_i)= \sigma^2/n_i\)</span>, which suggests <span class="math inline">\(w_i=n_i\)</span></li>
+<li>When the observed responses are known to be of varying quality, weights may be assigned <span class="math inline">\(w_i = 1/\text{sd}(y_i)\)</span>.</li>
+</ul>
+<!-- ## 8.3 Testing for Lack of Fit -->
+<!-- If the model is correct, then $\hat{\sigma}^2$ should be an unbiased estimate of $\sigma^2$. If we have a model that is not complex enough to fit the data or simply takes the wrong form, then $\hat{\sigma}^2$ will tend to overestimate $\sigma^2$. Alternatively, if our model is too complex and overfits the data, then $\hat{\sigma}^2$ will be an underestimate. -->
+</section>
+</section>
+<section id="robust-regression" class="level2">
+<h2 class="anchored" data-anchor-id="robust-regression">8.4 Robust Regression</h2>
+<p>When the errors are normally distributed, OLS is best, but long-tailed error distributions can cause difficulties because a few extreme cases can have a large effect on the fitted model. Robust regression is designed to estimate the mean relationship between the predictors and response, <span class="math inline">\(EY = X\beta\)</span>.</p>
+<section id="m-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="m-estimation">M-Estimation</h3>
+<p>M-estimates modify the least squares idea to choose <span class="math inline">\(\beta\)</span> to minimize: <span class="math display">\[\sum_{i=1}^n \rho(y_i - x_i^\top \beta) \]</span></p>
+<p>Possible choices for <span class="math inline">\(\rho\)</span> include:</p>
+<ul>
+<li><span class="math inline">\(\rho(x)=x^2\)</span> is just OLS</li>
+<li><span class="math inline">\(\rho(x)=\lvert x \rvert\)</span> is called least absolute deviation (LAD) regression or <span class="math inline">\(L_1\)</span> regression.</li>
+<li><span id="eq-huber"><span class="math display">\[
+\rho(x)= \begin{cases}
+x^2/2 &amp; \text{if } \lvert x \rvert \leq c \\
+c\lvert x \rvert \leq -c^2/2 &amp; \text{ otherwise}
+\end{cases}
+\tag{1}\]</span></span></li>
+</ul>
+<p><a href="#eq-huber">Equation&nbsp;1</a> is called Huber’s method and is a compromise between least squares and LAD regression. <span class="math inline">\(c\)</span> should be a robust estimate of <span class="math inline">\(\sigma\)</span>; a value proportional to the median of <span class="math inline">\(\lvert \hat{e} \rvert\)</span>$ is suitable.</p>
+<p>M-estimation is related to weighted least squares, where <span class="math inline">\(w(u) = \rho′\;(u)/u\)</span>.</p>
+<p>We find for our choices of ρ above that: 1. LS: <span class="math inline">\(w(u)\)</span> is constant and the estimator is simply OLS. - <span class="math inline">\(\rho'(x) = 2x\)</span>, so <span class="math inline">\(\rho′\;(x)/x=2x/x=2\)</span> 2. LAD: <span class="math inline">\(w(u) = 1/|u|\)</span>. We see how the weight goes down as <span class="math inline">\(u\)</span> moves away from 0, so that more extreme observations get downweighted. However, the asymptote at 0 makes a weighting approach to fitting an LAD regression infeasible without some modification. 3. Huber: <span class="math display">\[\begin{equation*}
+w(u)= \begin{cases}
+1 &amp; \text{if } \lvert u \rvert \leq c \\
+c/\lvert u \rvert &amp; \text{ otherwise}
+\end{cases}
+\end{equation*}\]</span></p>
+<p>This sensibly combines the downweighting of extreme cases with equal weighting for the middle cases.</p>
+<p>The Huber method is the default for the <code>rlm</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rlmod<span class="ot">&lt;-</span><span class="fu">rlm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent,gala)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rlmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call: rlm(formula = Species ~ Area + Elevation + Nearest + Scruz + 
+    Adjacent, data = gala)
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-74.389 -18.353  -6.364  21.187 229.082 
+
+Coefficients:
+            Value   Std. Error t value
+(Intercept)  6.3611 12.3897     0.5134
+Area        -0.0061  0.0145    -0.4214
+Elevation    0.2476  0.0347     7.1320
+Nearest      0.3592  0.6819     0.5267
+Scruz       -0.1952  0.1393    -1.4013
+Adjacent    -0.0546  0.0114    -4.7648
+
+Residual standard error: 29.73 on 24 degrees of freedom</code></pre>
+</div>
+</div>
+<p>It is worth looking at the weights assigned by the final fit. We extract and name the smallest 10 weights. The remaining weights are all ones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>wts <span class="ot">&lt;-</span> rlmod<span class="sc">$</span>w</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(wts) <span class="ot">&lt;-</span> <span class="fu">row.names</span>(gala)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">sort</span>(wts),<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   SantaCruz   SantaMaria SanCristobal        Pinta     Gardner1     Espanola 
+   0.1745816    0.3078288    0.4142330    0.5375752    0.6613011    0.6795050 
+    Gardner2       Baltra    Bartolome     Caldwell 
+   0.8500380    1.0000000    1.0000000    1.0000000 </code></pre>
+</div>
+</div>
+<p>We can see that a few islands are substantially discounted in the calculation of the robust fit. Provided we do not believe there are mistakes in the data for these cases, we should think carefully about what might be unusual about these islands. The main purpose in analyzing these data is likely to explain the relationship between the predictors and the response. Although the robust fit gives numerically different output, the overall impression of what predictors are significant in explaining the response is unchanged. Thus the robust regression has provided some measure of confirmation. Furthermore, it has identified a few islands which are not fit so well by the model.</p>
+<p>We can also do LAD regression using the <code>quantreg</code> package. The default option does LAD while other options allow for quantile regression:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>l1mod <span class="ot">&lt;-</span> quantreg<span class="sc">::</span><span class="fu">rq</span>(Species <span class="sc">~</span>Area<span class="sc">+</span>Elevation<span class="sc">+</span>Nearest<span class="sc">+</span>Scruz<span class="sc">+</span>Adjacent, <span class="at">data=</span>gala)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(l1mod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call: quantreg::rq(formula = Species ~ Area + Elevation + Nearest + 
+    Scruz + Adjacent, data = gala)
+
+tau: [1] 0.5
+
+Coefficients:
+            coefficients lower bd  upper bd 
+(Intercept)   1.31445    -19.87777  24.37411
+Area         -0.00306     -0.03185   0.52800
+Elevation     0.23211      0.12453   0.50196
+Nearest       0.16366     -3.16339   2.98896
+Scruz        -0.12314     -0.47987   0.13476
+Adjacent     -0.05185     -0.10458   0.01739</code></pre>
+</div>
+</div>
+</section>
+<section id="least-trimmed-squares-lts" class="level3">
+<h3 class="anchored" data-anchor-id="least-trimmed-squares-lts">Least Trimmed Squares (LTS)</h3>
+<p>The Huber and <span class="math inline">\(L_1\)</span> methods will still fail if the large errors are sufficiently numerous and extreme in value. For example, very bad data entry errors might be made or measurement equipment might malfunction in a serious way. We need methods that still fit the correct data well even in the presence of such problems. LTS is an example of a resistant regression method. Resistant methods are good for dealing with data where we expect a certain number of bad observations that we want to have no weight in the analysis.</p>
+<p>LTS minimizes the sum of squares of the <span class="math inline">\(q\)</span> smallest residuals, <span class="math inline">\(\sum^q_{i=1} \hat{e}_{(i)}^2\)</span>, where <span class="math inline">\(q\)</span> is some number less than <span class="math inline">\(n\)</span> and <span class="math inline">\((i)\)</span> indicates sorting. This method has a high breakdown point because it can tolerate a large number of outliers depending on how <span class="math inline">\(q\)</span> is chosen. For the Galapagos data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>ltsmod <span class="ot">&lt;-</span> MASS<span class="sc">::</span><span class="fu">ltsreg</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, gala)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(ltsmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)        Area   Elevation     Nearest       Scruz    Adjacent 
+12.50668352  1.54535820  0.01672532  0.52348693 -0.09407229 -0.14259212 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ltsmod_exact &lt;- ltsreg(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, gala,</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                        nsamp="exact")</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># coef(ltsmod_exact)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>However, we do not have standard errors for the LTS regression coefficients. We can use bootstrapping, as follows: 1. Generate <span class="math inline">\(e^∗\)</span> by sampling with replacement from <span class="math inline">\(\hat{e}_1, \ldots, \hat{e}_n\)</span>. 2. Form <span class="math inline">\(y^∗ = X\hat{\beta}+e^∗\)</span>. 3. Compute <span class="math inline">\(\hat{\beta}^*\)</span> from <span class="math inline">\((X, y^∗)\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>bcoef <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>,<span class="dv">1000</span>,<span class="dv">6</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>){</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>newy <span class="ot">&lt;-</span> <span class="fu">predict</span>(ltsmod) <span class="sc">+</span> <span class="fu">residuals</span>(ltsmod)[<span class="fu">sample</span>(<span class="dv">30</span>,<span class="at">rep=</span>T)]</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>brg <span class="ot">&lt;-</span> <span class="fu">ltsreg</span>(newy <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>, gala , <span class="at">nsamp=</span><span class="st">"best"</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>bcoef[i,] <span class="ot">&lt;-</span> brg<span class="sc">$</span>coef</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bcoef) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">coef</span>(ltsmod))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>(quants <span class="ot">&lt;-</span> <span class="fu">apply</span>(bcoef,<span class="dv">2</span>,<span class="cf">function</span>(x) <span class="fu">quantile</span>(x, <span class="fu">c</span>(<span class="fl">0.025</span>,<span class="fl">0.975</span>))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept)     Area   Elevation    Nearest      Scruz    Adjacent
+2.5%     1.412877 1.437543 -0.03415286 -0.4172014 -0.3159858 -0.19703956
+97.5%   31.382253 1.666588  0.09547331  2.2739460  0.2219613 -0.06381921</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>bcoef <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(bcoef)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bcoef, <span class="fu">aes</span>(<span class="at">x =</span> Area)) <span class="sc">+</span> <span class="fu">geom_density</span>() <span class="sc">+</span> mytheme</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fu">c</span>(quants[<span class="dv">1</span>,<span class="dv">2</span>], quants[<span class="dv">2</span>,<span class="dv">2</span>]), <span class="at">linetype=</span><span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ch8+9_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(bcoef, <span class="fu">aes</span>(<span class="at">x =</span> Adjacent)) <span class="sc">+</span> <span class="fu">geom_density</span>() <span class="sc">+</span> mytheme<span class="sc">+</span><span class="fu">xlim</span>(<span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="sc">+</span> <span class="fu">geom_vline</span>(<span class="at">xintercept=</span><span class="fu">c</span>(quants[<span class="dv">1</span>,<span class="dv">6</span>], quants[<span class="dv">2</span>,<span class="dv">6</span>]), <span class="at">linetype=</span><span class="st">"dashed"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ch8+9_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="chapter-9-transformation" class="level1">
+<h1>Chapter 9: Transformation</h1>
+<p>Transformations of the response and/or predictors can improve the fit and correct violations of model assumptions such as non-constant error variance. We may also consider adding additional predictors that are functions of the existing predictors like quadratic or cross-product terms.</p>
+<section id="transforming-the-response" class="level2">
+<h2 class="anchored" data-anchor-id="transforming-the-response">9.1 Transforming the response</h2>
+<p>Suppose that you are contemplating a logged response in a simple regression situation: <span class="math inline">\(\log{y} = \beta_0 +\beta_1x+e\)</span></p>
+<p>In the original scale of the response, this model becomes: <span class="math display">\[y = \exp(\beta_0 +\beta_1x)· \exp(e) \quad(9.1)\]</span></p>
+<p>In this model, the errors enter <em>multiplicatively</em> and not <em>additively</em> as they usually do, so the use of standard regression methods for the logged response model requires that we believe the errors enter multiplicatively in the original scale.</p>
+<section id="box-cox" class="level3">
+<h3 class="anchored" data-anchor-id="box-cox">Box-Cox</h3>
+
+
+</section>
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+          // target, if specified
+          link.setAttribute("target", "_blank");
+      }
+    }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

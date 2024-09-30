@@ -1,0 +1,233 @@
+---
+title: "Problems with Model Errors"
+author: "Ruby Krasnow"
+link-external-newwindow: true 
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "faraway", "broom", "DHARMa", "emmeans", "performance", "nlme", "MASS", "broom.helpers")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+
+```
+
+# Chapter 8: Problems with the Error
+
+## 8.1 Generalized Least Squares
+
+We have previously assumed $\text{var}(e)=\sigma^2 I$, but suppose that the errors have non-constant variance, $\text{var}(e)=\sigma^2 \Sigma$, where $\sigma^2$ is unknown and $\Sigma$ is known: we know the correlation and relative variance between the errors, but not the absolute scale of the variation.
+
+We can write $\Sigma  = SS^\top$ , where S is a triangular matrix using the Choleski decomposition, which be can be viewed as a square root for a matrix. We can transform the regression model as follows:
+\begin{align*}
+y &= X\beta +e
+S^{-1}y &=S^{-1}X \beta+S^{-1}e
+y' &= X'\beta+e'
+\end{align*}
+Then, $\text{var}(e')=\text{var}(S^{-1}e)=S^{-1}(\text{var }e)S^{-\top}=S^{-1}\sigma^2 SS^\top S^{-\top}=\sigma^2 I$
+
+So we can reduce GLS to OLS by a regression of $y′ = S^{-1}y$ on $X′ = S^{-1}X$ which has error $e'=S^{-1}e$ that is i.i.d. We have transformed the problem to the standard case.
+
+Errors between successive observations $\rightarrow$ autoregressive model, $e_{i+1}=\phi e_i+\delta_i$ where $\delta \sim N(0, \tau^2)$
+
+```{r}
+lmod <- lm(nhtemp ~ wusa + jasper + westgreen + chesapeake + tornetrask + urals + mongolia + tasman, globwarm)
+
+cor(residuals(lmod)[-1],residuals(lmod)[-length(residuals(lmod))])
+
+lmtest::dwtest(lmod)
+car::durbinWatsonTest(lmod) #tidy(car::durbinWatsonTest(lmod))
+performance::check_autocorrelation(lmod)
+
+glmod <- gls(nhtemp ~ wusa + jasper + westgreen + chesapeake + tornetrask + urals + mongolia + tasman, correlation=corAR1(form= ~year), data=na.omit(globwarm))
+
+summary(glmod)
+
+
+intervals(glmod,which="var-cov")
+```
+
+Also arises in spatial data & blocked designs, for example:
+
+```{r}
+#| label: block-design-example
+
+glmod <- gls(yield ~ variety, oatvar, correlation = corCompSymm(form
+= ~1 | block))
+
+intervals(glmod)
+```
+
+There is evidence of a non-zero correlation of ~0.4 between the errors within the blocks.
+
+## 8.2 Weighted Least Squares (WLS)
+
+- A special case of GLS
+- Errors are uncorrelated, but have unequal variance where the form of the inequality is known.
+- $\Sigma$ is diagonal but the entries are not equal
+- Set $\Sigma = \text{diag}(1/w_1,\ldots,1/w_n)$, where the $w_i$ are the weights so $S=\text{diag}(\sqrt{1/w_1},\ldots,\sqrt{1/w_n})$
+- Then regress $\sqrt{w_i}y_i$ on $\sqrt{w_i}x_i$ (although the column of ones in the X-matrix needs to be replaced with $\sqrt{w_i}$)
+- Residuals are modified to use $\sqrt{w_i}\hat{e}_i$
+- Cases with low variability get a high weight and those with high variability a low weight.
+
+### Examples
+
+-  Errors proportional to a predictor: $\text{var}(e) \propto x_i$ suggests $w_i = x^{−1}_i$. One might choose this option after observing a positive relationship in a plot of $\lvert \hat{e}_i \rvert$ against $x_i$.
+- When the $Y_i$ are the averages of $n_i$ observations, then $\text{var}(y_i)= \text{var}(e_i)=    \sigma^2/n_i$, which suggests $w_i=n_i$
+- When the observed responses are known to be of varying quality, weights may be
+assigned $w_i = 1/\text{sd}(y_i)$.
+
+<!-- ## 8.3 Testing for Lack of Fit -->
+
+<!-- If the model is correct, then $\hat{\sigma}^2$ should be an unbiased estimate of $\sigma^2$. If we have a model that is not complex enough to fit the data or simply takes the wrong form, then $\hat{\sigma}^2$ will tend to overestimate $\sigma^2$. Alternatively, if our model is too complex and overfits the data, then $\hat{\sigma}^2$ will be an underestimate. -->
+
+## 8.4 Robust Regression
+
+When the errors are normally distributed, OLS is best, but long-tailed error distributions can cause difficulties because a few extreme cases can have a large effect on the fitted model.
+Robust regression is designed to estimate the mean relationship between the predictors and response, $EY = X\beta$.
+
+### M-Estimation
+
+M-estimates modify the least squares idea to choose $\beta$ to minimize:
+$$\sum_{i=1}^n \rho(y_i - x_i^\top \beta) $$
+
+Possible choices for $\rho$ include:
+
+- $\rho(x)=x^2$ is just OLS
+- $\rho(x)=\lvert x \rvert$ is called least absolute deviation (LAD) regression or $L_1$ regression.
+-
+$$
+\rho(x)= \begin{cases}
+x^2/2 & \text{if } \lvert x \rvert \leq c \\
+c\lvert x \rvert \leq -c^2/2 & \text{ otherwise}
+\end{cases}
+$$ {#eq-huber}
+
+@eq-huber is called Huber’s method and is a compromise between least squares and LAD
+regression. $c$ should be a robust estimate of $\sigma$; a value proportional to the median
+of $\lvert \hat{e} \rvert$$ is suitable.
+
+M-estimation is related to weighted least squares, where $w(u) = \rho′\;(u)/u$.
+
+We find for our choices of ρ above that:
+1. LS: $w(u)$ is constant and the estimator is simply OLS.
+  - $\rho'(x) = 2x$, so $\rho′\;(x)/x=2x/x=2$
+2.  LAD: $w(u) = 1/|u|$. We see how the weight goes down as $u$ moves away from 0, so that more extreme observations get downweighted. However, the asymptote at 0 makes a weighting approach to fitting an LAD regression infeasible without some modification.
+3. Huber:
+\begin{equation*} 
+w(u)= \begin{cases}
+1 & \text{if } \lvert u \rvert \leq c \\
+c/\lvert u \rvert & \text{ otherwise}
+\end{cases}
+\end{equation*}
+
+This sensibly combines the downweighting of extreme cases with equal weighting for the middle cases.
+
+The Huber method is the default for the `rlm` function:
+```{r}
+rlmod<-rlm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent,gala)
+summary(rlmod)
+```
+
+It is worth looking at the weights assigned by the final fit. We extract and name the smallest 10 weights. The remaining weights are all ones.
+```{r}
+wts <- rlmod$w
+names(wts) <- row.names(gala)
+head(sort(wts),10)
+```
+
+We can see that a few islands are substantially discounted in the calculation of the robust fit. Provided we do not believe there are mistakes in the data for these cases, we should think carefully about what might be unusual about these islands. The main purpose in analyzing these data is likely to explain the relationship between the predictors and the response. Although the robust fit gives numerically different output, the overall impression of what predictors are significant in explaining the response is unchanged. Thus the robust regression has provided some measure of
+confirmation. Furthermore, it has identified a few islands which are not fit so well by the model.
+
+We can also do LAD regression using the `quantreg` package. The default option does LAD while other options allow for quantile regression:
+```{r}
+l1mod <- quantreg::rq(Species ~Area+Elevation+Nearest+Scruz+Adjacent, data=gala)
+summary(l1mod)
+```
+
+### Least Trimmed Squares (LTS)
+
+The Huber and $L_1$ methods will still fail if the large errors are sufficiently numerous and extreme in value. For example, very bad data entry errors might be made or measurement equipment might malfunction in a serious way. We need methods that still fit the correct data well even in the presence of such problems. LTS is an example of a resistant regression method. Resistant methods are
+good for dealing with data where we expect a certain number of bad observations that we want to have no weight in the analysis.
+
+LTS minimizes the sum of squares of the $q$ smallest residuals, $\sum^q_{i=1} \hat{e}_{(i)}^2$, where $q$ is some number less than $n$ and $(i)$ indicates sorting. This method has a high breakdown
+point because it can tolerate a large number of outliers depending on how $q$ is chosen. For the Galapagos data:
+```{r}
+set.seed(123)
+
+ltsmod <- MASS::ltsreg(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, gala)
+coef(ltsmod)
+
+# ltsmod_exact <- ltsreg(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, gala,
+#                        nsamp="exact")
+# coef(ltsmod_exact)
+```
+
+
+However, we do not have standard errors for the LTS regression coefficients. We can use bootstrapping, as follows:
+1. Generate $e^∗$ by sampling with replacement from $\hat{e}_1, \ldots, \hat{e}_n$.
+2. Form $y^∗ = X\hat{\beta}+e^∗$.
+3. Compute $\hat{\beta}^*$ from $(X, y^∗)$.
+
+```{r}
+bcoef <- matrix(0,1000,6)
+
+for(i in 1:1000){
+newy <- predict(ltsmod) + residuals(ltsmod)[sample(30,rep=T)]
+brg <- ltsreg(newy ~ Area + Elevation + Nearest + Scruz + Adjacent
+, gala , nsamp="best")
+bcoef[i,] <- brg$coef
+}
+```
+
+```{r}
+#| warning: false
+colnames(bcoef) <- names(coef(ltsmod))
+(quants <- apply(bcoef,2,function(x) quantile(x, c(0.025,0.975))))
+
+bcoef <- data.frame(bcoef)
+p1 <- ggplot(bcoef, aes(x = Area)) + geom_density() + mytheme
+p1 + geom_vline(xintercept=c(quants[1,2], quants[2,2]), linetype="dashed")
+
+p2 <- ggplot(bcoef, aes(x = Adjacent)) + geom_density() + mytheme+xlim(-0.5, 0.5)
+p2 + geom_vline(xintercept=c(quants[1,6], quants[2,6]), linetype="dashed")
+```
+
+# Chapter 9: Transformation
+
+Transformations of the response and/or predictors can improve the fit and correct violations of model assumptions such as non-constant error variance. We may also consider adding additional predictors that are functions of the existing predictors like quadratic or cross-product terms.
+
+## 9.1 Transforming the response
+
+Suppose that you are contemplating a logged response in a simple regression situation:
+$\log{y} = \beta_0 +\beta_1x+e$
+
+In the original scale of the response, this model becomes:
+$$y = \exp(\beta_0 +\beta_1x)· \exp(e) \quad(9.1)$$
+
+In this model, the errors enter *multiplicatively* and not *additively* as they usually do, so the use of standard regression methods for the logged response model requires that we believe the errors enter multiplicatively in the original scale.
+
+### Box-Cox

@@ -149,6 +149,15 @@ This function has the additional benefit of a built-in plot method:
 check_heteroscedasticity(fish) %>% plot()
 ```
 
+
+```{r}
+ggplot(res_fit)+
+  geom_point(aes(x=fit, y=sqrt(abs(rstandard(fish)))))+
+  labs(x="Model predictions", y="sqrt(abs(stdResiduals))")+
+  mytheme
+```
+
+
 As a default, the `bptest` function from the `lmtest` package uses the same explanatory variables as in the regression model you specify (and studentizes as well).
 ```{r}
 lmtest::bptest(fish, studentize = TRUE) #studentized Breusch-Pagan test

@@ -498,9 +498,22 @@ F-statistic: 5.061 on 14 and 23 DF,  p-value: 0.000314</code></pre>
 <p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res_fit)<span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>fit, <span class="at">y=</span><span class="fu">sqrt</span>(<span class="fu">abs</span>(<span class="fu">rstandard</span>(fish)))))<span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Model predictions"</span>, <span class="at">y=</span><span class="st">"sqrt(abs(stdResiduals))"</span>)<span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  mytheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 <p>As a default, the <code>bptest</code> function from the <code>lmtest</code> package uses the same explanatory variables as in the regression model you specify (and studentizes as well).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> <span class="cn">TRUE</span>) <span class="co">#studentized Breusch-Pagan test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> <span class="cn">TRUE</span>) <span class="co">#studentized Breusch-Pagan test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     studentized Breusch-Pagan test
@@ -508,7 +521,7 @@ F-statistic: 5.061 on 14 and 23 DF,  p-value: 0.000314</code></pre>
 data:  fish
 BP = 17.194, df = 14, p-value = 0.246</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> <span class="cn">FALSE</span>) <span class="co">#Breusch-Pagan test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> <span class="cn">FALSE</span>) <span class="co">#Breusch-Pagan test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Breusch-Pagan test
@@ -519,7 +532,7 @@ BP = 39.311, df = 14, p-value = 0.0003265</code></pre>
 </div>
 <p>We can obtain matching results to the <code>check_heteroscedasticity</code> function by explicitly using the fitted values of the model:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> F, <span class="at">varformula =</span> <span class="sc">~</span><span class="fu">fitted.values</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lmtest<span class="sc">::</span><span class="fu">bptest</span>(fish, <span class="at">studentize =</span> F, <span class="at">varformula =</span> <span class="sc">~</span><span class="fu">fitted.values</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Breusch-Pagan test
@@ -530,7 +543,7 @@ BP = 9.1824, df = 1, p-value = 0.002444</code></pre>
 </div>
 <p>The same result can also be obtained using the <code>ncvTest</code> (Non-constant Variance Score Test) function from the package <code>car</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">ncvTest</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">ncvTest</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Non-constant Variance Score Test 
 Variance formula: ~ fitted.values 
@@ -543,14 +556,14 @@ Chisquare = 9.182395, Df = 1, p = 0.0024435</code></pre>
 <li>Make a plot of the residuals against the predictor variable <code>stage</code>. Do you find this plot useful? Why or why not?</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>res_fit <span class="ot">&lt;-</span> res_fit <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">stage =</span> fws<span class="sc">$</span>stage)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res_fit)<span class="sc">+</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>stage, <span class="at">y=</span>res))<span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Life history stage"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)<span class="sc">+</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)<span class="sc">+</span>mytheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>res_fit <span class="ot">&lt;-</span> res_fit <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">stage =</span> fws<span class="sc">$</span>stage)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res_fit)<span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>stage, <span class="at">y=</span>res))<span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Life history stage"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)<span class="sc">+</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">lty=</span><span class="dv">2</span>)<span class="sc">+</span>mytheme</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>This plot is not particularly useful because there are only three life stages present and the design is unbalanced; the overall sample size is small and not all stages are equally represented. For example, the “EJ” stage only has three observations, making it difficult to determine if the possible difference in residual variance between stages is actually meaningful.</p>
@@ -558,27 +571,27 @@ Chisquare = 9.182395, Df = 1, p = 0.0024435</code></pre>
 <li>Produce a <span class="math inline">\(Q\)</span>-<span class="math inline">\(Q\)</span> plot of the model residuals and include a <span class="math inline">\(Q\)</span>-<span class="math inline">\(Q\)</span> line. Describe what you would hope to see here. Do you?</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(fish),<span class="at">ylab=</span><span class="st">"Residuals"</span>,<span class="at">main=</span><span class="st">""</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># base R</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(fish),<span class="at">ylab=</span><span class="st">"Residuals"</span>,<span class="at">main=</span><span class="st">""</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">residuals</span>(fish))) <span class="sc">+</span> </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">residuals</span>(fish))) <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  mytheme<span class="sc">+</span><span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Theoretical Quantiles"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggplot</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>(<span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">residuals</span>(fish))) <span class="sc">+</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq_line</span>(<span class="fu">aes</span>(<span class="at">sample =</span> <span class="fu">residuals</span>(fish))) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  mytheme<span class="sc">+</span><span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Theoretical Quantiles"</span>, <span class="at">y=</span><span class="st">"Residuals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-11-2.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># performance</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(performance<span class="sc">::</span><span class="fu">check_residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># performance</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(performance<span class="sc">::</span><span class="fu">check_residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-11-3.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shapiro-Wilk test</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shapiro-Wilk test</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
@@ -590,7 +603,7 @@ W = 0.90503, p-value = 0.003547</code></pre>
 <p>Normal residuals should approximately follow the Q-Q line. However, this plot shows large deviations from the line at both ends, somewhat like a leptokurtic (heavy-tailed) distribution.</p>
 <div style="background-color: #daf0ea;">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>datawizard<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish), <span class="at">type=</span><span class="st">"1"</span>) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>datawizard<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish), <span class="at">type=</span><span class="st">"1"</span>) <span class="co"># </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -609,15 +622,15 @@ W = 0.90503, p-value = 0.003547</code></pre>
 </table>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>confintr<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish))<span class="sc">-</span><span class="dv">3</span> <span class="co">#Pearson's Measure of Kurtosis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>confintr<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish))<span class="sc">-</span><span class="dv">3</span> <span class="co">#Pearson's Measure of Kurtosis</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.572732</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish))<span class="sc">-</span><span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish))<span class="sc">-</span><span class="dv">3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2.572732</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">anscombe.test</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>moments<span class="sc">::</span><span class="fu">anscombe.test</span>(<span class="fu">residuals</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Anscombe-Glynn kurtosis test
@@ -626,7 +639,7 @@ data:  residuals(fish)
 kurt = 5.5727, z = 2.5940, p-value = 0.009486
 alternative hypothesis: kurtosis is not equal to 3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datawizard<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish)), <span class="at">test =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(datawizard<span class="sc">::</span><span class="fu">kurtosis</span>(<span class="fu">residuals</span>(fish)), <span class="at">test =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -660,12 +673,12 @@ alternative hypothesis: kurtosis is not equal to 3</code></pre>
 <li>Which projects have the 3 largest leverages? Briefly explain what this tells us.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="do">## leverages of points</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>hv <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(fish)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="do">## assign their names</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hv) <span class="ot">&lt;-</span> fws<span class="sc">$</span>ProjectName</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">data.frame</span>(<span class="at">hat=</span>hv), hat, <span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## leverages of points</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>hv <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(fish)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="do">## assign their names</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(hv) <span class="ot">&lt;-</span> fws<span class="sc">$</span>ProjectName</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">slice_max</span>(<span class="fu">data.frame</span>(<span class="at">hat=</span>hv), hat, <span class="at">n=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="table table-sm table-striped small">
@@ -703,17 +716,17 @@ alternative hypothesis: kurtosis is not equal to 3</code></pre>
 </ol>
 <p>A rule of thumb is that a leverage point is large if <span class="math inline">\(h_{ii} \geq 2\bar{h} = \frac{2p}{n}\)</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## threshold value for h_i ~= 0.78</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">coefficients</span>(fish))</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">residuals</span>(fish))</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>th <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> ( p<span class="sc">/</span>n)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## threshold value for h_i ~= 0.78</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span><span class="fu">length</span>(<span class="fu">coefficients</span>(fish))</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">residuals</span>(fish))</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>th <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> ( p<span class="sc">/</span>n)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.7894737</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="do">## are any h_i &gt; Eh?</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>hv <span class="sc">&gt;</span> th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="do">## are any h_i &gt; Eh?</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>hv <span class="sc">&gt;</span> th</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Bethune         SR522           SPU        Boeing      Wilkeson 
         FALSE         FALSE         FALSE         FALSE         FALSE 
@@ -732,7 +745,7 @@ alternative hypothesis: kurtosis is not equal to 3</code></pre>
        Yeager       Century     Forgotten 
         FALSE         FALSE         FALSE </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>hv[hv<span class="sc">&gt;</span>th]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>hv[hv<span class="sc">&gt;</span>th]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Gail Vernon 
      1      1 </code></pre>
@@ -741,9 +754,9 @@ alternative hypothesis: kurtosis is not equal to 3</code></pre>
 <p>Using this rule of thumb, Gail and Vernon have particularly large leverages.</p>
 <p>We can confirm this with a half-normal plot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(hv,<span class="at">labs=</span>fws<span class="sc">$</span>ProjectName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(hv,<span class="at">labs=</span>fws<span class="sc">$</span>ProjectName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <ol start="8" type="a">
@@ -752,61 +765,61 @@ alternative hypothesis: kurtosis is not equal to 3</code></pre>
 <p>We can compute the studentized residuals as <span class="math display">\[t_i = \frac{y_i-\hat{y}_{(i)}}{\hat{\sigma}_{(i)}\sqrt{1+X_{i} (X_{(i)}^\top X_{(i)})^{-1}X_i}} \]</span></p>
 <p>which are distributed as a <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(n-p-1\)</span> df. Fortunately, there is an easier way to compute <span class="math inline">\(t_i\)</span> that avoids doing <span class="math inline">\(n\)</span> regressions: <span class="math display">\[t_i=\frac{\hat{e_i}}{\hat{\sigma}_{(i)} \sqrt{1-h_i}}= r_i \left(\frac{n-p-1}{n-p-r_i^2} \right)^{1/2} \]</span></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="fu">rstandard</span>(fish)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>std_manual <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fish)<span class="sc">/</span>(<span class="fu">sigma</span>(fish)<span class="sc">*</span><span class="fu">na_if</span>(<span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">-</span>hv), <span class="dv">0</span>))</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(std, std_manual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>std <span class="ot">&lt;-</span> <span class="fu">rstandard</span>(fish)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>std_manual <span class="ot">&lt;-</span> <span class="fu">residuals</span>(fish)<span class="sc">/</span>(<span class="fu">sigma</span>(fish)<span class="sc">*</span><span class="fu">na_if</span>(<span class="fu">sqrt</span>(<span class="dv">1</span><span class="sc">-</span>hv), <span class="dv">0</span>))</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(std, std_manual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>stu <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(fish)</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>stu_manual <span class="ot">&lt;-</span> std<span class="sc">*</span><span class="fu">sqrt</span>(((n<span class="sc">-</span>p<span class="dv">-1</span>)<span class="sc">/</span>(n<span class="sc">-</span>p<span class="sc">-</span>std<span class="sc">^</span><span class="dv">2</span>)))</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(stu, stu_manual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>stu <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(fish)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>stu_manual <span class="ot">&lt;-</span> std<span class="sc">*</span><span class="fu">sqrt</span>(((n<span class="sc">-</span>p<span class="dv">-1</span>)<span class="sc">/</span>(n<span class="sc">-</span>p<span class="sc">-</span>std<span class="sc">^</span><span class="dv">2</span>)))</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">all.equal</span>(stu, stu_manual)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
 </div>
 <p>We need to use a Bonferroni correction when performing significance tests to determine if case <span class="math inline">\(i\)</span> is an outlier because otherwise we would identify an excess of outliers (making Type I errors) just because of the number of cases that we are testing. The level of statistical significance <span class="math inline">\((\alpha)\)</span> determines probability of committing a type I error (rejecting the null hypothesis when it is actually true): if we had <span class="math inline">\(n=100\)</span> and tested all of the cases with <span class="math inline">\(\alpha=0.05\)</span>, we might expect to find around 5 outliers using this procedure even if the null hypothesis was true. Even though we might explicitly test only one or two large <span class="math inline">\(t_i\)</span>’s, we are implicitly testing all cases since we need to consider all the residuals to find out which ones are large.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part A</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>max_res <span class="ot">&lt;-</span> stu[<span class="fu">which.max</span>(<span class="fu">abs</span>(stu))]</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>max_res <span class="ot">&lt;-</span> <span class="fu">unname</span>(max_res)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>max_res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part A</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>max_res <span class="ot">&lt;-</span> stu[<span class="fu">which.max</span>(<span class="fu">abs</span>(stu))]</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>max_res <span class="ot">&lt;-</span> <span class="fu">unname</span>(max_res)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>max_res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3.523815</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part B</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>df_fish <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(fish)<span class="sc">-</span><span class="dv">1</span> <span class="co">#df=22</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Part C</span></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>un_p <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>)) <span class="co">#unadjusted p-value</span></span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Part D: adjusted p-value. These agree with each other</span></span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>))<span class="sc">*</span><span class="fu">nrow</span>(fws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part B</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df_fish <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(fish)<span class="sc">-</span><span class="dv">1</span> <span class="co">#df=22</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Part C</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>un_p <span class="ot">&lt;-</span> <span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>)) <span class="co">#unadjusted p-value</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Part D: adjusted p-value. These agree with each other</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>))<span class="sc">*</span><span class="fu">nrow</span>(fws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.07264217</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">nrow</span>(fws))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">nrow</span>(fws))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.07264217</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">nrow</span>(fws)<span class="sc">-</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">nrow</span>(fws)<span class="sc">-</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0688189</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>))<span class="sc">*</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(stu))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>(max_res, <span class="at">df=</span>df_fish, <span class="at">lower.tail =</span> <span class="cn">TRUE</span>))<span class="sc">*</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(stu))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0688189</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(stu)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">p.adjust</span>(un_p, <span class="at">method =</span> <span class="st">"bonferroni"</span>, <span class="at">n =</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(stu)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.0688189</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part E</span></span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p=</span>.<span class="dv">05</span><span class="sc">/</span>(<span class="fu">nrow</span>(fws)<span class="sc">*</span><span class="dv">2</span>), <span class="at">df=</span>df_fish) <span class="co">#find adjusted test statistic, -3.678813, which has abs &gt; max_res, indicating that with the correction, the outlier is not significant</span></span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Part F. Here, the rstudet and unadjusted p-val columns agree with the results of Parts A and C, respectively, but the Bonferroni p-value uses the number of non-NA studentized residuals rather than the number of observations in the data set.</span></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">outlierTest</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Part E</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p=</span>.<span class="dv">05</span><span class="sc">/</span>(<span class="fu">nrow</span>(fws)<span class="sc">*</span><span class="dv">2</span>), <span class="at">df=</span>df_fish) <span class="co">#find adjusted test statistic, -3.678813, which has abs &gt; max_res, indicating that with the correction, the outlier is not significant</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Part F. Here, the rstudet and unadjusted p-val columns agree with the results of Parts A and C, respectively, but the Bonferroni p-value uses the number of non-NA studentized residuals rather than the number of observations in the data set.</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">outlierTest</span>(fish)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>No Studentized residuals with Bonferroni p &lt; 0.05
 Largest |rstudent|:
@@ -820,14 +833,14 @@ Largest |rstudent|:
 <p>Cook’s D: <span class="math display">\[D_i=\frac{e_i^2}{p} \left(\frac{h_i}{1-h_i} \right) \]</span></p>
 <p>This metric combines the residual effect and leverage to quantify the influence. A half-normal plot of <span class="math inline">\(D_i\)</span> can be used to identify influential observations.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>cook_fish <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(fish)</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(cook_fish,<span class="dv">3</span>,<span class="at">labs=</span>fws<span class="sc">$</span>ProjectName,<span class="at">ylab=</span><span class="st">"Cook’s distances"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>cook_fish <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(fish)</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">halfnorm</span>(cook_fish,<span class="dv">3</span>,<span class="at">labs=</span>fws<span class="sc">$</span>ProjectName,<span class="at">ylab=</span><span class="st">"Cook’s distances"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">check_outliers</span>(fish))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-17-2.png" class="img-fluid" width="672"></p>
+<p><img src="hw_03_diagnostics_files/figure-html/unnamed-chunk-18-2.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
