@@ -1,0 +1,267 @@
+---
+title: "Modified labs: Model selection, multimodel inference, & mixed models"
+author: "Ruby Krasnow"
+date: "2024-10-17"
+link-external-newwindow: true 
+editor_options: 
+  chunk_output_type: console
+number-sections: true
+---
+
+```{r}
+#| label: load-packages
+#| message: FALSE
+#| echo: FALSE
+#| warning: FALSE
+#| output: FALSE
+
+# List of packages required:
+packages <- c("tidyverse", "PNWColors", "janitor", "broom", "DHARMa", "performance")
+
+# Load packages into session
+lapply(packages, require, character.only = TRUE)
+rm(packages)
+
+# Ensure functions with duplicate names are from the correct package
+select <- dplyr::select
+map <- purrr::map
+summarize <- dplyr::summarize
+clean_names <- janitor::clean_names
+margin <- ggplot2::margin
+
+set.seed(123) #Set seed for pseudo-random number generator, for reproducibility
+
+mytheme <- theme_light()+ #define custom theme for ggplots
+  theme(axis.title.y = element_text(margin = margin(t = 0, r = 10, l = 0)),
+        axis.title.x = element_text(margin = margin(t = 10, l = 0)),
+        text=element_text(size=15))
+```
+
+I will use male crab data instead of the built-in lab data.
+```{r}
+#| label: load-data
+
+crabs <- read_csv("../data/crab_data.csv", show_col_types = FALSE)
+
+glimpse(crabs)
+head(crabs)
+
+crabs <- crabs %>% filter(source == "NEFSC") %>% 
+  select(
+  cw,
+ # source,
+  zone,
+  longitude,
+  latitude,
+  year,
+  station_id,
+  cw,
+  ch,
+  log_cw,
+  log_ch
+) %>% mutate(zone = as.factor(zone))
+```
+
+We will choose carapace width (cw, in mm) as our dependent variable for the model-building.
+
+```{r}
+library(rnaturalearth)
+library(sf)
+
+coast <- ne_countries(
+  scale = "medium",
+  returnclass = "sf", country = "united states of america") %>% 
+  st_crop(c(xmin = -75, ymin = 10, xmax = -50, ymax = 50)) %>% 
+  st_transform(crs=32619)
+
+males_sf <- st_as_sf(crabs, coords=c("longitude", "latitude"), crs=4326)
+
+ggplot(data=males_sf)+
+  facet_wrap(~year)+
+  geom_sf(aes(color=zone))+
+  mytheme+
+  geom_sf(data=coast)+labs(color="Zone")
+```
+
+```{r}
+library(corrplot)
+
+M <- cor(crabs[,c(3,4,5,7,8)])
+testRes <- cor.mtest(crabs[,c(3,4,5,7,8)], conf.level = 0.95)
+
+corrplot(M)
+
+corrplot(
+  M,
+  p.mat = testRes$p,
+  sig.level = 0.05,
+  method = 'color',
+  type = 'lower',
+  insig = 'blank',
+  addCoef.col = 'black',
+  number.cex = 0.8,
+  order = 'AOE',
+  diag = FALSE
+)
+```
+
+```{r}
+
+crabs2 <- crabs %>% select(cw, zone, longitude, latitude, year, ch)
+
+## data frame specifying predictors to include
+df <- as.data.frame(matrix(c(FALSE, TRUE), 2, 5))
+
+## add col names
+cov_names <- colnames(df) <- colnames(crabs2)[2:6]
+
+## create set of all possible combinations
+full_set <- expand.grid(df)
+
+## converting to a matrix for easier indexing
+use_set <- as.matrix(full_set)
+
+## number of models in our set
+(n_mods <- nrow(use_set))
+```
+
+```{r}
+## empty matrix for storing results
+mod_res <- matrix(NA, n_mods, 2)
+colnames(mod_res) <- c("AIC", "BIC")
+
+## fit models & store AIC & BIC
+for (i in 1:n_mods) {
+  if (i == 1) {
+    fmla <- "cw ~ 1"
+  } else {
+    fmla <- paste("cw ~", paste(cov_names[use_set[i, ]], collapse = " + "))
+  }
+  mod_fit <- lm(as.formula(fmla), data = crabs)
+  mod_res[i, "AIC"] <- AIC(mod_fit)
+  mod_res[i, "BIC"] <- BIC(mod_fit)
+}
+
+```
+
+```{r}
+## empty matrix for storing results
+delta_res <- matrix(NA, n_mods, 2)
+colnames(delta_res) <- c("deltaAIC", "deltaBIC")
+
+## convert IC to deltaIC
+delta_res[, "deltaAIC"] <- mod_res[, "AIC"] - min(mod_res[, "AIC"])
+delta_res[, "deltaBIC"] <- mod_res[, "BIC"] - min(mod_res[, "BIC"])
+
+delta_res <- tibble(deltaAIC = delta_res[, 1], deltaBIC = delta_res[, 2])
+
+## round them for easier viewing
+delta_res <- round(delta_res, 2) %>% rownames_to_column("mod") %>% arrange(deltaAIC)
+```
+
+```{r}
+
+best_mods <- delta_res %>% slice_head(n = 8) %>% pull(mod)
+
+## "best" models from our set
+best_mods <- use_set %>% as_tibble() %>% rownames_to_column("mod") %>% filter(mod %in% best_mods)
+```
+
+Model 32 has all predictors and is in the top 8, let's check residuals
+```{r}
+lm64 <- lm(cw ~ ch + year + zone + latitude + longitude, data = crabs)
+summary(lm64)
+tidy(lm64)
+```
+
+```{r}
+check_model(lm64)
+```
+
+```{r}
+library(sdmTMB)
+
+sdm_df <- add_utm_columns(crabs, units="km") %>% 
+  select(cw, ch, X, Y, year) %>% 
+  mutate(loc = paste0("(", X, ", ", Y, ")")) %>% 
+  add_count(X,Y, name="n_obs") #add column with the number of observations at each set of coordinates
+ # mutate(source = as.factor(source))
+
+mesh <- make_mesh(sdm_df, xy_cols = c("X", "Y"), cutoff = 10)
+```
+
+```{r}
+fit_var <- sdmTMB(
+  formula= cw ~  s(ch),
+  data = sdm_df,
+  mesh = mesh,
+  time = "year",
+  family = gaussian(link = "identity"),
+  spatial = "off")
+
+fit_var
+
+tidy(fit_var) %>% mutate(across(where(is.double), ~round(.x, digits=2)))
+
+sanity(fit_var)
+
+# fit_var2 <- sdmTMB(
+#   formula= cw ~  ch + source,
+#   data = sdm_df,
+#   mesh = mesh,
+#   time = "year",
+#   extra_time = c(2020),
+#   family = gaussian(link = "identity"),
+#   spatial = "off", 
+#   spatiotemporal = "ar1")
+# 
+# fit_var2
+```
+
+```{r}
+sims <- simulate(fit_var, type = "mle-mvn")
+
+res_obj <- dharma_residuals(sims, fit_var, return_DHARMa = TRUE)
+plot(res_obj)
+```
+
+```{r}
+#DHARMa::testSpatialAutocorrelation(res_obj, x = sdm_df$X, y = sdm_df$Y)
+```
+
+```{r}
+
+ggplot(data=sdm_df)+
+  mytheme+
+  geom_point(aes(x=cw, y=ch), alpha=0.5, shape=21)+
+  labs(x = "Carapace width (mm)", y = "Chela height (mm)")
+```
+
+```{r}
+library(mgcv)
+library(gratia)
+
+gam1 <- gam(cw ~ s(ch), data = crabs)
+
+check_model(gam1, residual_type = "normal")
+
+gam2 <- gam(cw ~ s(ch) + zone, data = crabs)
+
+check_model(gam2, residual_type = "normal")
+
+anova(gam1, gam2)
+
+summary(gam2)
+
+residuals(gam1)
+
+gratia::qq_plot(gam2)
+
+## Alternatively use simulate new data from the model, which
+## allows construction of reference intervals for the Q-Q plot
+qq_plot(gam2,
+  method = "simulate", point_col = "steelblue",
+  point_alpha = 0.4
+)
+```
+
