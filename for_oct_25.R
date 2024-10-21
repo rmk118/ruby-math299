@@ -1,14 +1,14 @@
 #---------------------------------------------------#
 # Exploring spatial variation in Jonah crab size
 # Ruby Krasnow
-# Last updated Oct 20, 2024
+# Last updated Oct 21, 2024
 #---------------------------------------------------#
 
 
 # 1: Initial setup -----------------------------------------------------------
 
 # List of packages required:
-packages <- c("tidyverse", "PNWColors", "janitor", "broom", "DHARMa", "performance", "sdmTMB", "sf", "marmap")
+packages <- c("tidyverse", "PNWColors", "janitor", "broom", "DHARMa", "performance", "sdmTMB", "sf", "marmap", "mclust", "ggeffects")
 
 # Load packages into session
 lapply(packages, require, character.only = TRUE)
@@ -50,7 +50,7 @@ outliers_m <- check_outliers(
   select(crab_id, Outlier)
 
 crabs <- crabs_initial %>% left_join(outliers_m) %>%
-  filter(Outlier < 1)
+  filter(Outlier < 0.5)
 
 
 # Clustering --------------------------------------------------------------
@@ -223,7 +223,7 @@ testDispersion(r_mod)
 
 # Visualization -----------------------------------------------------------
 
-fdepth<- ggeffect(mod, "depth")
+fdepth <- ggeffect(mod, "depth")
 plot(fdepth)
 
 jonah_sf <- st_as_sf(jonah, coords=c("longitude", "latitude"), crs=4326)
@@ -265,19 +265,78 @@ depth_df <- get.depth(bat,
 
 plotting_coords <- grid1 %>% bind_cols(depth_df) %>% 
   as_tibble() %>% 
-  mutate(X=X/1000, Y=Y/1000) #convert from m to km
+  filter(depth < 0) %>% 
+  mutate(X=X/1000, Y=Y/1000, depth = abs(depth)) #convert from m to km
 
 grid_classes <- replicate_df(plotting_coords, "pred_class", unique(jonah$pred_class))
 
-predictions <- predict(mod, newdata=grid_classes, type="response") %>% as.data.frame()
+mod <- sdmTMB(
+  data = jonah,
+  formula = cw ~ depth + pred_class,
+  mesh = mesh,
+  spatial = "on",
+  family = inverse.gaussian())
+  #family = inverse.gaussian(link = "identity"))
+  #family = lognormal())
+  #family = tweedie(link = "log"))
+  #family = Gamma(link = "log"))
+  # family = gengamma())
+  #family = tweedie(link = "log"))
+
+summary(mod)
+sanity(mod)
+
+# Residual checking (again) -------------------------------------------------------
+
+# qqnorm(residuals(mod, type = "mle-mvn"))
+# qqline(residuals(mod, type = "mle-mvn"))
+# hist(residuals(mod, type = "mle-mvn"))
+
+s_mod <- simulate(mod, nsim = 500, type = "mle-mvn")
+dharma_residuals(s_mod, mod)
+
+r_mod <- dharma_residuals(s_mod, mod, return_DHARMa = TRUE)
+plot(r_mod)
+testDispersion(r_mod)
+
+# https://en.wikipedia.org/wiki/Inverse_Gaussian_distribution
+# https://cran.r-project.org/web/packages/DHARMa/vignettes/DHARMa.html 
+# unconcerned about underdispersion bc it will just bias p-values to be on 
+# the conservative side
+
+# samps <- sdmTMBextra::predict_mle_mcmc(mod, mcmc_warmup = 300, mcmc_iter = 1000)
+# r <- residuals(mod, "mle-mcmc", mcmc_samples = samps)
+
+plot(ggeffect(mod, "pred_class"), show_data = TRUE, jitter = 0.5, line_size = 2, dot_size = 1)
+plot(ggeffect(mod, terms = c("pred_class", "depth [0:300 by=50]")))
+plot(ggeffect(mod, terms = c("depth", "pred_class")))
+
+mod_log <- update(mod, family = inverse.gaussian(link = "log"))
+mod_id <- update(mod, family = inverse.gaussian(link = "identity"))
+
+AIC(mod, mod_log, mod_id)
+
+s_mod_id <- simulate(mod_id, nsim = 500, type = "mle-mvn")
+dharma_residuals(s_mod_id, mod_id)
+
+preds_resids <- predict(mod)
+resids_test <- preds_resids$est - preds_resids$cw
+hist(resids_test)
+
+preds_resids_id <- predict(mod_id)
+resids_test_id <- preds_resids_id$est - preds_resids_id$cw
+hist(resids_test_id)
+shapiro.test(resids_test_id)
+
+predictions <- predict(mod, newdata = grid_classes) %>% as.data.frame()
 
 preds_plot <- ggplot() + 
-  geom_tile(data=predictions, aes(x = X*1000, y = Y*1000, color = est), linewidth=4) +
+  geom_tile(data=predictions %>% filter(lat > 40), aes(x = X*1000, y = Y*1000, color = est), linewidth=4) +
   geom_sf(data=coast) +
   theme_light() +
   labs(color = "CW (mm)") +
   labs(x = NULL, y = NULL)+
   scale_color_viridis_c()+
-  theme(text = element_text(size=14))
+  theme(text = element_text(size=14)) # + facet_wrap(~pred_class)
 
 preds_plot
