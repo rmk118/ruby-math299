@@ -1,7 +1,7 @@
 #---------------------------------------------------#
 # Exploring spatial variation in Jonah crab size
 # Ruby Krasnow
-# Last updated Oct 21, 2024
+# Last updated Oct 25, 2024
 #---------------------------------------------------#
 
 
@@ -126,7 +126,7 @@ ggplot() +
 
 res_remove <- res_remove_orig %>%
   mutate(res = residuals(lm(data = res_remove_orig, log(ch)~ log(cw)))) %>%
-  slice_max(res, n = -25)
+  slice_max(res, n = -20)
 
 jonah <- res_remove %>%
   select(-res) %>%
@@ -162,7 +162,7 @@ plot(mesh)
 no_spat <- sdmTMB(
   data = jonah,
   formula = cw ~ depth + pred_class,
-  mesh = mesh, # can be omitted for a non-spatial model
+ # mesh = mesh, # can be omitted for a non-spatial model
   spatial = "off")
 
 no_year <- sdmTMB(
@@ -184,6 +184,7 @@ gam_mod <- sdmTMB(
   spatial = "on")
 
 AIC(no_spat, no_year, lin_mod, gam_mod)
+
 
 summary(lin_mod)
 
