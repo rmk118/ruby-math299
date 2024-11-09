@@ -215,7 +215,7 @@ testZeroInflation(final_mod) # No remaining issues with zero-inflation
 
 testOutliers(final_mod) # outlier test looks good
 
-# No within-group devfinal_mod_simres <- simulateResiduals(final_mod)iations from uniformity
+# No within-group deviations from uniformity
 # Levene Test for homogeneity of variance looks good
 final_mod_simres <- simulateResiduals(final_mod)
 testCategorical(final_mod_simres, catPred = na.omit(spat2)$area)

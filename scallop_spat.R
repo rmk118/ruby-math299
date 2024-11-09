@@ -1,7 +1,7 @@
 #---------------------------------------------------#
 # Modeling scallop spat count data
 # Ruby Krasnow
-# Last updated Nov 8, 2024
+# Last updated Nov 9, 2024
 #---------------------------------------------------#
 
 ## List of packages required:
@@ -35,14 +35,6 @@ perc_rec <- tribble(
   2016,	6,	1.25,	"closed",
   2017,	5,	1,	"closed"
 )
-
-spat2 %>% mutate(status = if_else(area == "closure", "closed", "open")) %>% 
-  filter(!is.na(count)) %>% 
-  count(year, status) %>% 
- # mutate(lines = n/5) %>% 
-  rename(bags = n) %>% 
-  arrange(status)
-
 
 perc_rec <- perc_rec %>% 
   mutate(deployed = if_else(status == "open", 45, 15)) %>% 
@@ -80,40 +72,34 @@ expand_grid(area = c(1, 2, 3, 4), line = c(1:3)) %>%
   geom_tile(aes(x = line,y = area), fill = "white", color = "black") + 
   geom_point(aes(x = line, y = area + bag_pos, color = as.factor(bag_pos)))
 
-## Visualization ------------------------------------------------------------------
-
-ggplot(perc_rec) + geom_bar(aes(x = year, y = perc, color = str_to_sentence(status), fill = str_to_sentence(status)), stat = "identity", position = "dodge", alpha = 0.7, linewidth = 1) + mytheme + scale_color_tableau() + scale_fill_tableau() + labs(x = "Year", y = "% of bags recovered", fill = NULL, color = NULL)
-
-ggplot(spat) + geom_boxplot(aes(x = year, y = count, fill = str_to_sentence(area)), alpha = 0.7) + mytheme + scale_fill_tableau() + labs(x = "Year", y = "# spat per recovered bag", fill = NULL) + scale_y_continuous(labels = scales::comma)
-
 ## Modeling -------------------------------------------------------------------
 
 perc_lm <- lm(data = perc_rec, perc ~ status)
-perc_lm_area <- lm(data = perc_rec_area, perc ~ area)
+# perc_lm_area <- lm(data = perc_rec_area, perc ~ area)
 
 check_model(perc_lm)
-check_residuals(perc_lm_area)
+# check_residuals(perc_lm_area)
 
-shapiro.test(perc_lm_area$residuals)
+# shapiro.test(perc_lm_area$residuals)
 
 weighted1 <- glmmTMB(data = perc_rec, bags ~ status, weights = deployed)
 weighted2 <- glmmTMB(data = perc_rec, bags ~ status, weights = inv_dep)
 no_weight <- glmmTMB(data = perc_rec, bags ~ status)
 null_mod <- glmmTMB(data = perc_rec, bags ~ 1)
 
-weighted1_area <- glmmTMB(data = perc_rec_area, bags ~ area, weights = deployed)
-no_weight_area  <- glmmTMB(data = perc_rec_area, bags ~ area)
-null_mod_area  <- glmmTMB(data = perc_rec_area, bags ~ 1)
+# weighted1_area <- glmmTMB(data = perc_rec_area, bags ~ area, weights = deployed)
+# no_weight_area  <- glmmTMB(data = perc_rec_area, bags ~ area)
+# null_mod_area  <- glmmTMB(data = perc_rec_area, bags ~ 1)
 
-counts_weighted_area <- glmmTMB(data = perc_rec_area,
-                            perc ~ area,
-                            weights = deployed,
-                            family = binomial())
-
-bbmle::AICtab(weighted1_area,
-              no_weight_area,
-              null_mod_area,
-              counts_weighted_area)
+# counts_weighted_area <- glmmTMB(data = perc_rec_area,
+#                             perc ~ area,
+#                             weights = deployed,
+#                             family = binomial())
+# 
+# bbmle::AICtab(weighted1_area,
+#               no_weight_area,
+#               null_mod_area,
+#               counts_weighted_area)
 
 r2(counts_weighted)
 check_residuals(counts_weighted)
@@ -143,9 +129,6 @@ spat <- read.csv("./spat_clean.csv") %>%
     area = as_factor(area),
     status = as_factor(status)
   )
-
-## Visualization ------------------------------------------------------------------
-
 
 ## Modeling -------------------------------------------------------------------
 
@@ -200,14 +183,16 @@ nb_formula <- list(
 
 # https://cran.r-project.org/web/packages/glmmTMB/vignettes/glmmTMB.pdf
 
-nb1_models <- tibble(nb_formula, models = purrr::map(nb_formula, \(x)
+nb1_models <- tibble(zi_formula, models = purrr::map(zi_formula, \(x)
                                                     glmmTMB(
-                                                      data = spat,
+                                                      #data = spat,
+                                                      data = zero_df,
                                                       formula = x,
-                                                      family = nbinom1(),
-                                                      # ziformula = ~1
+                                                      family = nbinom2(),
+                                                      #family = poisson,
+                                                       ziformula = ~1
                                                     ))) %>%
-  add_column(id = names(nb_formula), .before = 1)
+  add_column(id = names(zi_formula), .before = 1)
 
 nb1_models_tidy <- nb1_models %>%
   mutate(tidy_model = map(models, tidy),
@@ -251,7 +236,7 @@ testResiduals(c2) # equivalent to check_residuals(c2)
 testDispersion(c2) # equivalent to check_overdispersion(c2)
 check_predictions(c2, type = "discrete_interval", check_range = TRUE, plot = FALSE)
 c2_simres <- simulate_residuals(c2)
-testCategorical(c2_simres, catPred = spat$area)
+testCategorical(c2_simres, catPred = na.omit(spat)$area)
 testCategorical(c2_simres, catPred = spat$year)
 plot(simulateResiduals(c2, n = 1000))
 
@@ -260,7 +245,7 @@ testResiduals(c2b)
 testDispersion(c2)
 check_predictions(c2b, type = "discrete_interval", check_range = TRUE, plot = FALSE)
 c2b_simres <- simulate_residuals(c2b)
-testCategorical(c2b_simres, catPred = spat$area)
+testCategorical(c2b_simres, catPred = na.omit(spat)$area)
 testCategorical(c2b_simres, catPred = spat$year)
 plot(simulateResiduals(c2b, n = 1000))
 DHARMa::testQuantiles(c2b) # slight quantile deviation detected but not statistically significant
@@ -293,6 +278,14 @@ spat2 <- read.csv("./spat_filled.csv") %>%
     year = as_factor(year),
     area = as_factor(area) )
 
+
+spat2 %>% mutate(status = if_else(area == "closure", "closed", "open")) %>% 
+  filter(!is.na(count)) %>% 
+  count(year, status) %>% 
+  # mutate(lines = n/5) %>% 
+  rename(bags = n) %>% 
+  arrange(status)
+
 zero_df <- spat2 %>% mutate( # create version of data set where not-recovered bags are 0
   true_zero = if_else(count!=0 | is.na(count), FALSE, TRUE),
   count = replace_na(count, 0))
@@ -310,12 +303,28 @@ zi_formula <- list(
   modD2 = count ~ year + (1|line2),
   modD3 = count ~ bag_position + (1|line2))
 
+# Define list of formulas to test
+zi_formula <- list(
+  modA1 = count ~ year,
+  modA2 = count ~ area,
+  modA3 = count ~ year + area,
+  modB1 = count ~ area + (1 | line2),
+  modB2 = count ~ year + (1 | line2),
+  modB3 = count ~ area + year + (1 | line2),
+  modC1 = count ~ area + (1 | bag_position),
+  modC2 = count ~ year + (1 | bag_position),
+  modC3 = count ~ year + area + (1 | bag_position),
+  modD1 = count ~ area + (1 | bag_position) + (1 | line2),
+  modD2 = count ~ year + (1 | bag_position) + (1 | line2),
+  modD3 = count ~ year + area + (1 | bag_position) + (1 | line2)
+)
+
 zi_models <- tibble(zi_formula, models = purrr::map(zi_formula, \(x)
                                                      glmmTMB(
                                                        data = spat2,
                                                        formula = x,
                                                        family = nbinom2(),
-                                                       ziformula = ~1
+                                                      # ziformula = ~1
                                                      ))) %>%
   add_column(id = names(zi_formula), .before = 1)
 
@@ -331,8 +340,11 @@ zi_models_tidy <- zi_models %>%
   unnest(cols = c(logLik)) %>% 
   arrange(AIC)
 
-
-testmod <- glmmTMB(count ~ year + area, data = spat2, family = nbinom2(), zi=~1)
+testmod <- glmmTMB(count ~ year + area + (1|line2) + (1|bag_position), data = spat2, family = nbinom2()) #ziformula = ~ 1)
+testmod2 <- glmmTMB(count ~ year + area + (1|line2) + (1|bag_position), 
+                    data = spat2, 
+                    #data = zero_df, 
+                    family = nbinom2(), ziformula = ~ 1)
 summary(testmod)
 tidy(testmod)
 
@@ -342,9 +354,14 @@ check_model(testmod)
 check_predictions(testmod, type = "discrete_interval", check_range = TRUE)
 testmod_simres <- simulateResiduals(testmod)
 testZeroInflation(testmod)
-testCategorical(testmod_simres, catPred = spat2$year)
-testCategorical(testmod_simres, catPred = spat2$year)
+testCategorical(testmod_simres, 
+                #catPred = na.omit(spat2)$year)
+                catPred = zero_df$year)
+testCategorical(testmod_simres, 
+                #catPred = na.omit(spat2)$area)
+                catPred = zero_df$area)
 plot(simulateResiduals(testmod, n = 1000))
+plot(simulateResiduals(testmod, n = 1000), quantreg = F)
 DHARMa::testQuantiles(testmod)
 
 # Efron's pseudo r-squared
@@ -429,3 +446,39 @@ supp_gts <- gt_group(s1, s2, s3, s4)
 supp_gts
 
 
+## Visualization ---------------------------------------------------------------
+
+ggplot(perc_rec) + geom_bar(aes(x = year, y = perc, color = str_to_sentence(status), fill = str_to_sentence(status)), stat = "identity", position = "dodge", alpha = 0.7, linewidth = 1) + mytheme + scale_color_tableau() + scale_fill_tableau() + labs(x = "Year", y = "% of bags recovered", fill = NULL, color = NULL)
+
+ggplot(spat) + geom_boxplot(aes(x = year, y = count, fill = str_to_sentence(area)), alpha = 0.7) + mytheme + scale_fill_tableau() + labs(x = "Year", y = "# spat per recovered bag", fill = NULL) + scale_y_continuous(labels = scales::comma)
+
+
+# Hurdle models -----------------------------------------------------------
+
+
+h_models <- tibble(zi_formula, models = purrr::map(
+  zi_formula,
+  \(x)
+  glmmTMB(
+    data = zero_df,
+    formula = x,
+    family = truncated_nbinom2(),
+    ziformula = ~ 1
+  )
+)) %>%
+  add_column(id = names(zi_formula), .before = 1)
+
+h_models_tidy <- h_models %>%
+  mutate(tidy_model = map(models, tidy),
+         AIC = map(models, AIC),
+         resids = map(models, residuals)) %>% 
+  unnest(cols = c(AIC)) %>% 
+  mutate(resids = map(resids, as.numeric()), 
+         normal_p = map(resids, ~ shapiro.test(.x)$p.value)) %>% 
+  unnest(cols = c(normal_p)) %>% 
+  mutate(logLik = map(models, ~ (logLik(.x)[1]))) %>% 
+  unnest(cols = c(logLik)) %>% 
+  arrange(AIC)
+
+library(bbmle)
+AICtab(testmod, final_mod, logLik = T)
