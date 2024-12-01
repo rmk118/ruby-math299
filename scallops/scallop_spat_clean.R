@@ -73,7 +73,7 @@ perc_rec_area <- spat2 %>% mutate(status = if_else(area == "closure", "closed", 
 
 # Percent of bags recovered by year and closure status
 ggplot(perc_rec) + 
-  geom_bar(aes(x = year, y = perc,
+  geom_bar(aes(x = year, y = perc*100,
                fill = str_to_sentence(status)), 
            stat = "identity",
            position = "dodge", 
@@ -88,7 +88,7 @@ perc_rec %>% mutate(across(where(is.numeric), \(x) round(x, digits = 2))) %>% wr
 
 # Percent of bags recovered by year and closure status
 ggplot(perc_rec_area) + 
-  geom_bar(aes(x = year, y = perc, 
+  geom_bar(aes(x = year, y = perc*100, 
                fill = str_to_sentence(area)),
            color = NA,
            stat = "identity",
